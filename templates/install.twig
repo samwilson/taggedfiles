@@ -1,0 +1,13 @@
+{%extends "base.twig"%}
+
+{% block content %}
+    <article>
+        <p>
+            Welcome to {{site_title}}.
+            Click the button below to install or upgrade the required database tables.
+        </p>
+        <form action="{{baseurl}}/install" method="post">
+            <input type="submit" value="Install" />
+        </form>
+    </article>
+{%endblock%}

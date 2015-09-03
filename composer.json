@@ -1,0 +1,17 @@
+{
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "require": {
+        "twig/twig": "1.*",
+        "erusev/parsedown": "1.*",
+        "hautelook/phpass": "dev-master",
+        "yohang/calendr": "1.*",
+        "phayes/geophp": "1.*",
+        "vlucas/phpdotenv": "2.*",
+        "codeguy/upload": "1.*",
+        "league/route": "1.*"
+    }
+}
