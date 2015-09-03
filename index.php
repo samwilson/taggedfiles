@@ -10,12 +10,30 @@ $dotenv->load();
 $dotenv->required(['DB_NAME', 'DB_USER', 'DB_PASS']);
 
 /**
+ * Base URL.
+ */
+$baseUrl = '/';
+foreach (explode('/', $_SERVER['PHP_SELF']) as $part) {
+    if ($part == basename(__FILE__)) {
+        break;
+    }
+    if (!empty($part)) {
+        $baseUrl .= $part . '/';
+    }
+}
+//var_dump($baseUrl);
+
+/**
  * Routes.
  */
 $router = new League\Route\RouteCollection;
+
+$router->addRoute('GET', '/{file:.*\.(?:css|js)}', 'App\Controllers\AssetsController::css');
 $router->addRoute('GET', '/install', 'App\Controllers\InstallController::install');
 $router->addRoute('POST', '/install', 'App\Controllers\InstallController::run');
 $router->addRoute('GET', '/', 'App\Controllers\HomeController::index');
+$router->addRoute('GET', '/{id:number}', 'App\Controllers\HomeController::view');
+
 $dispatcher = $router->getDispatcher();
 $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
 try {

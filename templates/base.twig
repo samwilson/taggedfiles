@@ -1,56 +1,61 @@
 <!DOCTYPE html>
 <!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]-->
-<html class="no-js" lang="en" >
+<html class="no-js" lang="en">
 
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{{title}} :: {{site_title}}</title>
-        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.18.1/build/cssfonts/cssfonts-min.css">
-        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.18.1/build/cssbase/cssbase-min.css" />
-        <link href="{{baseurl}}/assets/{{app_version}}/all.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="https://cdn.rawgit.com/mblode/marx/master/css/marx.min.css">
+        <link rel="stylesheet" type="text/css" href="{{baseurl}}all.css?ver={{app_version}}" />
     </head>
 
     <body>
+        <main>
 
-        <header>
-            <p><a href="{{baseurl}}">Home</a></p>
-        </header>
+            <header>
+                <nav>
+                    <ul>
+                        <li><a href="{{baseurl}}">Home</a></li>
+                        <li><a href="{{baseurl}}/search">Search</a></li>
+                        <li><a href="{{baseurl}}/upload">Upload</a></li>
+                    </ul>
+                </nav>
+            </header>
 
-        {% if alerts %}
-        <div class="alerts">
-            {% for alert in alerts %}
-            <div class="alert alert-{{alert.type}}">{{alert.message|raw}}</div>
-            {% endfor %}
-        </div>
-        {% endif %}
+            {% if alerts %}
+                <div class="alerts">
+                    {% for alert in alerts %}
+                        <div class="alert alert-{{alert.type}}">{{alert.message|raw}}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
 
-        <div id="content">
-            <h1>
-                {{title}}
-                {% if subtitle %}
-                <span class="subtitle">{{subtitle}}</span>
+            <div id="content">
+                <h1>
+                    {{title}}
+                    {% if subtitle %}
+                        <span class="subtitle">{{subtitle}}</span>
+                    {% endif %}
+                </h1>
+                {% block content %}
+                {% endblock %}
+            </div>
+
+            <footer>
+                <a href="https://github.com/samwilson/swidau" title="Go to the {{app_title}} homepage">
+                    {{app_title}}
+                </a>
+                {% if mode == 'development' %}
+                    {% for query in queries %}
+                        <pre class="queries">{{query}}</pre>
+                    {% endfor %}
                 {% endif %}
-            </h1>
-            {% block content %}{% endblock %}
-        </div>
+            </footer>
+        </main>
 
-        <footer>
-            <ul>
-                <li>
-                    <a href="https://github.com/samwilson/swidau" title="Go to the {{app_title}} homepage">
-                        {{app_title}}
-                    </a>
-                </li>
-            </ul>
-        </footer>
-
-        {% for query in queries %}
-        <pre class="queries">{{query}}</pre>
-        {% endfor %}
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
-        <script src="{{baseurl}}/assets/{{app_version}}/js/foundation.min.js"></script>
-        <script src="{{baseurl}}/assets/{{app_version}}/js/app.js"></script>
+        <script src="{{baseurl}}app.js?ver={{app_version}}"></script>
     </body>
 </html>

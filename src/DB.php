@@ -14,7 +14,8 @@ class DB {
         if (self::$pdo) {
             return;
         }
-        $dsn = "mysql:host=" . getenv('DB_HOST') . ";dbname=" . getenv('DB_NAME');
+        $host = getenv('DB_HOST') ? getenv('DB_HOST') : 'localhost';
+        $dsn = "mysql:host=$host;dbname=" . getenv('DB_NAME');
         $attr = array(\PDO::ATTR_TIMEOUT => 10);
         self::$pdo = new \PDO($dsn, getenv('DB_USER'), getenv('DB_PASS'), $attr);
         self::$pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
