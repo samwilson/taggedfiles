@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class HomeController {
 
-    public function index() {
+    public function index(Request $request, Response $response, array $args) {
         $db = new \App\DB();
         $items = $db->query("SELECT * FROM items WHERE auth_level = 0 ORDER BY RAND() LIMIT 10");
         $template = new \App\Template('home.twig');

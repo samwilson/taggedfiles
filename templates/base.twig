@@ -6,8 +6,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{{title}} :: {{site_title}}</title>
-        <link rel="stylesheet" href="https://cdn.rawgit.com/mblode/marx/master/css/marx.min.css">
-        <link rel="stylesheet" type="text/css" href="{{baseurl}}all.css?ver={{app_version}}" />
+        <link rel="stylesheet" href="//cdn.rawgit.com/mblode/marx/master/css/marx.min.css">
+        <link rel="stylesheet" type="text/css" href="{{baseurl}}/all.css?ver={{app_version}}" />
     </head>
 
     <body>
@@ -18,18 +18,10 @@
                     <ul>
                         <li><a href="{{baseurl}}">Home</a></li>
                         <li><a href="{{baseurl}}/search">Search</a></li>
-                        <li><a href="{{baseurl}}/upload">Upload</a></li>
+                        <li><a href="{{baseurl}}/create">Create</a></li>
                     </ul>
                 </nav>
             </header>
-
-            {% if alerts %}
-                <div class="alerts">
-                    {% for alert in alerts %}
-                        <div class="alert alert-{{alert.type}}">{{alert.message|raw}}</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
 
             <div id="content">
                 <h1>
@@ -38,12 +30,21 @@
                         <span class="subtitle">{{subtitle}}</span>
                     {% endif %}
                 </h1>
+
+                {% if alerts %}
+                    <div class="alerts">
+                        {% for alert in alerts %}
+                            <div class="alert alert-{{alert.type}}">{{alert.message|raw}}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
                 {% block content %}
                 {% endblock %}
             </div>
 
             <footer>
-                <a href="https://github.com/samwilson/swidau" title="Go to the {{app_title}} homepage">
+                <a href="https://github.com/samwilson/swidau" title="Go to the {{app_title}} homepage" target="_blank">
                     {{app_title}}
                 </a>
                 {% if mode == 'development' %}
@@ -54,8 +55,7 @@
             </footer>
         </main>
 
-
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
-        <script src="{{baseurl}}app.js?ver={{app_version}}"></script>
+        <script src="{{baseurl}}/app.js?ver={{app_version}}"></script>
     </body>
 </html>

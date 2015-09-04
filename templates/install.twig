@@ -4,10 +4,12 @@
     <article>
         <p>
             Welcome to {{site_title}}.
-            Click the button below to install or upgrade the required database tables.
+            Click the 'Install' button at right to install or upgrade the application.
         </p>
+    </article>
+    <aside>
         <form action="{{baseurl}}/install" method="post">
             <input type="submit" value="Install" />
         </form>
-    </article>
+    </aside>
 {%endblock%}

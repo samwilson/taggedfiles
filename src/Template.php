@@ -10,12 +10,16 @@ class Template {
     /** @var string */
     private $template = false;
 
+    const INFO = 'info';
+    const WARNING = 'warning';
+    const ERROR = 'error';
+
     public function __construct($template) {
         $this->template = $template;
         $this->data['app_title'] = App::name() . ' ' . App::version();
         $this->data['app_version'] = App::version();
         $this->data['mode'] = App::mode();
-        $this->data['baseurl'] = App::env('BASEURL', '/');
+        $this->data['baseurl'] = App::baseurl();
         $this->data['site_title'] = App::env('SITE_TITLE', 'A Swidau Site');
 
         if (!isset($_SESSION)) {

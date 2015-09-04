@@ -19,6 +19,15 @@ class App {
         return '0.1.0';
     }
 
+    /**
+     * Get the site's base URL. Never has a trailing slash.
+     * @return string
+     */
+    public static function baseurl() {
+        $baseurl = self::env('BASEURL', '/swidau');
+        return rtrim($baseurl, '/');
+    }
+
     public static function mode() {
         return self::env('MODE', 'production');
     }
