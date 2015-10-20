@@ -3,7 +3,7 @@
 {% block content %}
     <ul>
         {% for item in items %}
-            <li><a href="{{baseurl}}{{item.id}}">{{item.title}}</a></li>
+            <li><a href="{{baseurl}}/{{item.id}}">{{item.title}}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}

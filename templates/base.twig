@@ -47,13 +47,16 @@
                 <a href="https://github.com/samwilson/swidau" title="Go to the {{app_title}} homepage" target="_blank">
                     {{app_title}}
                 </a>
-                {% if mode == 'development' %}
-                    {% for query in queries %}
-                        <pre class="queries">{{query}}</pre>
-                    {% endfor %}
-                {% endif %}
             </footer>
         </main>
+
+        {% if mode == 'development' %}
+            <div id="queries">
+            {% for query in queries %}
+                <pre>{{query}}</pre>
+            {% endfor %}
+            </div>
+        {% endif %}
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> 
         <script src="{{baseurl}}/app.js?ver={{app_version}}"></script>

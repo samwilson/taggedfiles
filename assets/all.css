@@ -2,3 +2,11 @@
 .alerts .alert-success { border-color:green; color:green }
 .alerts .alert-warning { border-color:orange; color:orange }
 .alerts .alert-error { border-color:red; color:red }
+
+input#title { width:100% }
+textarea#description { width:100% }
+input#keywords { width:100% }
+
+div#queries { border:thin solid darkgoldenrod; border-width:thin 0; width:100%; clear:both; background-color:bisque }
+div#queries pre { margin:0 0.4em; padding:0; background-color:inherit }
+

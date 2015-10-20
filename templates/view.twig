@@ -1,0 +1,17 @@
+{%extends "base.twig"%}
+
+{% block content %}
+
+    <p><a href="{{baseurl}}/{{item.id}}/edit">[Edit]</a></p>
+    
+    <p>{{item.date}}</p>
+
+    {{item.description}}
+
+    <ol id="keywords">
+        {% for keyword in keywords %}
+            <li><a href="{{baseurl}}/+{{keyword.id}}">{{keyword.title}}</a></li>
+        {% endfor %}
+    </ol>
+
+{% endblock %}

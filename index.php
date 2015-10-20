@@ -18,7 +18,11 @@ $router->addRoute('GET', '/{file:.*\.(?:css|js)}', 'App\Controllers\AssetsContro
 $router->addRoute('GET', '/install', 'App\Controllers\InstallController::install');
 $router->addRoute('POST', '/install', 'App\Controllers\InstallController::run');
 $router->addRoute('GET', '/', 'App\Controllers\HomeController::index');
+$router->addRoute('GET', '/create', 'App\Controllers\HomeController::edit');
+$router->addRoute('POST', '/create', 'App\Controllers\HomeController::save');
 $router->addRoute('GET', '/{id:number}', 'App\Controllers\HomeController::view');
+$router->addRoute('GET', '/{id:number}/edit', 'App\Controllers\HomeController::edit');
+$router->addRoute('POST', '/{id:number}', 'App\Controllers\HomeController::save');
 
 $dispatcher = $router->getDispatcher();
 $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();

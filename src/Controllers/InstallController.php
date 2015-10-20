@@ -27,16 +27,27 @@ class InstallController {
                 . " (2, 'Day', 'j F Y'),"
                 . " (3, 'Month', 'F Y'),"
                 . " (4, 'Year', 'Y'),"
-                . " (5, 'Circa', '\c. Y')");
-        $sql = "CREATE TABLE IF NOT EXISTS items ("
+                . " (5, 'Circa', '\\c. Y')");
+        $db->query("CREATE TABLE IF NOT EXISTS items ("
                 . " id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
                 . " title VARCHAR(100) NOT NULL UNIQUE,"
                 . " date DATE NULL DEFAULT NULL,"
                 . " date_granularity INT(2) UNSIGNED NOT NULL DEFAULT 1,"
+                . "     FOREIGN KEY (date_granularity) REFERENCES date_granularities (id),"
                 . " description TEXT NULL DEFAULT NULL,"
-                . " auth_level INT(2) NOT NULL DEFAULT 0"
-                . ");";
-        $db->query($sql);
+                . " auth_level INT(2) UNSIGNED NOT NULL DEFAULT 0"
+                . ")");
+        $db->query("CREATE TABLE IF NOT EXISTS keywords ("
+                . " id INT(5) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
+                . " title VARCHAR(200) NOT NULL UNIQUE"
+                . ")");
+        $db->query("CREATE TABLE IF NOT EXISTS item_keywords ("
+                . " item INT(10) UNSIGNED NOT NULL,"
+                . "     FOREIGN KEY (item) REFERENCES items (id),"
+                . " keyword INT(5) UNSIGNED NOT NULL,"
+                . "     FOREIGN KEY (keyword) REFERENCES keywords (id),"
+                . " PRIMARY KEY (item, keyword)"
+                . ")");
         return new \Symfony\Component\HttpFoundation\RedirectResponse(\App\App::baseurl());
     }
 
