@@ -48,6 +48,7 @@ class InstallController {
                 . "     FOREIGN KEY (keyword) REFERENCES keywords (id),"
                 . " PRIMARY KEY (item, keyword)"
                 . ")");
+        mkdir(\App\App::datadir(), 0600, true);
         return new \Symfony\Component\HttpFoundation\RedirectResponse(\App\App::baseurl());
     }
 

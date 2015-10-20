@@ -31,9 +31,10 @@ try {
 } catch (\League\Route\Http\Exception\NotFoundException $notFound) {
     $response = new \Symfony\Component\HttpFoundation\Response('Not Found', 404);
 } catch (\Exception $e) {
-    $template = new \App\Template('base.twig');
+    $template = new \App\Template('error.twig');
     $template->title = 'Error';
     $template->message('error', $e->getMessage());
+    $template->e = $e;
     $response = new \Symfony\Component\HttpFoundation\Response($template->render());
 }
 $response->send();

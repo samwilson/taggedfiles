@@ -76,6 +76,12 @@ class HomeController {
             $this->db->query($sql, $params);
             $id = $this->db->lastInsertId();
         }
+
+        // Save the file.
+        $storage = new \Upload\Storage\FileSystem(\App\App::datadir());
+        $file = new \Upload\File('file', $storage);
+        $file->upload("file");
+
         return new \Symfony\Component\HttpFoundation\RedirectResponse(\App\App::baseurl() . '/' . $id);
     }
 

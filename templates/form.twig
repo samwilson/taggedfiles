@@ -2,14 +2,14 @@
 
 {% block content %}
 
-    <form action="{{baseurl}}/{% if item %}{{item.id}}{% else %}create{% endif %}" method="post">
+    <form action="{{baseurl}}/{% if item %}{{item.id}}{% else %}create{% endif %}" method="post" enctype="multipart/form-data">
         <p>
             <label for="title">Title:</label>
             <input type="text" id="title" name="title" value="{{item.title}}" />
         </p>
         <p>
             <label>Upload:</label>
-            <input type="file" name="attachment" />
+            <input type="file" id="file" name="file" />
         </p>
         <p>
             <label for="keywords">Keywords:</label>

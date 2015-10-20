@@ -28,6 +28,15 @@ class App {
         return rtrim($baseurl, '/');
     }
 
+    /**
+     * Get the site's data directory. Never has a trailing slash.
+     * @return string
+     */
+    public static function datadir() {
+        $datadir = self::env('DATADIR', __DIR__.'/../data');
+        return rtrim($datadir, '/');
+    }
+
     public static function mode() {
         return self::env('MODE', 'production');
     }

@@ -1,0 +1,22 @@
+{% extends "base.twig" %}
+{% block content %}
+
+    <p>Do you need to run the <a href="{{baseurl}}/install">installer</a>?</p>
+
+    {% if mode=='development' %}
+    <h2>Trace</h2>
+    <table>
+        {% for line in e.getTrace() %}
+        <tr>
+            <td>{{line.file}}</td>
+            <td>{{line.line}}</td>
+            <td>{{line.function}}</td>
+            <td>{{line.class}}</td>
+            <td>{{line.type}}</td>
+            <td>{{dump(line.args)}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+{% endblock %}
