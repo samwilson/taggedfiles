@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class HomeController {
 
+    /** @var \App\DB */
     protected $db;
 
     public function __construct() {
@@ -23,13 +24,11 @@ class HomeController {
     }
 
     public function view(Request $request, Response $response, array $args) {
-        $params = ['id' => $args['id']];
-        $item = $this->db->query('SELECT * FROM items WHERE id=:id', $params)->fetch();
+        $item = new \App\Item($this->db, $args['id']);
         $template = new \App\Template('view.twig');
         $template->item = $item;
-        $template->title = $item->title;
-        $keywordSql = 'SELECT k.id, k.title FROM item_keywords ik JOIN keywords k ON (ik.keyword=k.id) WHERE ik.item=:id';
-        $template->keywords = $this->db->query($keywordSql, $params)->fetchAll();
+        $template->title = $item->get('title');
+        $template->keywords = $item->getKeywords();
         $response->setContent($template->render());
         return $response;
     }
@@ -53,6 +52,8 @@ class HomeController {
     }
 
     public function save(Request $request, Response $response, array $args) {
+        $item = new \App\Item();
+
         $_POST = array_filter($_POST, 'trim');
         $params = array(
             'title' => filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING),
@@ -66,6 +67,7 @@ class HomeController {
         }
         $setClause = 'SET title=:title, description=:description, date=:date, '
                 . ' date_granularity=:date_granularity, auth_level=:auth_level ';
+        $this->db->query('BEGIN');
         if (isset($args['id'])) {
             $sql = "UPDATE items $setClause WHERE id=:id";
             $params['id'] = $args['id'];
@@ -78,10 +80,13 @@ class HomeController {
         }
 
         // Save the file.
-        $storage = new \Upload\Storage\FileSystem(\App\App::datadir());
-        $file = new \Upload\File('file', $storage);
-        $file->upload("file");
+        if ($_FILE['file']) {
+            $storage = new \Upload\Storage\FileSystem(\App\App::datadir());
+            $file = new \Upload\File('file', $storage);
+            $file->upload("file");
+        }
 
+        $this->db->query('COMMIT');
         return new \Symfony\Component\HttpFoundation\RedirectResponse(\App\App::baseurl() . '/' . $id);
     }
 

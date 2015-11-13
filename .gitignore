@@ -2,4 +2,5 @@
 /vendor
 /nbproject/private
 /data
+/phpunit.xml
 
