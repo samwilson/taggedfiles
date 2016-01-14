@@ -34,7 +34,7 @@ class Template {
     }
 
     public function render($echo = false) {
-        $this->queries = DB::getQueries();
+        $this->queries = Db::getQueries();
 
         // Load template directories.
         $loader = new \Twig_Loader_Filesystem();

@@ -2,10 +2,10 @@
 
 {% block content %}
 
-    <form action="{{baseurl}}/{% if item %}{{item.id}}{% else %}create{% endif %}" method="post" enctype="multipart/form-data">
+    <form action="{{baseurl}}/save" method="post" enctype="multipart/form-data">
         <p>
             <label for="title">Title:</label>
-            <input type="text" id="title" name="title" value="{{item.title}}" />
+            <input type="text" id="title" name="title" value="{{item.getTitle|raw}}" />
         </p>
         <p>
             <label>Upload:</label>
@@ -13,15 +13,15 @@
         </p>
         <p>
             <label for="keywords">Keywords:</label>
-            <input type="text" id="keywords" name="keywords" value="{{item.keywords}}" />
+            <input type="text" id="keywords" name="keywords" value="{{item.getKeywords}}" />
         </p>
         <p>
             <label>Date:</label>
-            <input type="text" name="date" value="{{item.date}}" />
+            <input type="text" name="date" value="{{item.getDate}}" />
             <label>Granularity:</label>
             <select name="date_granularity">
-            {%for g in date_granularities %}
-                <option value="{{g.id}}" {% if g.id == item.date_granularity %}selected{% endif %}>
+            {%for g in item.getDateGranularities %}
+                <option value="{{g.id}}" {% if g.id == item.getDateGranularity %}selected{% endif %}>
                     {{g.title}}
                 </option>
             {% endfor %}
@@ -29,11 +29,14 @@
         </p>
         <p>
             <label for="description">Description:</label>
-            <textarea id="description" name="description">{{item.description}}</textarea>
+            <textarea id="description" name="description">{{item.getDescription}}</textarea>
         </p>
         <p>
             <input type="submit" value="Save" />
-            {% if item %}<a href="{{baseurl}}/{{item.id}}">Cancel</a>{% endif %}
+            {% if item %}
+                <input type="hidden" name="id" value="{{item.getId}}" />
+                <a href="{{baseurl}}/{{item.id}}">Cancel</a>
+            {% endif %}
         </p>
     </form>
 

@@ -1,14 +1,54 @@
 <?php
 
+use App\Item;
+
 class ItemTest extends \PHPUnit_Framework_TestCase {
+
+    /** @var App\Db */
+    protected $db;
+
+    public function setUp() {
+        $this->db = new App\Db();
+        $this->db->query("SET FOREIGN_KEY_CHECKS=0");
+        $this->db->query("DROP TABLE `keywords`");
+        $this->db->query("DROP TABLE `items`");
+        $this->db->query("SET FOREIGN_KEY_CHECKS=1");
+        $this->db->install();
+    }
 
     /**
      * @testdox An Item has an ID and title.
+     * @test
      */
-    public function meta() {
-        $item = new App\Item();
-        $item->save();
+    public function basics() {
+        $item = new Item();
+        $item->save(['title' => 'Test']);
         $this->assertEquals(1, $item->getId());
+        $this->assertEquals('Test', $item->getTitle());
+        $this->assertEquals(1, $this->db->query("SELECT COUNT(*) FROM `items`")->fetchColumn());
+    }
+
+    /**
+     * @testdox An item can be created and modified.
+     */
+    public function modification() {
+        $item = new Item();
+        $item->save(['title' => 'Test']);
+        $this->assertEquals(1, $item->getId());
+        $this->assertEquals('Test', $item->getTitle());
+        $this->assertEquals(1, $this->db->query("SELECT COUNT(*) FROM `items`")->fetchColumn());
+        $item->save(['id' => 1, 'title' => 'Testing Title']);
+        $this->assertEquals(1, $item->getId());
+        $this->assertEquals('Testing Title', $item->getTitle());
+        $this->assertEquals(1, $this->db->query("SELECT COUNT(*) FROM `items`")->fetchColumn());
+    }
+
+    /**
+     * @testdox An item can have a single file attached.
+     * @test
+     */
+    public function files() {
+        $item = new Item();
     }
 
 }

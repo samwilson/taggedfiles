@@ -1,9 +1,9 @@
 {% extends "base.twig" %}
 
 {% block content %}
-    <ul>
+    <ul class="items">
         {% for item in items %}
-            <li><a href="{{baseurl}}/{{item.id}}">{{item.title}}</a></li>
+            <li><a href="{{baseurl}}/{{item.id}}">{{item.title|raw}}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}

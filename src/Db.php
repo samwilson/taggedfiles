@@ -2,7 +2,7 @@
 
 namespace App;
 
-class DB {
+class Db {
 
     /** @var \PDO */
     static protected $pdo;
@@ -45,7 +45,7 @@ class DB {
      * @param array $params Array of param => value pairs.
      * @return \PDOStatement Resulting PDOStatement.
      */
-    public function query($sql, $params = false, $class = false, $classArgs = false) {
+    public function query($sql, $params = null, $class = null, $classArgs = null) {
         if (!empty($class) && !class_exists($class)) {
             throw new \Exception("Class not found: $class");
         }
@@ -61,7 +61,6 @@ class DB {
                 } else {
                     $type = \PDO::PARAM_STR;
                 }
-                //echo '<li>';var_dump($value, $type);
                 $stmt->bindValue($placeholder, $value, $type);
             }
             if ($class) {
@@ -72,10 +71,7 @@ class DB {
             $result = $stmt->execute();
             if (!$result) {
                 throw new \PDOException('Unable to execute parameterised SQL: <code>' . $sql . '</code>');
-            } else {
-                //echo '<p>Executed: '.$sql.'<br />with '.  print_r($params, true).'</p>';
             }
-            //exit();
         } else {
             try {
                 if ($class) {
@@ -90,6 +86,43 @@ class DB {
 
         self::$queries[] = $sql;
         return $stmt;
+    }
+
+    public function install() {
+        $this->query("CREATE TABLE IF NOT EXISTS date_granularities ("
+                . " id INT(2) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
+                . " title VARCHAR(20) NOT NULL UNIQUE,"
+                . " php_format VARCHAR(50) NOT NULL UNIQUE"
+                . ")");
+        $this->query("INSERT IGNORE INTO date_granularities (id,title,php_format) VALUES"
+                . " (1, 'Exact', 'Y-m-d H:i:s'),"
+                . " (2, 'Day', 'j F Y'),"
+                . " (3, 'Month', 'F Y'),"
+                . " (4, 'Year', 'Y'),"
+                . " (5, 'Circa', '\\c. Y')");
+        $this->query("CREATE TABLE IF NOT EXISTS items ("
+                . " id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
+                . " title VARCHAR(100) NOT NULL UNIQUE,"
+                . " date DATE NULL DEFAULT NULL,"
+                . " date_granularity INT(2) UNSIGNED NOT NULL DEFAULT 1,"
+                . "     FOREIGN KEY (date_granularity) REFERENCES date_granularities (id),"
+                . " description TEXT NULL DEFAULT NULL,"
+                . " auth_level INT(2) UNSIGNED NOT NULL DEFAULT 0"
+                . ")");
+        $this->query("CREATE TABLE IF NOT EXISTS keywords ("
+                . " id INT(5) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
+                . " title VARCHAR(200) NOT NULL UNIQUE"
+                . ")");
+        $this->query("CREATE TABLE IF NOT EXISTS item_keywords ("
+                . " item INT(10) UNSIGNED NOT NULL,"
+                . "     FOREIGN KEY (item) REFERENCES items (id),"
+                . " keyword INT(5) UNSIGNED NOT NULL,"
+                . "     FOREIGN KEY (keyword) REFERENCES keywords (id),"
+                . " PRIMARY KEY (item, keyword)"
+                . ")");
+        if (!file_exists(\App\App::datadir())) {
+            mkdir(\App\App::datadir(), 0600, true);
+        }
     }
 
 }

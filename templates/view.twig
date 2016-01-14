@@ -2,11 +2,11 @@
 
 {% block content %}
 
-    <p><a href="{{baseurl}}/{{item.id}}/edit">[Edit]</a></p>
+    <p><a href="{{baseurl}}/{{item.getId}}/edit">[Edit]</a></p>
 
-    <p>{{item.dateFormatted}}</p>
+    <p>Date: {{item.getDate}}</p>
 
-    {{item.description}}
+    {{item.getDescription}}
 
     <ol id="keywords">
         {% for keyword in keywords %}
