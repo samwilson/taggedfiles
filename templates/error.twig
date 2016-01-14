@@ -5,7 +5,7 @@
 
     {% if mode=='development' %}
     <h2>Trace</h2>
-    <table class="full-width">
+    <table class="full-width table">
         {% for line in e.getTrace() %}
         <tr>
             <td>{{line.file}}</td>

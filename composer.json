@@ -13,9 +13,13 @@
         "phayes/geophp": "1.*",
         "vlucas/phpdotenv": "2.*",
         "codeguy/upload": "1.*",
-        "league/route": "1.*"
+        "league/route": "1.*",
+        "eternicode/bootstrap-datepicker": "^1.5"
     },
     "require-dev": {
         "phpunit/phpunit": "*"
+    },
+    "config": {
+        "component-dir": "assets/components"
     }
 }

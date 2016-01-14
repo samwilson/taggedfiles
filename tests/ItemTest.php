@@ -10,8 +10,8 @@ class ItemTest extends \PHPUnit_Framework_TestCase {
     public function setUp() {
         $this->db = new App\Db();
         $this->db->query("SET FOREIGN_KEY_CHECKS=0");
-        $this->db->query("DROP TABLE `keywords`");
-        $this->db->query("DROP TABLE `items`");
+        $this->db->query("DROP TABLE IF EXISTS `keywords`");
+        $this->db->query("DROP TABLE IF EXISTS `items`");
         $this->db->query("SET FOREIGN_KEY_CHECKS=1");
         $this->db->install();
     }

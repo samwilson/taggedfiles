@@ -10,6 +10,11 @@ if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
 require __DIR__ . '/vendor/autoload.php';
 
 /**
+ * Exception handler.
+ */
+set_exception_handler(['App\App', 'exceptionHandler']);
+
+/**
  * Environment.
  */
 if (!file_exists(__DIR__ . '/.env')) {
@@ -24,7 +29,6 @@ $dotenv->required(['DB_NAME', 'DB_USER', 'DB_PASS']);
  * Routes.
  */
 $router = new League\Route\RouteCollection;
-
 $router->addRoute('GET', '/{file:.*\.(?:css|js)}', 'App\Controllers\AssetsController::css');
 $router->addRoute('GET', '/install', 'App\Controllers\InstallController::install');
 $router->addRoute('POST', '/install', 'App\Controllers\InstallController::run');
@@ -34,17 +38,10 @@ $router->addRoute('POST', '/save', 'App\Controllers\HomeController::save');
 $router->addRoute('GET', '/{id:number}', 'App\Controllers\HomeController::view');
 $router->addRoute('GET', '/{id:number}/edit', 'App\Controllers\HomeController::edit');
 
+/**
+ * Dispatch.
+ */
 $dispatcher = $router->getDispatcher();
 $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
-try {
-    $response = $dispatcher->dispatch($request->getMethod(), $request->getPathInfo());
-} catch (\League\Route\Http\Exception\NotFoundException $notFound) {
-    $response = new \Symfony\Component\HttpFoundation\Response('Not Found', 404);
-} catch (\Exception $e) {
-    $template = new \App\Template('error.twig');
-    $template->title = 'Error';
-    $template->message('error', $e->getMessage());
-    $template->e = $e;
-    $response = new \Symfony\Component\HttpFoundation\Response($template->render());
-}
+$response = $dispatcher->dispatch($request->getMethod(), $request->getPathInfo());
 $response->send();

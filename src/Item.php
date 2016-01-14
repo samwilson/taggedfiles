@@ -56,6 +56,7 @@ class Item {
             $this->db->query($sql, $data);
             $id = $data['id'];
         } else {
+            unset($data['id']);
             $sql = "INSERT INTO items $setClause";
             $this->db->query($sql, $data);
             $id = $this->db->lastInsertId();
@@ -72,8 +73,16 @@ class Item {
         $keywordSql = 'SELECT k.id, k.title '
             . ' FROM item_keywords ik JOIN keywords k ON (ik.keyword=k.id) '
             . ' WHERE ik.item=:id';
-        $params = ['id' => $this->get('id')];
+        $params = ['id' => $this->getId()];
         return $this->db->query($keywordSql, $params)->fetchAll();
+    }
+
+    public function getKeywordsString() {
+        $out = [];
+        foreach ($this->getKeywords() as $keyword) {
+            $out[] = $keyword->title;
+        }
+        return join(', ', $out);
     }
 
     public function getId() {

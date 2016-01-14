@@ -2,40 +2,45 @@
 
 {% block content %}
 
-    <form action="{{baseurl}}/save" method="post" enctype="multipart/form-data">
-        <p>
+    <form action="{{baseurl}}/save" method="post" enctype="multipart/form-data" class="form">
+        <p class="form-group">
             <label for="title">Title:</label>
-            <input type="text" id="title" name="title" value="{{item.getTitle|raw}}" />
+            <input type="text" id="title" name="title" value="{{item.getTitle|raw}}" class="form-control" />
         </p>
         <p>
             <label>Upload:</label>
-            <input type="file" id="file" name="file" />
+            <input type="file" id="file" name="file" class="form-control" />
         </p>
         <p>
             <label for="keywords">Keywords:</label>
-            <input type="text" id="keywords" name="keywords" value="{{item.getKeywords}}" />
+            {{item.getKeywordsString}}
+            <input type="text" id="keywords" name="keywords" value="{{item.getKeywordsString}}" class="form-control" />
         </p>
-        <p>
-            <label>Date:</label>
-            <input type="text" name="date" value="{{item.getDate}}" />
-            <label>Granularity:</label>
-            <select name="date_granularity">
-            {%for g in item.getDateGranularities %}
-                <option value="{{g.id}}" {% if g.id == item.getDateGranularity %}selected{% endif %}>
-                    {{g.title}}
-                </option>
-            {% endfor %}
-            </select>
-        </p>
+        <div class="row">
+            <div class="col-md-6">
+                <label>Date:</label>
+                <input type="text" name="date" value="{{item.getDate}}" class="form-control datepicker" />
+            </div>
+            <div class="col-md-6">
+                <label>Granularity:</label>
+                <select name="date_granularity" class="form-control">
+                {%for g in item.getDateGranularities %}
+                    <option value="{{g.id}}" {% if g.id == item.getDateGranularity %}selected{% endif %}>
+                        {{g.title}}
+                    </option>
+                {% endfor %}
+                </select>
+            </div>
+        </div>
         <p>
             <label for="description">Description:</label>
-            <textarea id="description" name="description">{{item.getDescription}}</textarea>
+            <textarea id="description" name="description" class="form-control" rows="10">{{item.getDescription}}</textarea>
         </p>
         <p>
-            <input type="submit" value="Save" />
+            <input type="submit" value="Save" class="btn btn-primary" />
             {% if item %}
                 <input type="hidden" name="id" value="{{item.getId}}" />
-                <a href="{{baseurl}}/{{item.id}}">Cancel</a>
+                <a href="{{baseurl}}/{{item.id}}" class="btn btn-default">Cancel</a>
             {% endif %}
         </p>
     </form>

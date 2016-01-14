@@ -46,4 +46,12 @@ class App {
         return ($env) ? $env : $default;
     }
 
+    public static function exceptionHandler(\Exception $exception) {
+        $template = new \App\Template('error.twig');
+        $template->title = 'Error';
+        $template->message('danger', $exception->getMessage());
+        $template->e = $exception;
+        $template->render(true);
+    }
+
 }

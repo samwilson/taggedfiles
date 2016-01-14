@@ -6,28 +6,55 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{{title}} :: {{site_title}}</title>
-        <link rel="stylesheet" href="//cdn.rawgit.com/mblode/marx/master/css/marx.min.css">
+        <link rel="stylesheet" type="text/css" href="{{baseurl}}/assets/components/bootstrap/css/bootstrap.min.css?ver={{app_version}}" />
+        <link rel="stylesheet" type="text/css" href="{{baseurl}}/assets/components/bootstrap-datepicker/bootstrap-datepicker-built.min.css?ver={{app_version}}" />
         <link rel="stylesheet" type="text/css" href="{{baseurl}}/all.css?ver={{app_version}}" />
     </head>
 
     <body>
-        <main>
-
-            <header>
-                <nav>
-                    <ul>
-                        <li><a href="{{baseurl}}">Home</a></li>
-                        <li><a href="{{baseurl}}/search">Search</a></li>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{{baseurl}}/">{{site_title}}</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
                         <li><a href="{{baseurl}}/create">Create</a></li>
+                        <li><a href="{{baseurl}}/keywords">Keywords</a></li>
                     </ul>
-                </nav>
-            </header>
+                    <ul class="nav navbar-nav navbar-right">
+                        <form class="navbar-form navbar-left" role="search" action="{{baseurl}}/search" method="get">
+                            <div class="form-group">
+                                <input type="text" name="s" class="form-control" placeholder="Search">
+                            </div>
+                        </form>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                Users <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{baseurl}}/login">Log in</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+
+        <main class="container">
 
             <div id="content">
                 <h1>
                     {{title|raw}}
                     {% if subtitle %}
-                        <span class="subtitle">{{subtitle}}</span>
+                        <small class="subtitle">{{subtitle}}</small>
                     {% endif %}
                 </h1>
 
@@ -58,7 +85,9 @@
             </div>
         {% endif %}
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> 
+        <script src="{{baseurl}}/assets/components/jquery/jquery.min.js"></script>
+        <script src="{{baseurl}}/assets/components/bootstrap/js/bootstrap.min.js"></script>
+        <script src="{{baseurl}}/assets/components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
         <script src="{{baseurl}}/app.js?ver={{app_version}}"></script>
     </body>
 </html>
