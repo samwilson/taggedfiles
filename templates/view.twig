@@ -2,16 +2,21 @@
 
 {% block content %}
 
-    <p><a href="{{baseurl}}/{{item.getId}}/edit">[Edit]</a></p>
+    <ul class="list-inline">
+        {% if item.getDate %}
+        <li>{{item.getDateFormatted}}</li>
+        {% endif %}
+        <li><a href="{{baseurl}}/{{item.getId}}/edit">Edit</a></li>
+    </ul>
 
-    <p>Date: {{item.getDate}}</p>
 
     {{item.getDescription}}
 
-    <ol id="keywords">
+    <ol id="keywords" class="list-inline">
         {% for keyword in keywords %}
-            <li><a href="{{baseurl}}/+{{keyword.id}}">{{keyword.title}}</a></li>
+            <li><a href="{{baseurl}}/+{{keyword.id}}" class="label label-default">{{keyword.title}}</a></li>
         {% endfor %}
     </ol>
 
+    
 {% endblock %}

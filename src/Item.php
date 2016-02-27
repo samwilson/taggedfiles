@@ -32,37 +32,91 @@ class Item {
         $this->data = $this->db->query($sql, $params)->fetch();
     }
 
-    public function save($data) {
-        if (empty($data['title'])) {
-            $data['title'] = 'Untitled';
+    /**
+     * Save an item's data.
+     *
+     * @param string[] $medatdata Array of metadata pairs.
+     * @param string $keywordsString CSV string of keywords.
+     * @param string $filename The full filesystem path to a file to attach to this Item.
+     * @param string $fileContents A string to treat as the contents of a file.
+     */
+    public function save($medatdata, $keywordsString = null, $filename = null, $fileContents = null) {
+        if (empty($medatdata['title'])) {
+            $medatdata['title'] = 'Untitled';
         }
-        if (empty($data['description'])) {
-            $data['description'] = null;
+        if (empty($medatdata['description'])) {
+            $medatdata['description'] = null;
         }
-        if (empty($data['date'])) {
-            $data['date'] = null;
+        if (empty($medatdata['date'])) {
+            $medatdata['date'] = null;
         }
-        if (empty($data['date_granularity'])) {
-            $data['date_granularity'] = self::DATE_GRANULARITY_DEFAULT;
+        if (empty($medatdata['date_granularity'])) {
+            $medatdata['date_granularity'] = self::DATE_GRANULARITY_DEFAULT;
         }
-        if (empty($data['auth_level'])) {
-            $data['auth_level'] = 0;
+        if (empty($medatdata['auth_level'])) {
+            $medatdata['auth_level'] = 0;
         }
         $setClause = 'SET title=:title, description=:description, date=:date, '
             . ' date_granularity=:date_granularity, auth_level=:auth_level ';
+
+        // Start a transaction. End after the key words and files have been written.
         $this->db->query('BEGIN');
-        if (isset($data['id']) && is_numeric($data['id'])) {
+
+        if (isset($medatdata['id']) && is_numeric($medatdata['id'])) {
+            // Update?
             $sql = "UPDATE items $setClause WHERE id=:id";
-            $this->db->query($sql, $data);
-            $id = $data['id'];
+            $this->db->query($sql, $medatdata);
+            $id = $medatdata['id'];
         } else {
-            unset($data['id']);
+            // Or insert?
+            unset($medatdata['id']);
             $sql = "INSERT INTO items $setClause";
-            $this->db->query($sql, $data);
+            $this->db->query($sql, $medatdata);
             $id = $this->db->lastInsertId();
         }
-        $this->db->query('COMMIT');
         $this->load($id);
+
+        // Save keywords.
+        if ($keywordsString) {
+            $this->db->query("DELETE FROM item_keywords WHERE item=:id", ['id' => $id]);
+            $keywords = array_map('trim', array_unique(str_getcsv($keywordsString)));
+            foreach ($keywords as $kwd) {
+                $this->db->query("INSERT IGNORE INTO keywords SET title=:title", ['title' => $kwd]);
+                $selectKeywordId = "SELECT id FROM keywords WHERE title LIKE :title";
+                $keywordId = $this->db->query($selectKeywordId, ['title' => $kwd])->fetchColumn();
+                $insertJoin = "INSERT IGNORE INTO item_keywords SET item=:item, keyword=:keyword";
+                $this->db->query($insertJoin, ['item' => $id, 'keyword' => $keywordId]);
+            }
+        }
+
+        if (!empty($fileContents)) {
+            $filesystem = App::getFilesystem();
+            $filesystem->put("storage://".$this->getFilePath(), $fileContents);
+        }
+
+        // Save file.
+        if ($filename) {
+            $filesystem = App::getFilesystem();
+            $stream = fopen($filename, 'r+');
+            $filesystem->putStream("storage://".$this->getFilePath(), $stream);
+            fclose($stream);
+        }
+
+        // End the transaction and reload the data from the DB.
+        $this->db->query('COMMIT');
+    }
+
+    /**
+     * Get the path to a version of the attached file.
+     * Never has a leading slash, and the last component is the filename.
+     * @return string
+     */
+    public function getFilePath($version = 1) {
+        if (!is_int($version)) {
+            throw new Exception("Version must be an integer ('$version' was given)");
+        }
+        $hash = md5($this->getId());
+        return $hash[0] . $hash[1] . '/' . $hash[2] . $hash[3] . '/v' . $version;
     }
 
     public function getDateGranularities() {
@@ -72,7 +126,8 @@ class Item {
     public function getKeywords() {
         $keywordSql = 'SELECT k.id, k.title '
             . ' FROM item_keywords ik JOIN keywords k ON (ik.keyword=k.id) '
-            . ' WHERE ik.item=:id';
+            . ' WHERE ik.item=:id '
+            . ' ORDER BY k.title ASC ';
         $params = ['id' => $this->getId()];
         return $this->db->query($keywordSql, $params)->fetchAll();
     }

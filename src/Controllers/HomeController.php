@@ -6,6 +6,7 @@ use App\App;
 use App\Item;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class HomeController {
 
@@ -52,25 +53,19 @@ class HomeController {
 
     public function save(Request $request, Response $response, array $args) {
         $_POST = array_filter($_POST, 'trim');
-        $params = array(
+        $metadata = array(
             'id' => filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT),
-            'title' => filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING),
-            'description' => filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING),
-            'date' => filter_input(INPUT_POST, 'date', FILTER_SANITIZE_STRING),
+            'title' => filter_input(INPUT_POST, 'title'),
+            'description' => filter_input(INPUT_POST, 'description'),
+            'date' => filter_input(INPUT_POST, 'date'),
             'date_granularity' => filter_input(INPUT_POST, 'date_granularity', FILTER_SANITIZE_NUMBER_INT),
             'auth_level' => filter_input(INPUT_POST, 'auth_level', FILTER_SANITIZE_NUMBER_INT),
         );
+        $keywords = filter_input(INPUT_POST, 'keywords');
         $item = new \App\Item();
-        $item->save($params);
+        $item->save($metadata, $keywords, $_FILES['file']['tmp_name']);
 
-        // Save the file.
-//        if ($_FILE['file']) {
-//            $storage = new \Upload\Storage\FileSystem(\App\App::datadir());
-//            $file = new \Upload\File('file', $storage);
-//            $file->upload("file");
-//        }
-        //$this->db->query('COMMIT');
-        return new \Symfony\Component\HttpFoundation\RedirectResponse(App::baseurl() . '/' . $item->getId());
+        return new RedirectResponse(App::baseurl() . '/' . $item->getId());
     }
 
 }

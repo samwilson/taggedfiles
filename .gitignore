@@ -4,3 +4,5 @@
 /data
 /phpunit.xml
 /assets/components/
+/.htaccess
+/config.php

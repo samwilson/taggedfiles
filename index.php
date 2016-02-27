@@ -37,6 +37,8 @@ $router->addRoute('GET', '/create', 'App\Controllers\HomeController::edit');
 $router->addRoute('POST', '/save', 'App\Controllers\HomeController::save');
 $router->addRoute('GET', '/{id:number}', 'App\Controllers\HomeController::view');
 $router->addRoute('GET', '/{id:number}/edit', 'App\Controllers\HomeController::edit');
+$router->addRoute('GET', '/login', 'App\Controllers\UserController::loginForm');
+$router->addRoute('POST', '/login', 'App\Controllers\UserController::login');
 
 /**
  * Dispatch.

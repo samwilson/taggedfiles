@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<ruleset name="Archorgau">
+    <description>Sniffs for the coding standards of Archorgau</description>
+
+    <!--
+      About this file:
+      https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml
+    -->
+
+    <rule ref="PSR2" />
+    <file>./</file>
+    <exclude-pattern>./data/*</exclude-pattern>
+    <exclude-pattern>./vendor/*</exclude-pattern>
+
+</ruleset>

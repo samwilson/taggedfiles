@@ -13,6 +13,7 @@
         "phayes/geophp": "1.*",
         "vlucas/phpdotenv": "2.*",
         "codeguy/upload": "1.*",
+        "league/flysystem": "1.*",
         "league/route": "1.*",
         "eternicode/bootstrap-datepicker": "^1.5"
     },

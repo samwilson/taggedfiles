@@ -44,11 +44,25 @@ class ItemTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
+     * @testdox
+     * @test
+     */
+    public function keywords() {
+        $item = new Item();
+        $item->save([], 'one,two');
+        $this->assertCount(2, $item->getKeywords());
+    }
+
+    /**
      * @testdox An item can have a single file attached.
      * @test
      */
     public function files() {
         $item = new Item();
+        $item->save([], null, null, 'Test file contents.');
+        $this->assertEquals(1, $item->getId());
+        $this->assertEquals('c4/ca/v1', $item->getFilePath());
+        $this->assertFileExists(__DIR__.'/data/storage/c4/ca/v1');
     }
 
 }

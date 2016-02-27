@@ -1,9 +1,14 @@
 {% extends "base.twig" %}
 
 {% block content %}
-    <ul class="items">
+    <div class=" row">
         {% for item in items %}
-            <li><a href="{{baseurl}}/{{item.id}}">{{item.title|raw}}</a></li>
+        <div class="col-lg-2">
+            <a href="{{baseurl}}/{{item.id}}" class="thumbnail">
+                <h2>{{item.title|raw}}</h2>
+                {{item.getDescription}}
+            </a>
+        </div>
         {% endfor %}
-    </ul>
+    </div>
 {% endblock %}
