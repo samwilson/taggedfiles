@@ -47,6 +47,7 @@ class HomeController {
             $item = new Item($args['id']);
         }
         $template->item = $item;
+        $template->fileContents = $item->getFileContents();
         $response->setContent($template->render());
         return $response;
     }
@@ -63,7 +64,7 @@ class HomeController {
         );
         $keywords = filter_input(INPUT_POST, 'keywords');
         $item = new \App\Item();
-        $item->save($metadata, $keywords, $_FILES['file']['tmp_name']);
+        $item->save($metadata, $keywords, $_FILES['file']['tmp_name'], filter_input(INPUT_POST, 'file_contents'));
 
         return new RedirectResponse(App::baseurl() . '/' . $item->getId());
     }

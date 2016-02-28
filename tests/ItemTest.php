@@ -1,19 +1,22 @@
 <?php
 
 use App\Item;
+use App\App;
+use App\Db;
 
 class ItemTest extends \PHPUnit_Framework_TestCase {
 
-    /** @var App\Db */
+    /** @var \App\Db */
     protected $db;
 
     public function setUp() {
-        $this->db = new App\Db();
+        $this->db = new Db();
         $this->db->query("SET FOREIGN_KEY_CHECKS=0");
         $this->db->query("DROP TABLE IF EXISTS `keywords`");
         $this->db->query("DROP TABLE IF EXISTS `items`");
         $this->db->query("SET FOREIGN_KEY_CHECKS=1");
         $this->db->install();
+        App::deleteDir(__DIR__.'/tests');
     }
 
     /**
@@ -59,10 +62,21 @@ class ItemTest extends \PHPUnit_Framework_TestCase {
      */
     public function files() {
         $item = new Item();
+        // First version.
         $item->save([], null, null, 'Test file contents.');
-        $this->assertEquals(1, $item->getId());
-        $this->assertEquals('c4/ca/v1', $item->getFilePath());
+        $this->assertSame(1, $item->getId());
+        $this->assertSame('c4/ca/v1', $item->getFilePath());
         $this->assertFileExists(__DIR__.'/data/storage/c4/ca/v1');
+        $this->assertSame('Test file contents.', $item->getFileContents());
+        $this->assertSame(1, $item->getVersionCount());
+        // Second version.
+        $item->save(['id'=>1], null, null, 'New file contents.');
+        $this->assertSame(1, $item->getId());
+        $this->assertSame('c4/ca/v2', $item->getFilePath());
+        $this->assertFileExists(__DIR__.'/data/storage/c4/ca/v1');
+        $this->assertFileExists(__DIR__.'/data/storage/c4/ca/v2');
+        $this->assertSame('New file contents.', $item->getFileContents());
+        $this->assertSame('Test file contents.', $item->getFileContents(1));
     }
 
 }

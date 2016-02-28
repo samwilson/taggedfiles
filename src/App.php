@@ -58,10 +58,7 @@ class App {
      * @throws \Exception
      */
     public static function getFilesystem() {
-        if (!is_file(getenv('CONFIG_FILE'))) {
-            throw new \Exception("Config file not found: " . env('CONFIG_FILE'));
-        }
-        $config = require_once getenv('CONFIG_FILE');
+        $config = require CONFIG_FILE;
         $manager = new \League\Flysystem\MountManager();
         foreach ($config['filesystems'] as $name => $fsConfig) {
             $adapterName = '\\League\\Flysystem\\Adapter\\' . self::camelcase($fsConfig['type']);
@@ -89,4 +86,18 @@ class App {
         $template->render(true);
     }
 
+    /**
+     * Delete a directory and its contents.
+     * @link http://stackoverflow.com/a/8688278/99667
+     * @param $path
+     * @return bool
+     */
+    public static function deleteDir($path) {
+        if (empty($path)) {
+            return false;
+        }
+        return is_file($path) ?
+            @unlink($path) :
+            array_map([__CLASS__, __FUNCTION__], glob($path.'/*')) == @rmdir($path);
+    }
 }

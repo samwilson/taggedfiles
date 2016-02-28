@@ -2,47 +2,60 @@
 
 {% block content %}
 
-    <form action="{{baseurl}}/save" method="post" enctype="multipart/form-data" class="form">
-        <p class="form-group">
-            <label for="title">Title:</label>
-            <input type="text" id="title" name="title" value="{{item.getTitle}}" class="form-control" />
-        </p>
-        <p>
-            <label>Upload:</label>
-            <input type="file" id="file" name="file" class="form-control" />
-        </p>
-        <p>
-            <label for="keywords">Keywords:</label>
-            {{item.getKeywordsString}}
-            <input type="text" id="keywords" name="keywords" value="{{item.getKeywordsString}}" class="form-control" />
-        </p>
-        <div class="row">
-            <div class="col-md-6">
-                <label>Date:</label>
-                <input type="text" name="date" value="{{item.getDate}}" class="form-control datepicker" />
+<form action="{{baseurl}}/save" method="post" enctype="multipart/form-data" class="form">
+    <p class="form-group">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" value="{{item.getTitle}}" class="form-control" />
+    </p>
+    <p>
+        <label for="keywords">Keywords:</label>
+        {{item.getKeywordsString}}
+        <input type="text" id="keywords" name="keywords" value="{{item.getKeywordsString}}" class="form-control" />
+    </p>
+    <div class="row">
+        <div class="col-md-6">
+            <label>Date:</label>
+            <input type="text" name="date" value="{{item.getDate}}" class="form-control datepicker" />
+        </div>
+        <div class="col-md-6">
+            <label>Granularity:</label>
+            <select name="date_granularity" class="form-control">
+            {%for g in item.getDateGranularities %}
+                <option value="{{g.id}}" {% if g.id == item.getDateGranularity %}selected{% endif %}>
+                    {{g.title}}
+                </option>
+            {% endfor %}
+            </select>
+        </div>
+    </div>
+    <p>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" class="form-control" rows="5">{{item.getDescription}}</textarea>
+    </p>
+    <div id="fileContents">
+        <label for="fileContents">File contents:</label>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="active"><a href="#direct-entry" role="tab" data-toggle="tab">Direct text entry</a></li>
+          <li role="presentation"><a href="#upload" role="tab" data-toggle="tab">Upload</a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="direct-entry">
+                <textarea name="file_contents" id="fileContents" class="form-control" rows="20">{{fileContents}}</textarea>
             </div>
-            <div class="col-md-6">
-                <label>Granularity:</label>
-                <select name="date_granularity" class="form-control">
-                {%for g in item.getDateGranularities %}
-                    <option value="{{g.id}}" {% if g.id == item.getDateGranularity %}selected{% endif %}>
-                        {{g.title}}
-                    </option>
-                {% endfor %}
-                </select>
+            <div role="tabpanel" class="tab-pane" id="upload">
+                <input type="file" id="fileContents" name="file" class="form-control" />
             </div>
         </div>
-        <p>
-            <label for="description">Description:</label>
-            <textarea id="description" name="description" class="form-control" rows="10">{{item.getDescription}}</textarea>
-        </p>
-        <p>
-            <input type="submit" value="Save" class="btn btn-primary" />
-            {% if item %}
-                <input type="hidden" name="id" value="{{item.getId}}" />
-                <a href="{{baseurl}}/{{item.id}}" class="btn btn-default">Cancel</a>
-            {% endif %}
-        </p>
-    </form>
+    </div>
+    <p>
+        <input type="submit" value="Save" class="btn btn-primary" />
+        {% if item %}
+            <input type="hidden" name="id" value="{{item.getId}}" />
+            <a href="{{baseurl}}/{{item.id}}" class="btn btn-default">Cancel</a>
+        {% endif %}
+    </p>
+</form>
 
 {% endblock %}

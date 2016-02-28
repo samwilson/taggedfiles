@@ -14,10 +14,12 @@ class Db {
         if (self::$pdo) {
             return;
         }
-        $host = getenv('DB_HOST') ? getenv('DB_HOST') : 'localhost';
-        $dsn = "mysql:host=$host;dbname=" . getenv('DB_NAME');
+        $config = require CONFIG_FILE;
+        $dbConfig = $config['database'];
+        $host = isset($dbConfig['host']) ? $dbConfig['host'] : 'localhost';
+        $dsn = "mysql:host=$host;dbname=" . $dbConfig['database'];
         $attr = array(\PDO::ATTR_TIMEOUT => 10);
-        self::$pdo = new \PDO($dsn, getenv('DB_USER'), getenv('DB_PASS'), $attr);
+        self::$pdo = new \PDO($dsn, $dbConfig['user'], $dbConfig['password'], $attr);
         self::$pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->setFetchMode(\PDO::FETCH_OBJ);
     }

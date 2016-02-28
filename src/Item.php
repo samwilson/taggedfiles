@@ -10,7 +10,7 @@ class Item {
     /** @var \App\Db */
     private $db;
 
-    /** @var string[] */
+    /** @var \StdClass */
     private $data;
 
     public function __construct($id = null) {
@@ -91,7 +91,8 @@ class Item {
 
         if (!empty($fileContents)) {
             $filesystem = App::getFilesystem();
-            $filesystem->put("storage://".$this->getFilePath(), $fileContents);
+            $newVer = $this->getVersionCount() + 1;
+            $filesystem->put("storage://".$this->getFilePath($newVer), $fileContents);
         }
 
         // Save file.
@@ -107,16 +108,51 @@ class Item {
     }
 
     /**
+     * Get the contents of the file.
+     *
+     * @param integer $version Which file version to get.
+     * @return false|string
+     * @throws \Exception
+     */
+    public function getFileContents($version = null)
+    {
+        if (is_null($version)) {
+            $version = $this->getVersionCount();
+        }
+        $filesystem = App::getFilesystem();
+        $path = "storage://".$this->getFilePath($version);
+        if ($filesystem->has($path)) {
+            return $filesystem->read($path);
+        }
+    }
+
+    public function getVersionCount()
+    {
+        $filesystem = App::getFilesystem();
+        $out = $filesystem->getFilesystem('storage')->listContents($this->getHashedPath());
+        return count($out);
+    }
+
+    public function getHashedPath()
+    {
+        $hash = md5($this->getId());
+        return $hash[0] . $hash[1] . '/' . $hash[2] . $hash[3];
+    }
+
+    /**
      * Get the path to a version of the attached file.
      * Never has a leading slash, and the last component is the filename.
      * @return string
+     * @throws \Exception
      */
-    public function getFilePath($version = 1) {
-        if (!is_int($version)) {
-            throw new Exception("Version must be an integer ('$version' was given)");
+    public function getFilePath($version = null) {
+        if (is_null($version)) {
+            $version = $this->getVersionCount();
         }
-        $hash = md5($this->getId());
-        return $hash[0] . $hash[1] . '/' . $hash[2] . $hash[3] . '/v' . $version;
+        if (!is_int($version)) {
+            throw new \Exception("Version must be an integer ('$version' was given)");
+        }
+        return $this->getHashedPath() . '/v' . $version;
     }
 
     public function getDateGranularities() {
@@ -132,7 +168,8 @@ class Item {
         return $this->db->query($keywordSql, $params)->fetchAll();
     }
 
-    public function getKeywordsString() {
+    public function getKeywordsString()
+    {
         $out = [];
         foreach ($this->getKeywords() as $keyword) {
             $out[] = $keyword->title;
@@ -141,7 +178,7 @@ class Item {
     }
 
     public function getId() {
-        return isset($this->data->id) ? $this->data->id : null;
+        return isset($this->data->id) ? (int) $this->data->id : null;
     }
 
     public function getTitle() {

@@ -10,3 +10,4 @@ input#keywords { width:100% }*/
 /*div#queries { border:thin solid darkgoldenrod; border-width:thin 0; width:100%; clear:both; background-color:bisque }
 div#queries pre { margin:0 0.4em; padding:0; background-color:inherit }*/
 
+* { border-radius:0!important }

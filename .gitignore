@@ -6,3 +6,5 @@
 /assets/components/
 /.htaccess
 /config.php
+/tests/data
+

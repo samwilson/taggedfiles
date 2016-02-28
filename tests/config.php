@@ -1,6 +1,12 @@
 <?php
 
 return [
+    'database' => [
+        'host' => 'localhost',
+        'user' => 'root',
+        'password' => 'dev123dev',
+        'database' => 'archorgau_test',
+    ],
     'filesystems' => [
         'cache' => [
             'type' => 'local',

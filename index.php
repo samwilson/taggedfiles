@@ -26,6 +26,11 @@ $dotenv->load();
 $dotenv->required(['DB_NAME', 'DB_USER', 'DB_PASS']);
 
 /**
+ * Configuration file. When testing, the tests/config.php file is used instead.
+ */
+define('CONFIG_FILE', __DIR__ . '/config.php');
+
+/**
  * Routes.
  */
 $router = new League\Route\RouteCollection;
