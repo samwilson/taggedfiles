@@ -15,20 +15,13 @@ require __DIR__ . '/vendor/autoload.php';
 set_exception_handler(['App\App', 'exceptionHandler']);
 
 /**
- * Environment.
- */
-if (!file_exists(__DIR__ . '/.env')) {
-    echo "Please copy <code>.env.example</code> to <code>.env</code> and edit the values therein";
-    exit(1);
-}
-$dotenv = new Dotenv\Dotenv(__DIR__);
-$dotenv->load();
-$dotenv->required(['DB_NAME', 'DB_USER', 'DB_PASS']);
-
-/**
- * Configuration file. When testing, the tests/config.php file is used instead.
+ * Configuration file. When testing, the tests/config.php file is used.
  */
 define('CONFIG_FILE', __DIR__ . '/config.php');
+if (!file_exists(CONFIG_FILE)) {
+    echo "Please copy <code>config.example.php</code> to <code>config.php</code> and edit the values therein";
+    exit(1);
+}
 
 /**
  * Routes.
@@ -41,6 +34,8 @@ $router->addRoute('GET', '/', 'App\Controllers\HomeController::index');
 $router->addRoute('GET', '/create', 'App\Controllers\HomeController::edit');
 $router->addRoute('POST', '/save', 'App\Controllers\HomeController::save');
 $router->addRoute('GET', '/{id:number}', 'App\Controllers\HomeController::view');
+$router->addRoute('GET', '/{id:number}.png', 'App\Controllers\FileController::render');
+$router->addRoute('GET', '/{id:number}_{size}.png', 'App\Controllers\FileController::render');
 $router->addRoute('GET', '/{id:number}/edit', 'App\Controllers\HomeController::edit');
 $router->addRoute('GET', '/login', 'App\Controllers\UserController::loginForm');
 $router->addRoute('POST', '/login', 'App\Controllers\UserController::login');

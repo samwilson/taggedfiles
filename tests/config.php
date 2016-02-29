@@ -1,11 +1,12 @@
 <?php
 
 return [
+    'mode' => 'development',
     'database' => [
         'host' => 'localhost',
         'user' => 'root',
         'password' => 'dev123dev',
-        'database' => 'archorgau_test',
+        'database' => 'swidau_test',
     ],
     'filesystems' => [
         'cache' => [

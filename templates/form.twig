@@ -42,7 +42,7 @@
         <!-- Tab panes -->
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="direct-entry">
-                <textarea name="file_contents" id="fileContents" class="form-control" rows="20">{{fileContents}}</textarea>
+                <textarea name="file_contents" id="fileContents" class="form-control" rows="20">{% if item.isText() %}{{fileContents}}{% endif %}</textarea>
             </div>
             <div role="tabpanel" class="tab-pane" id="upload">
                 <input type="file" id="fileContents" name="file" class="form-control" />

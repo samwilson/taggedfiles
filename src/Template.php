@@ -47,6 +47,12 @@ class Template {
         ));
         $twig->addExtension(new \Twig_Extension_Debug());
 
+        // Mardown support.
+        $twig->addFilter('markdown', new \Twig_SimpleFilter('markdown',function ($text) {
+            $parsedown = new \Parsedown();
+            return $parsedown->text($text);
+        }));
+
         // Render.
         $string = $twig->render($this->template, $this->data);
         if ($echo) {

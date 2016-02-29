@@ -1,0 +1,15 @@
+language: php
+
+php:
+  - 5.5
+  - 5.6
+  - 7.0
+
+install:
+  - mysql -e 'create database swidau_test;'
+  - composer install
+  - echo -e "DB_USERNAME=root\nDB_PASSWORD=" > $TRAVIS_BUILD_DIR/.env
+
+script:
+  - phpunit
+  - $TRAVIS_BUILD_DIR/vendor/bin/phpcs --standard=$TRAVIS_BUILD_DIR/phpcs.xml

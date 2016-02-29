@@ -2,9 +2,7 @@
 /vendor
 /nbproject/private
 /data
-/phpunit.xml
 /assets/components/
 /.htaccess
 /config.php
 /tests/data
-

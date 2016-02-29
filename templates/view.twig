@@ -2,21 +2,27 @@
 
 {% block content %}
 
-    <ul class="list-inline">
-        {% if item.getDate %}
-        <li>{{item.getDateFormatted}}</li>
-        {% endif %}
-        <li><a href="{{baseurl}}/{{item.getId}}/edit">Edit</a></li>
-    </ul>
+    <div class="well">
+        <ul class="list-inline">
+            {% if item.getDate %}
+            <li>{{item.getDateFormatted}}</li>
+            {% endif %}
+            <li>{{item.getMimeType()}}</li>
+            <li><a href="{{baseurl}}/{{item.getId}}/edit">Edit</a></li>
+        </ul>
 
+        {{item.getDescription}}
 
-    {{item.getDescription}}
+        <ol id="keywords" class="list-inline">
+            <li>Keywords:</li>
+            {% for keyword in keywords %}
+                <li><a href="{{baseurl}}/+{{keyword.id}}" class="label label-default">{{keyword.title}}</a></li>
+            {% endfor %}
+        </ol>
+    </div>
 
-    <ol id="keywords" class="list-inline">
-        {% for keyword in keywords %}
-            <li><a href="{{baseurl}}/+{{keyword.id}}" class="label label-default">{{keyword.title}}</a></li>
-        {% endfor %}
-    </ol>
+    {% if item.getMimeType == 'text/plain' %}
+    {{item.getFileContents|markdown|raw}}
+    {% endif %}
 
-    
 {% endblock %}

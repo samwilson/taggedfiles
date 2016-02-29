@@ -32,6 +32,8 @@ class HomeController {
         $template->item = $item;
         $template->title = $item->getTitle();
         $template->keywords = $item->getKeywords();
+        $template->mime_type = $item->getMimeType();
+        // Return the template.
         $response->setContent($template->render());
         return $response;
     }

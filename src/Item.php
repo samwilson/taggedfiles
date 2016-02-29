@@ -89,9 +89,9 @@ class Item {
             }
         }
 
+        $newVer = $this->getVersionCount() + 1;
         if (!empty($fileContents)) {
             $filesystem = App::getFilesystem();
-            $newVer = $this->getVersionCount() + 1;
             $filesystem->put("storage://".$this->getFilePath($newVer), $fileContents);
         }
 
@@ -99,12 +99,32 @@ class Item {
         if ($filename) {
             $filesystem = App::getFilesystem();
             $stream = fopen($filename, 'r+');
-            $filesystem->putStream("storage://".$this->getFilePath(), $stream);
+            $filesystem->putStream("storage://".$this->getFilePath($newVer), $stream);
             fclose($stream);
         }
 
         // End the transaction and reload the data from the DB.
         $this->db->query('COMMIT');
+    }
+
+    /**
+     * 
+     * @param type $version
+     */
+    public function getMimeType($version = null) {
+        if (is_null($version)) {
+            $version = $this->getVersionCount();
+        }
+        $filesystem = App::getFilesystem();
+        $path = "storage://".$this->getFilePath($version);
+        return $filesystem->getMimetype($path);
+    }
+
+    /**
+     * Whether this file is a text file.
+     */
+    public function isText($version = null) {
+        return $this->getMimeType($version) === 'text/plain';
     }
 
     /**
@@ -126,6 +146,17 @@ class Item {
         }
     }
 
+    public function getFileStream($version = null) {
+        if (is_null($version)) {
+            $version = $this->getVersionCount();
+        }
+        $filesystem = App::getFilesystem();
+        $path = "storage://".$this->getFilePath($version);
+        if ($filesystem->has($path)) {
+            return $filesystem->readStream($path);
+        }
+    }
+
     public function getVersionCount()
     {
         $filesystem = App::getFilesystem();
@@ -136,7 +167,7 @@ class Item {
     public function getHashedPath()
     {
         $hash = md5($this->getId());
-        return $hash[0] . $hash[1] . '/' . $hash[2] . $hash[3];
+        return $hash[0].$hash[1].'/'.$hash[2].$hash[3].'/'.$this->getId();
     }
 
     /**
