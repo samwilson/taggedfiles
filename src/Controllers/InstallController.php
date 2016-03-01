@@ -2,22 +2,26 @@
 
 namespace App\Controllers;
 
+use App\Config;
+use App\Db;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class InstallController {
 
     public function install(Request $request, Response $response, array $args) {
-        $response = new \Symfony\Component\HttpFoundation\Response();
         $template = new \App\Template('install.twig');
         $template->title = 'Install';
-        return \Symfony\Component\HttpFoundation\Response::create($template->render());
+        $response->setContent($template->render());
+        return $response;
     }
 
     public function run(Request $request, Response $response, array $args) {
-        $db = new \App\Db();
+        $db = new Db();
         $db->install();
-        return new \Symfony\Component\HttpFoundation\RedirectResponse(\App\App::baseurl());
+        $config = new Config();
+        return new RedirectResponse($config->baseUrl());
     }
 
 }

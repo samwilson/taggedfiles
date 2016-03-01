@@ -16,11 +16,12 @@ class Template {
 
     public function __construct($template) {
         $this->template = $template;
+        $config = new Config();
         $this->data['app_title'] = App::name() . ' ' . App::version();
         $this->data['app_version'] = App::version();
-        $this->data['mode'] = App::mode();
-        $this->data['baseurl'] = App::baseurl();
-        $this->data['site_title'] = App::env('SITE_TITLE', 'A Swidau Site');
+        $this->data['mode'] = $config->mode();
+        $this->data['baseurl'] = $config->baseUrl();
+        $this->data['site_title'] = $config->siteTitle();
 
         if (!isset($_SESSION)) {
             session_start();

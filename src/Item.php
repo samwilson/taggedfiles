@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Intervention\Image\ImageManager;
+
 class Item {
 
     /** The default date granularity is 'exact' (ID 1). */
@@ -90,12 +92,13 @@ class Item {
         }
 
         $newVer = $this->getVersionCount() + 1;
+        // Save file contents.
         if (!empty($fileContents)) {
             $filesystem = App::getFilesystem();
             $filesystem->put("storage://".$this->getFilePath($newVer), $fileContents);
         }
 
-        // Save file.
+        // Save uploaded file.
         if ($filename) {
             $filesystem = App::getFilesystem();
             $stream = fopen($filename, 'r+');
@@ -108,10 +111,14 @@ class Item {
     }
 
     /**
-     * 
-     * @param type $version
+     * Get the file's mime type, or false if there's no file.
+     * @param integer $version
+     * @return integer|false
      */
     public function getMimeType($version = null) {
+        if (!$this->getId()) {
+            return false;
+        }
         if (is_null($version)) {
             $version = $this->getVersionCount();
         }
@@ -127,6 +134,10 @@ class Item {
         return $this->getMimeType($version) === 'text/plain';
     }
 
+    public function isImage($version = null) {
+        return 0 === strpos($this->getMimeType($version), 'image');
+    }
+
     /**
      * Get the contents of the file.
      *
@@ -136,6 +147,9 @@ class Item {
      */
     public function getFileContents($version = null)
     {
+        if (!$this->getId()) {
+            return;
+        }
         if (is_null($version)) {
             $version = $this->getVersionCount();
         }
@@ -144,6 +158,49 @@ class Item {
         if ($filesystem->has($path)) {
             return $filesystem->read($path);
         }
+    }
+
+    /**
+     * Get a local filesystem path to the requested file.
+     *
+     * @param string $format
+     * @param null $version
+     * @throws \Exception
+     */
+    public function getCachePath($format = 'o', $version = null)
+    {
+        if (is_null($version)) {
+            $version = $this->getVersionCount();
+        }
+        $filesystem = App::getFilesystem();
+        $path = $this->getFilePath($version);
+
+        // Get local filesystem root.
+        $config = new Config();
+        $filesystems = $config->filesystems();
+        $root = realpath($filesystems['cache']['root']);
+
+        // First of all copy the original file to the cache.
+        $filenameOrig = $this->getId() . '_v' . $version . '_o';
+        if (!$filesystem->has("cache://" . $filenameOrig)) {
+            $filesystem->copy("storage://$path", "cache://" . $filenameOrig);
+        }
+        $pathnameOrig = $root.'/'.$filenameOrig;
+        if ($format === 'o') {
+            return $pathnameOrig;
+        }
+
+        // Then create smaller version if required.
+        $filenameDisplay = $this->getId() . '_v' . $version . '_t';
+        $pathnameDisplay = $root.'/'.$filenameDisplay;
+        $manager = new ImageManager();
+        $image = $manager->make($pathnameOrig);
+        $image->fit(200);
+        $image->save($pathnameDisplay);
+
+        clearstatcache(false, $pathnameDisplay);
+
+        return $pathnameDisplay;
     }
 
     public function getFileStream($version = null) {

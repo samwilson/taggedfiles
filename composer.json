@@ -19,7 +19,8 @@
         "intervention/image": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "*"
+        "phpunit/phpunit": "*",
+        "symfony/var-dumper": "^3.0"
     },
     "config": {
         "component-dir": "assets/components"

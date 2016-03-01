@@ -2,6 +2,10 @@
 
 namespace App;
 
+use App\Template;
+use League\Flysystem\Filesystem;
+use League\Flysystem\MountManager;
+
 class App {
 
     public static function name() {
@@ -20,28 +24,6 @@ class App {
     }
 
     /**
-     * Get the site's base URL. Never has a trailing slash.
-     * @return string
-     */
-    public static function baseurl() {
-        $baseurl = self::env('BASEURL', '/swidau');
-        return rtrim($baseurl, '/');
-    }
-
-    /**
-     * Get the site's data directory. Never has a trailing slash.
-     * @return string
-     */
-    public static function datadir() {
-        $datadirEnv = self::env('DATADIR', __DIR__ . '/../data');
-        $datadir = rtrim($datadirEnv, '/');
-        if (!is_dir($datadir)) {
-            throw new \Exception("Data directory is not a directory: $datadir");
-        }
-        return $datadir;
-    }
-
-    /**
      * Turn a spaced or underscored string to camelcase (with no spaces or underscores).
      *
      * @param string $str
@@ -54,32 +36,23 @@ class App {
     /**
      * Get the filesystem manager.
      *
-     * @return \League\Flysystem\MountManager
+     * @return MountManager
      * @throws \Exception
      */
     public static function getFilesystem() {
-        $config = require CONFIG_FILE;
-        $manager = new \League\Flysystem\MountManager();
-        foreach ($config['filesystems'] as $name => $fsConfig) {
+        $config = new Config();
+        $manager = new MountManager();
+        foreach ($config->filesystems() as $name => $fsConfig) {
             $adapterName = '\\League\\Flysystem\\Adapter\\' . self::camelcase($fsConfig['type']);
             $adapter = new $adapterName($fsConfig['root']);
-            $fs = new \League\Flysystem\Filesystem($adapter);
+            $fs = new Filesystem($adapter);
             $manager->mountFilesystem($name, $fs);
         }
         return $manager;
     }
 
-    public static function mode() {
-        return self::env('MODE', 'production');
-    }
-
-    public static function env($name, $default) {
-        $env = getenv($name);
-        return ($env) ? $env : $default;
-    }
-
     public static function exceptionHandler(\Exception $exception) {
-        $template = new \App\Template('error.twig');
+        $template = new Template('error.twig');
         $template->title = 'Error';
         $template->message('danger', $exception->getMessage());
         $template->e = $exception;

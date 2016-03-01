@@ -25,4 +25,8 @@
     {{item.getFileContents|markdown|raw}}
     {% endif %}
 
+    {% if item.isImage() %}
+        <p><a href="{{baseurl}}/{{item.id}}_o.png"><img src="{{baseurl}}/{{item.id}}_t.png" /></a></p>
+    {% endif %}
+
 {% endblock %}

@@ -122,9 +122,6 @@ class Db {
                 . "     FOREIGN KEY (keyword) REFERENCES keywords (id),"
                 . " PRIMARY KEY (item, keyword)"
                 . ")");
-        if (!file_exists(\App\App::datadir())) {
-            mkdir(\App\App::datadir(), 0600, true);
-        }
     }
 
 }

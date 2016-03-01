@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\App;
+use App\Config;
 use App\Item;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -68,7 +69,8 @@ class HomeController {
         $item = new \App\Item();
         $item->save($metadata, $keywords, $_FILES['file']['tmp_name'], filter_input(INPUT_POST, 'file_contents'));
 
-        return new RedirectResponse(App::baseurl() . '/' . $item->getId());
+        $config = new Config();
+        return new RedirectResponse($config->baseUrl() . '/' . $item->getId());
     }
 
 }

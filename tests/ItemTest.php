@@ -3,6 +3,7 @@
 use App\Item;
 use App\App;
 use App\Db;
+use App\Config;
 
 class ItemTest extends \PHPUnit_Framework_TestCase {
 
@@ -86,7 +87,10 @@ class ItemTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($item2->isText());
     }
 
-    public function getLocalFile() {
+    public function testLocalCacheFile() {
+        $config = new Config();
+        $this->assertArrayHasKey('cache', $config->filesystems());
+
         $item = new Item();
         $item->save([], null, null, 'Test file contents.');
         $this->assertSame(__DIR__.'/data/cache/1_v1_o', $item->getCachePath());

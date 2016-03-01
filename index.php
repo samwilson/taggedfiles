@@ -26,7 +26,7 @@ if (!file_exists(CONFIG_FILE)) {
 /**
  * Routes.
  */
-$router = new League\Route\RouteCollection;
+$router = new League\Route\RouteCollection();
 $router->addRoute('GET', '/{file:.*\.(?:css|js)}', 'App\Controllers\AssetsController::css');
 $router->addRoute('GET', '/install', 'App\Controllers\InstallController::install');
 $router->addRoute('POST', '/install', 'App\Controllers\InstallController::run');
@@ -36,6 +36,7 @@ $router->addRoute('POST', '/save', 'App\Controllers\HomeController::save');
 $router->addRoute('GET', '/{id:number}', 'App\Controllers\HomeController::view');
 $router->addRoute('GET', '/{id:number}.png', 'App\Controllers\FileController::render');
 $router->addRoute('GET', '/{id:number}_{size}.png', 'App\Controllers\FileController::render');
+$router->addRoute('GET', '/{id:number}_v{version}_{size}.png', 'App\Controllers\FileController::render');
 $router->addRoute('GET', '/{id:number}/edit', 'App\Controllers\HomeController::edit');
 $router->addRoute('GET', '/login', 'App\Controllers\UserController::loginForm');
 $router->addRoute('POST', '/login', 'App\Controllers\UserController::login');
@@ -46,4 +47,5 @@ $router->addRoute('POST', '/login', 'App\Controllers\UserController::login');
 $dispatcher = $router->getDispatcher();
 $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
 $response = $dispatcher->dispatch($request->getMethod(), $request->getPathInfo());
+$response->prepare($request);
 $response->send();

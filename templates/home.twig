@@ -6,7 +6,8 @@
         <div class="col-lg-2">
             <a href="{{baseurl}}/{{item.id}}" class="thumbnail">
                 <h2>{{item.title|raw}}</h2>
-                {{item.getDescription}}
+                <p><img src="{{baseurl}}/{{item.id}}_t.png" class="img-responsive" /></p>
+                {{item.description|markdown|raw}}
             </a>
         </div>
         {% endfor %}

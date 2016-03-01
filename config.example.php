@@ -1,11 +1,12 @@
 <?php
 
 return [
+    'site_title' => 'Your Site Name Here',
     'database' => [
         'host' => 'localhost',
-        'user' => 'archorgau',
+        'user' => 'swidau',
         'password' => '',
-        'database' => 'archorgau',
+        'database' => 'swidau',
     ],
     'filesystems' => [
         'cache' => [
