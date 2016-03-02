@@ -9,7 +9,7 @@ use League\Flysystem\MountManager;
 class App {
 
     public static function name() {
-        return 'Archorgau';
+        return 'Swidau';
     }
 
     /**
@@ -54,7 +54,7 @@ class App {
     public static function exceptionHandler(\Exception $exception) {
         $template = new Template('error.twig');
         $template->title = 'Error';
-        $template->message('danger', $exception->getMessage());
+        $template->alert('danger', $exception->getMessage());
         $template->e = $exception;
         $template->render(true);
     }

@@ -2,16 +2,22 @@
 
 {% block content %}
 
-<form action="{{baseurl}}/login" method="post">
+<div class="row">
+<form action="{{baseurl}}/login" method="post" class="col-lg-3">
     <p>
-        <label>Username: <input type="text" name="username" class="form-control" /></label>
+        <label class="control-label" for="name">Name:</label>
+        <input type="text" id="name" name="name" class="form-control {%if name is empty%}focus-me{%endif%}" value="{{name}}" />
     </p>
     <p>
-        <label>Password: <input type="password" name="password" class="form-control" /></label>
+        <label class="control-label" for="password">Password:</label>
+        <input type="password" id="password" name="password" class="form-control {%if name is not empty%}focus-me{%endif%}" />
     </p>
     <p>
-        <input type="submit" value="Log in" class="btn btn-success" />
+        <input type="submit" value="Log in" name="login" class="btn btn-success" />
+        <input type="submit" value="Remind" name="remind" class="btn btn-default nav-only" />
+        <input type="submit" value="Register" name="register" class="btn btn-default nav-only" />
     </p>
 </form>
+</div>
 
 {% endblock %}

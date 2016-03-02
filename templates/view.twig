@@ -13,10 +13,10 @@
 
         {{item.getDescription}}
 
-        <ol id="keywords" class="list-inline">
-            <li>Keywords:</li>
-            {% for keyword in keywords %}
-                <li><a href="{{baseurl}}/+{{keyword.id}}" class="label label-default">{{keyword.title}}</a></li>
+        <ol id="tags" class="list-inline">
+            <li>Tags:</li>
+            {% for tag in tags %}
+                <li><a href="{{baseurl}}/+{{tag.id}}" class="label label-default">{{tag.title}}</a></li>
             {% endfor %}
         </ol>
     </div>

@@ -49,7 +49,7 @@ class Template {
         $twig->addExtension(new \Twig_Extension_Debug());
 
         // Mardown support.
-        $twig->addFilter('markdown', new \Twig_SimpleFilter('markdown',function ($text) {
+        $twig->addFilter(new \Twig_SimpleFilter('markdown',function ($text) {
             $parsedown = new \Parsedown();
             return $parsedown->text($text);
         }));
@@ -70,7 +70,7 @@ class Template {
      * @param string $message The text of the message.
      * @param boolean $delayed Whether to delay the message until the next request.
      */
-    public function message($type, $message, $delayed = false) {
+    public function alert($type, $message, $delayed = false) {
         $msg = array(
             'type' => $type,
             'message' => $message,
@@ -81,5 +81,4 @@ class Template {
             $this->data['alerts'][] = $msg;
         }
     }
-
 }

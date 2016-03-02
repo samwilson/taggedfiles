@@ -1,30 +1,19 @@
 <?php
 
+namespace App\Tests;
+
 use App\Item;
-use App\App;
-use App\Db;
 use App\Config;
 
-class ItemTest extends \PHPUnit_Framework_TestCase {
-
-    /** @var \App\Db */
-    protected $db;
-
-    public function setUp() {
-        $this->db = new Db();
-        $this->db->query("SET FOREIGN_KEY_CHECKS=0");
-        $this->db->query("DROP TABLE IF EXISTS `keywords`");
-        $this->db->query("DROP TABLE IF EXISTS `items`");
-        $this->db->query("SET FOREIGN_KEY_CHECKS=1");
-        $this->db->install();
-        App::deleteDir(__DIR__.'/data');
-    }
+class ItemTest extends Base
+{
 
     /**
      * @testdox An Item has an ID and title.
      * @test
      */
-    public function basics() {
+    public function basics()
+    {
         $item = new Item();
         $item->save(['title' => 'Test']);
         $this->assertEquals(1, $item->getId());
@@ -35,7 +24,8 @@ class ItemTest extends \PHPUnit_Framework_TestCase {
     /**
      * @testdox An item can be created and modified.
      */
-    public function modification() {
+    public function modification()
+    {
         $item = new Item();
         $item->save(['title' => 'Test']);
         $this->assertEquals(1, $item->getId());
@@ -54,7 +44,7 @@ class ItemTest extends \PHPUnit_Framework_TestCase {
     public function keywords() {
         $item = new Item();
         $item->save([], 'one,two');
-        $this->assertCount(2, $item->getKeywords());
+        $this->assertCount(2, $item->getTags());
     }
 
     /**
@@ -93,7 +83,7 @@ class ItemTest extends \PHPUnit_Framework_TestCase {
 
         $item = new Item();
         $item->save([], null, null, 'Test file contents.');
-        $this->assertSame(__DIR__.'/data/cache/1_v1_o', $item->getCachePath());
+        $this->assertSame(__DIR__.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'1_v1_o', $item->getCachePath());
         $this->assertFileExists(__DIR__.'/data/cache/1_v1_o');
     }
 }

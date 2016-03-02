@@ -91,6 +91,10 @@ class Db {
     }
 
     public function install() {
+        $this->query("CREATE TABLE IF NOT EXISTS groups ("
+                . " id INT(5) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
+                . " name VARCHAR(200) NOT NULL UNIQUE"
+                . ")");
         $this->query("CREATE TABLE IF NOT EXISTS date_granularities ("
                 . " id INT(2) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
                 . " title VARCHAR(20) NOT NULL UNIQUE,"
@@ -109,18 +113,33 @@ class Db {
                 . " date_granularity INT(2) UNSIGNED NOT NULL DEFAULT 1,"
                 . "     FOREIGN KEY (date_granularity) REFERENCES date_granularities (id),"
                 . " description TEXT NULL DEFAULT NULL,"
-                . " auth_level INT(2) UNSIGNED NOT NULL DEFAULT 0"
+                . " read_group INT(5) UNSIGNED NOT NULL,"
+                . "     FOREIGN KEY (read_group) REFERENCES groups (id),"
+                . " edit_group INT(5) UNSIGNED NOT NULL,"
+                . "     FOREIGN KEY (edit_group) REFERENCES groups (id)"
                 . ")");
-        $this->query("CREATE TABLE IF NOT EXISTS keywords ("
+        $this->query("CREATE TABLE IF NOT EXISTS tags ("
                 . " id INT(5) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
                 . " title VARCHAR(200) NOT NULL UNIQUE"
                 . ")");
-        $this->query("CREATE TABLE IF NOT EXISTS item_keywords ("
+        $this->query("CREATE TABLE IF NOT EXISTS item_tags ("
                 . " item INT(10) UNSIGNED NOT NULL,"
                 . "     FOREIGN KEY (item) REFERENCES items (id),"
-                . " keyword INT(5) UNSIGNED NOT NULL,"
-                . "     FOREIGN KEY (keyword) REFERENCES keywords (id),"
-                . " PRIMARY KEY (item, keyword)"
+                . " tag INT(5) UNSIGNED NOT NULL,"
+                . "     FOREIGN KEY (tag) REFERENCES tags (id),"
+                . " PRIMARY KEY (item, tag)"
+                . ")");
+        $this->query("CREATE TABLE IF NOT EXISTS `users` ("
+                . " `id` INT(5) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
+                . " `name` VARCHAR(200) NOT NULL UNIQUE,"
+                . " `password` VARCHAR(255) NULL DEFAULT NULL"
+                . ")");
+        $this->query("CREATE TABLE IF NOT EXISTS `user_groups` ("
+                . " `user` INT(5) UNSIGNED NOT NULL,"
+                . "     FOREIGN KEY (`user`) REFERENCES `users` (`id`),"
+                . " `group` INT(5) UNSIGNED NOT NULL,"
+                . "     FOREIGN KEY (`group`) REFERENCES `groups` (`id`),"
+                . " PRIMARY KEY (`user`, `group`)"
                 . ")");
     }
 

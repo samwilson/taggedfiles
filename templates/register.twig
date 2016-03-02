@@ -1,0 +1,32 @@
+{%extends "base.twig"%}
+
+{% block content %}
+
+<form action="{{baseurl}}/register" method="post" id="register">
+    <div class="row">
+        <p class="col-lg-4">
+            <label class="control-label" for="name">Name:</label>
+            <input type="text" id="name" name="name" class="form-control focus-me" value="{{name}}" required />
+        </p>
+        <p class="col-lg-5">
+            <label class="control-label" for="email">Email:</label>
+            <input type="email" id="email" name="email" class="form-control" />
+        </p>
+    </div>
+    <div class="row">
+        <p class="col-lg-3">
+            <label class="control-label" for="password">Password:</label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required />
+        </p>
+        <p class="col-lg-3">
+            <label class="control-label" for="password-confirmation">Confirmation:</label>
+            <input type="password" id="password-confirmation" name="password-confirmation" class="form-control" placeholder="Repeat your password" required />
+        </p>
+    </div>
+    <p>
+        <input type="submit" value="Register" name="register" class="btn btn-success" />
+        <input type="submit" value="Return to log in" name="login" class="btn btn-default nav-only" />
+    </p>
+</form>
+
+{% endblock %}

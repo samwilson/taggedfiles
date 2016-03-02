@@ -11,16 +11,14 @@
     "require": {
         "twig/twig": "1.*",
         "erusev/parsedown": "1.*",
-        "yohang/calendr": "1.*",
-        "phayes/geophp": "1.*",
         "league/flysystem": "1.*",
         "league/route": "1.*",
         "eternicode/bootstrap-datepicker": "1.*",
-        "intervention/image": "*"
+        "intervention/image": "2.*"
     },
     "require-dev": {
-        "phpunit/phpunit": "*",
-        "symfony/var-dumper": "^3.0"
+        "phpunit/phpunit": "5.*",
+        "symfony/var-dumper": "3.*"
     },
     "config": {
         "component-dir": "assets/components"

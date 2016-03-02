@@ -6,7 +6,9 @@
         <div class="col-lg-2">
             <a href="{{baseurl}}/{{item.id}}" class="thumbnail">
                 <h2>{{item.title|raw}}</h2>
+                {% if item.isImage %}
                 <p><img src="{{baseurl}}/{{item.id}}_t.png" class="img-responsive" /></p>
+                {% endif %}
                 {{item.description|markdown|raw}}
             </a>
         </div>

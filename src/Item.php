@@ -38,11 +38,11 @@ class Item {
      * Save an item's data.
      *
      * @param string[] $medatdata Array of metadata pairs.
-     * @param string $keywordsString CSV string of keywords.
+     * @param string $tagsString CSV string of tags.
      * @param string $filename The full filesystem path to a file to attach to this Item.
      * @param string $fileContents A string to treat as the contents of a file.
      */
-    public function save($medatdata, $keywordsString = null, $filename = null, $fileContents = null) {
+    public function save($medatdata, $tagsString = null, $filename = null, $fileContents = null) {
         if (empty($medatdata['title'])) {
             $medatdata['title'] = 'Untitled';
         }
@@ -78,16 +78,16 @@ class Item {
         }
         $this->load($id);
 
-        // Save keywords.
-        if ($keywordsString) {
-            $this->db->query("DELETE FROM item_keywords WHERE item=:id", ['id' => $id]);
-            $keywords = array_map('trim', array_unique(str_getcsv($keywordsString)));
-            foreach ($keywords as $kwd) {
-                $this->db->query("INSERT IGNORE INTO keywords SET title=:title", ['title' => $kwd]);
-                $selectKeywordId = "SELECT id FROM keywords WHERE title LIKE :title";
-                $keywordId = $this->db->query($selectKeywordId, ['title' => $kwd])->fetchColumn();
-                $insertJoin = "INSERT IGNORE INTO item_keywords SET item=:item, keyword=:keyword";
-                $this->db->query($insertJoin, ['item' => $id, 'keyword' => $keywordId]);
+        // Save tags.
+        if ($tagsString) {
+            $this->db->query("DELETE FROM item_tags WHERE item=:id", ['id' => $id]);
+            $tags = array_map('trim', array_unique(str_getcsv($tagsString)));
+            foreach ($tags as $tag) {
+                $this->db->query("INSERT IGNORE INTO tags SET title=:title", ['title' => $tag]);
+                $selectTagId = "SELECT id FROM tags WHERE title LIKE :title";
+                $tagId = $this->db->query($selectTagId, ['title' => $tag])->fetchColumn();
+                $insertJoin = "INSERT IGNORE INTO item_tags SET item=:item, tag=:tag";
+                $this->db->query($insertJoin, ['item' => $id, 'tag' => $tagId]);
             }
         }
 
@@ -185,14 +185,14 @@ class Item {
         if (!$filesystem->has("cache://" . $filenameOrig)) {
             $filesystem->copy("storage://$path", "cache://" . $filenameOrig);
         }
-        $pathnameOrig = $root.'/'.$filenameOrig;
+        $pathnameOrig = $root.DIRECTORY_SEPARATOR.$filenameOrig;
         if ($format === 'o') {
             return $pathnameOrig;
         }
 
         // Then create smaller version if required.
         $filenameDisplay = $this->getId() . '_v' . $version . '_t';
-        $pathnameDisplay = $root.'/'.$filenameDisplay;
+        $pathnameDisplay = $root.DIRECTORY_SEPARATOR.$filenameDisplay;
         $manager = new ImageManager();
         $image = $manager->make($pathnameOrig);
         $image->fit(200);
@@ -247,20 +247,20 @@ class Item {
         return $this->db->query("SELECT id, title FROM date_granularities ORDER BY id ASC")->fetchAll();
     }
 
-    public function getKeywords() {
-        $keywordSql = 'SELECT k.id, k.title '
-            . ' FROM item_keywords ik JOIN keywords k ON (ik.keyword=k.id) '
-            . ' WHERE ik.item=:id '
-            . ' ORDER BY k.title ASC ';
+    public function getTags() {
+        $tagsSql = 'SELECT t.id, t.title '
+            . ' FROM item_tags it JOIN tags t ON (it.tag=t.id) '
+            . ' WHERE it.item=:id '
+            . ' ORDER BY t.title ASC ';
         $params = ['id' => $this->getId()];
-        return $this->db->query($keywordSql, $params)->fetchAll();
+        return $this->db->query($tagsSql, $params)->fetchAll();
     }
 
-    public function getKeywordsString()
+    public function getTagsString()
     {
         $out = [];
-        foreach ($this->getKeywords() as $keyword) {
-            $out[] = $keyword->title;
+        foreach ($this->getTags() as $tag) {
+            $out[] = $tag->title;
         }
         return join(', ', $out);
     }
