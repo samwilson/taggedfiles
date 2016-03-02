@@ -64,11 +64,19 @@ class UserController extends Base {
         $response->setContent($template->render());
         return $response;
     }
-    
+
     public function remind(Request $request, Response $response, array $args) {
         $name = $request->get('name');
         if ($request->get('login')) {
             return new RedirectResponse($this->config->baseUrl().'/login?name='.$name);
         }
+        $user = new User();
+        $message = \Swift_Message::newInstance()
+            ->setSubject('Password reminder')
+            ->setFrom(array('john@doe.com' => 'John Doe'))
+            ->setTo(array('other@domain.org' => 'A name'))
+            ->setBody('Here is the message itself')
+            ->addPart('<q>Here is the message itself</q>', 'text/html')
+            ;
     }
 }
