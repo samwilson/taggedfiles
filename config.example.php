@@ -18,4 +18,7 @@ return [
             'root' => __DIR__ . '/data/storage',
         ]
     ],
+    'mail' => [
+        'transport' => 'mail',
+    ],
 ];

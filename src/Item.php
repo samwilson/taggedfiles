@@ -86,7 +86,7 @@ class Item
         $this->load($id);
 
         // Save tags.
-        if ($tagsString) {
+        if (!empty($tagsString)) {
             $this->db->query("DELETE FROM item_tags WHERE item=:id", ['id' => $id]);
             $tags = array_map('trim', array_unique(str_getcsv($tagsString)));
             foreach ($tags as $tag) {
@@ -106,7 +106,7 @@ class Item
         }
 
         // Save uploaded file.
-        if ($filename) {
+        if (!empty($filename)) {
             $filesystem = App::getFilesystem();
             $stream = fopen($filename, 'r+');
             $filesystem->putStream("storage://" . $this->getFilePath($newVer), $stream);
@@ -276,22 +276,22 @@ class Item
 
     public function getId()
     {
-        return isset($this->data->id) ? (int) $this->data->id : null;
+        return isset($this->data->id) ? (int) $this->data->id : false;
     }
 
     public function getTitle()
     {
-        return isset($this->data->title) ? $this->data->title : null;
+        return isset($this->data->title) ? $this->data->title : false;
     }
 
     public function getDescription()
     {
-        return isset($this->data->description) ? $this->data->description : null;
+        return isset($this->data->description) ? $this->data->description : false;
     }
 
     public function getDate()
     {
-        return isset($this->data->date) ? $this->data->date : null;
+        return isset($this->data->date) ? $this->data->date : false;
     }
 
     public function getDateFormatted()
