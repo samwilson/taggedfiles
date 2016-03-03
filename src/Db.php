@@ -8,8 +8,8 @@ class Db
     /** @var \PDO */
     static protected $pdo;
 
-    /** @var array|string */
-    static protected $queries;
+    /** @var string[] */
+    static protected $queries = [];
 
     public function __construct()
     {
