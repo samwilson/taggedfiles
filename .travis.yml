@@ -11,11 +11,10 @@ php:
 install:
   - mysql -e 'CREATE DATABASE swidau_test;' -uroot
   - composer install
-  - cp config.example.php config.php
-  - sed -i "s/database_name_here/swidau_test/" config.php
-  - sed -i "s/database_user_here/root/" config.php
-  - sed -i "s/database_password_here//" config.php
-  - cat config.php
+  - cp config.example.php tests/config.php
+  - sed -i "s/database_name_here/swidau_test/" tests/config.php
+  - sed -i "s/database_user_here/root/" tests/config.php
+  - sed -i "s/database_password_here//" tests/config.php
 
 script:
   - $TRAVIS_BUILD_DIR/vendor/bin/phpunit

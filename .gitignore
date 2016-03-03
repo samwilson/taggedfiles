@@ -6,3 +6,4 @@
 /.htaccess
 /config.php
 /tests/data
+/tests/config.php
