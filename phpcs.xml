@@ -10,7 +10,12 @@
     <file>./</file>
     <exclude-pattern>./data/*</exclude-pattern>
     <exclude-pattern>./vendor/*</exclude-pattern>
+    <exclude-pattern>./assets/components/*</exclude-pattern>
 
     <rule ref="PSR2" />
 
+    <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+        <exclude-pattern>./index.php</exclude-pattern>
+        <exclude-pattern>./tests/bootstrap.php</exclude-pattern>
+    </rule>
 </ruleset>

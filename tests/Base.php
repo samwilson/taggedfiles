@@ -5,12 +5,14 @@ namespace App\Tests;
 use App\App;
 use App\Db;
 
-abstract class Base extends \PHPUnit_Framework_TestCase {
+abstract class Base extends \PHPUnit_Framework_TestCase
+{
 
     /** @var \App\Db */
     protected $db;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->db = new Db();
         $this->db->query("SET FOREIGN_KEY_CHECKS=0");
         $this->db->query("DROP TABLE IF EXISTS `keywords`");
@@ -22,8 +24,8 @@ abstract class Base extends \PHPUnit_Framework_TestCase {
         $this->db->install();
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         App::deleteDir(__DIR__ . '/data');
     }
-
 }

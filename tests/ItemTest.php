@@ -41,7 +41,8 @@ class ItemTest extends Base
      * @testdox
      * @test
      */
-    public function keywords() {
+    public function keywords()
+    {
         $item = new Item();
         $item->save([], 'one,two');
         $this->assertCount(2, $item->getTags());
@@ -51,22 +52,23 @@ class ItemTest extends Base
      * @testdox An item can have a single file attached.
      * @test
      */
-    public function files() {
+    public function files()
+    {
         $item = new Item();
         // First version.
         $item->save([], null, null, 'Test file contents.');
         $this->assertSame(1, $item->getId());
         $this->assertSame('c4/ca/1/v1', $item->getFilePath());
-        $this->assertFileExists(__DIR__.'/data/storage/c4/ca/1/v1');
+        $this->assertFileExists(__DIR__ . '/data/storage/c4/ca/1/v1');
         $this->assertSame('Test file contents.', $item->getFileContents());
         $this->assertSame(1, $item->getVersionCount());
         // Second version.
-        $item->save(['id'=>1], null, null, 'New file contents.');
+        $item->save(['id' => 1], null, null, 'New file contents.');
         $this->assertSame(1, $item->getId());
         $this->assertSame(2, $item->getVersionCount());
         $this->assertSame('c4/ca/1/v2', $item->getFilePath());
-        $this->assertFileExists(__DIR__.'/data/storage/c4/ca/1/v1');
-        $this->assertFileExists(__DIR__.'/data/storage/c4/ca/1/v2');
+        $this->assertFileExists(__DIR__ . '/data/storage/c4/ca/1/v1');
+        $this->assertFileExists(__DIR__ . '/data/storage/c4/ca/1/v2');
         $this->assertSame('New file contents.', $item->getFileContents());
         $this->assertSame('Test file contents.', $item->getFileContents(1));
         // Upload a different file.
@@ -77,13 +79,14 @@ class ItemTest extends Base
         $this->assertTrue($item2->isText());
     }
 
-    public function testLocalCacheFile() {
+    public function testLocalCacheFile()
+    {
         $config = new Config();
         $this->assertArrayHasKey('cache', $config->filesystems());
-
         $item = new Item();
         $item->save([], null, null, 'Test file contents.');
-        $this->assertSame(__DIR__.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'1_v1_o', $item->getCachePath());
-        $this->assertFileExists(__DIR__.'/data/cache/1_v1_o');
+        $this->assertSame(__DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR
+            . 'cache' . DIRECTORY_SEPARATOR . '1_v1_o', $item->getCachePath());
+        $this->assertFileExists(__DIR__ . '/data/cache/1_v1_o');
     }
 }

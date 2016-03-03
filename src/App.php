@@ -6,9 +6,11 @@ use App\Template;
 use League\Flysystem\Filesystem;
 use League\Flysystem\MountManager;
 
-class App {
+class App
+{
 
-    public static function name() {
+    public static function name()
+    {
         return 'Swidau';
     }
 
@@ -19,7 +21,8 @@ class App {
      * @link http://semver.org
      * @return string
      */
-    public static function version() {
+    public static function version()
+    {
         return '0.1.0';
     }
 
@@ -29,7 +32,8 @@ class App {
      * @param string $str
      * @return string
      */
-    public static function camelcase($str) {
+    public static function camelcase($str)
+    {
         return str_replace(' ', '', ucwords(str_replace('_', ' ', $str)));
     }
 
@@ -39,7 +43,8 @@ class App {
      * @return MountManager
      * @throws \Exception
      */
-    public static function getFilesystem() {
+    public static function getFilesystem()
+    {
         $config = new Config();
         $manager = new MountManager();
         foreach ($config->filesystems() as $name => $fsConfig) {
@@ -51,7 +56,8 @@ class App {
         return $manager;
     }
 
-    public static function exceptionHandler(\Exception $exception) {
+    public static function exceptionHandler(\Exception $exception)
+    {
         $template = new Template('error.twig');
         $template->title = 'Error';
         $template->alert('danger', $exception->getMessage());
@@ -65,16 +71,13 @@ class App {
      * @param $path
      * @return bool
      */
-    public static function deleteDir($path) {
+    public static function deleteDir($path)
+    {
         if (empty($path)) {
             return false;
         }
         return is_file($path) ?
             @unlink($path) :
-            array_map([__CLASS__, __FUNCTION__], glob($path.'/*')) == @rmdir($path);
-    }
-
-    public function mail($message) {
-
+            array_map([__CLASS__, __FUNCTION__], glob($path . '/*')) == @rmdir($path);
     }
 }

@@ -5,7 +5,8 @@ namespace App\Controllers;
 use App\Config;
 use App\User;
 
-abstract class Base {
+abstract class Base
+{
 
     /**
      * The site configuration.
@@ -28,7 +29,8 @@ abstract class Base {
      */
     protected $user;
 
-   public function __construct() {
+    public function __construct()
+    {
         $this->config = new Config();
         $this->db = new \App\Db();
 
@@ -44,9 +46,10 @@ abstract class Base {
      *
      * @param \Swift_Message $message
      */
-    public function email(\Swift_Message $message) {
+    public function email(\Swift_Message $message)
+    {
         $config = $this->config->mail();
-        $transport_classname = '\\Swift_'.ucfirst($config['transport']).'Transport';
+        $transport_classname = '\\Swift_' . ucfirst($config['transport']) . 'Transport';
         $transport = $transport_classname::newInstance();
         $mailer = \Swift_Mailer::newInstance($transport);
         $mailer->send($message);

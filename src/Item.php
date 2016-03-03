@@ -4,7 +4,8 @@ namespace App;
 
 use Intervention\Image\ImageManager;
 
-class Item {
+class Item
+{
 
     /** The default date granularity is 'exact' (ID 1). */
     const DATE_GRANULARITY_DEFAULT = 1;
@@ -15,14 +16,16 @@ class Item {
     /** @var \StdClass */
     private $data;
 
-    public function __construct($id = null) {
+    public function __construct($id = null)
+    {
         $this->db = new Db();
         if ($id !== null) {
             $this->load($id);
         }
     }
 
-    public function load($id) {
+    public function load($id)
+    {
         if (!empty($id) && !is_numeric($id)) {
             throw new \Exception("Not an Item ID: " . print_r($id, true));
         }
@@ -42,7 +45,8 @@ class Item {
      * @param string $filename The full filesystem path to a file to attach to this Item.
      * @param string $fileContents A string to treat as the contents of a file.
      */
-    public function save($medatdata, $tagsString = null, $filename = null, $fileContents = null) {
+    public function save($medatdata, $tagsString = null, $filename = null, $fileContents = null)
+    {
         if (empty($medatdata['title'])) {
             $medatdata['title'] = 'Untitled';
         }
@@ -55,8 +59,14 @@ class Item {
         if (empty($medatdata['date_granularity'])) {
             $medatdata['date_granularity'] = self::DATE_GRANULARITY_DEFAULT;
         }
+        if (empty($medatdata['edit_group'])) {
+            $medatdata['edit_group'] = User::GROUP_ADMIN;
+        }
+        if (empty($medatdata['read_group'])) {
+            $medatdata['read_group'] = User::GROUP_PUBLIC;
+        }
         $setClause = 'SET title=:title, description=:description, date=:date, '
-            . ' date_granularity=:date_granularity ';
+            . ' date_granularity=:date_granularity, edit_group=:edit_group, read_group=:read_group ';
 
         // Start a transaction. End after the key words and files have been written.
         $this->db->query('BEGIN');
@@ -92,14 +102,14 @@ class Item {
         // Save file contents.
         if (!empty($fileContents)) {
             $filesystem = App::getFilesystem();
-            $filesystem->put("storage://".$this->getFilePath($newVer), $fileContents);
+            $filesystem->put("storage://" . $this->getFilePath($newVer), $fileContents);
         }
 
         // Save uploaded file.
         if ($filename) {
             $filesystem = App::getFilesystem();
             $stream = fopen($filename, 'r+');
-            $filesystem->putStream("storage://".$this->getFilePath($newVer), $stream);
+            $filesystem->putStream("storage://" . $this->getFilePath($newVer), $stream);
             fclose($stream);
         }
 
@@ -112,7 +122,8 @@ class Item {
      * @param integer $version
      * @return integer|false
      */
-    public function getMimeType($version = null) {
+    public function getMimeType($version = null)
+    {
         if (!$this->getId()) {
             return false;
         }
@@ -120,18 +131,20 @@ class Item {
             $version = $this->getVersionCount();
         }
         $filesystem = App::getFilesystem();
-        $path = "storage://".$this->getFilePath($version);
+        $path = "storage://" . $this->getFilePath($version);
         return $filesystem->getMimetype($path);
     }
 
     /**
      * Whether this file is a text file.
      */
-    public function isText($version = null) {
+    public function isText($version = null)
+    {
         return $this->getMimeType($version) === 'text/plain';
     }
 
-    public function isImage($version = null) {
+    public function isImage($version = null)
+    {
         return 0 === strpos($this->getMimeType($version), 'image');
     }
 
@@ -151,7 +164,7 @@ class Item {
             $version = $this->getVersionCount();
         }
         $filesystem = App::getFilesystem();
-        $path = "storage://".$this->getFilePath($version);
+        $path = "storage://" . $this->getFilePath($version);
         if ($filesystem->has($path)) {
             return $filesystem->read($path);
         }
@@ -182,14 +195,14 @@ class Item {
         if (!$filesystem->has("cache://" . $filenameOrig)) {
             $filesystem->copy("storage://$path", "cache://" . $filenameOrig);
         }
-        $pathnameOrig = $root.DIRECTORY_SEPARATOR.$filenameOrig;
+        $pathnameOrig = $root . DIRECTORY_SEPARATOR . $filenameOrig;
         if ($format === 'o') {
             return $pathnameOrig;
         }
 
         // Then create smaller version if required.
         $filenameDisplay = $this->getId() . '_v' . $version . '_t';
-        $pathnameDisplay = $root.DIRECTORY_SEPARATOR.$filenameDisplay;
+        $pathnameDisplay = $root . DIRECTORY_SEPARATOR . $filenameDisplay;
         $manager = new ImageManager();
         $image = $manager->make($pathnameOrig);
         $image->fit(200);
@@ -200,12 +213,13 @@ class Item {
         return $pathnameDisplay;
     }
 
-    public function getFileStream($version = null) {
+    public function getFileStream($version = null)
+    {
         if (is_null($version)) {
             $version = $this->getVersionCount();
         }
         $filesystem = App::getFilesystem();
-        $path = "storage://".$this->getFilePath($version);
+        $path = "storage://" . $this->getFilePath($version);
         if ($filesystem->has($path)) {
             return $filesystem->readStream($path);
         }
@@ -221,7 +235,7 @@ class Item {
     public function getHashedPath()
     {
         $hash = md5($this->getId());
-        return $hash[0].$hash[1].'/'.$hash[2].$hash[3].'/'.$this->getId();
+        return $hash[0] . $hash[1] . '/' . $hash[2] . $hash[3] . '/' . $this->getId();
     }
 
     /**
@@ -230,7 +244,8 @@ class Item {
      * @return string
      * @throws \Exception
      */
-    public function getFilePath($version = null) {
+    public function getFilePath($version = null)
+    {
         if (is_null($version)) {
             $version = $this->getVersionCount();
         }
@@ -240,7 +255,8 @@ class Item {
         return $this->getHashedPath() . '/v' . $version;
     }
 
-    public function getTags() {
+    public function getTags()
+    {
         $tagsSql = 'SELECT t.id, t.title '
             . ' FROM item_tags it JOIN tags t ON (it.tag=t.id) '
             . ' WHERE it.item=:id '
@@ -258,23 +274,28 @@ class Item {
         return join(', ', $out);
     }
 
-    public function getId() {
+    public function getId()
+    {
         return isset($this->data->id) ? (int) $this->data->id : null;
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         return isset($this->data->title) ? $this->data->title : null;
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return isset($this->data->description) ? $this->data->description : null;
     }
 
-    public function getDate() {
+    public function getDate()
+    {
         return isset($this->data->date) ? $this->data->date : null;
     }
 
-    public function getDateFormatted() {
+    public function getDateFormatted()
+    {
         if (empty($this->data->date)) {
             return '';
         }
@@ -283,8 +304,8 @@ class Item {
         return $date->format($format);
     }
 
-    public function getDateGranularity() {
+    public function getDateGranularity()
+    {
         return isset($this->data->date_granularity) ? $this->data->date_granularity : self::DATE_GRANULARITY_DEFAULT;
     }
-
 }

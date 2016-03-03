@@ -2,7 +2,8 @@
 
 namespace App;
 
-class Template {
+class Template
+{
 
     /** @var array */
     private $data = array();
@@ -14,7 +15,8 @@ class Template {
     const WARNING = 'warning';
     const ERROR = 'error';
 
-    public function __construct($template) {
+    public function __construct($template)
+    {
         $this->template = $template;
         $config = new Config();
         $this->data['app_title'] = App::name() . ' ' . App::version();
@@ -34,11 +36,13 @@ class Template {
         }
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         $this->data[$name] = $value;
     }
 
-    public function render($echo = false) {
+    public function render($echo = false)
+    {
         $this->queries = Db::getQueries();
 
         // Load template directories.
@@ -53,7 +57,7 @@ class Template {
         $twig->addExtension(new \Twig_Extension_Debug());
 
         // Mardown support.
-        $twig->addFilter(new \Twig_SimpleFilter('markdown',function ($text) {
+        $twig->addFilter(new \Twig_SimpleFilter('markdown', function ($text) {
             $parsedown = new \Parsedown();
             return $parsedown->text($text);
         }));
@@ -74,7 +78,8 @@ class Template {
      * @param string $message The text of the message.
      * @param boolean $delayed Whether to delay the message until the next request.
      */
-    public function alert($type, $message, $delayed = false) {
+    public function alert($type, $message, $delayed = false)
+    {
         $alert = array(
             'type' => $type,
             'message' => $message,

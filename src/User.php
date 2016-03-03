@@ -2,10 +2,14 @@
 
 namespace App;
 
-class User {
+class User
+{
 
     /** @var integer The ID of the public group. */
     const GROUP_PUBLIC = 1;
+
+    /** @var integer The ID of the admin group. */
+    const GROUP_ADMIN = 2;
 
     /** @var \App\Db */
     protected $db;
@@ -13,35 +17,41 @@ class User {
     /** @var stdClass */
     protected $data;
 
-    public function __construct($database = null) {
+    public function __construct($database = null)
+    {
         $this->db = ($database) ? $database : new Db();
     }
 
-    public function register($name, $email = null, $password = null) {
+    public function register($name, $email = null, $password = null)
+    {
         $params = [
             'email' => $email,
             'password' => password_hash($password, PASSWORD_DEFAULT),
         ];
 
         // Add the user.
-        $userNum = $this->db->query('SELECT COUNT(*) FROM `users` WHERE `name` LIKE :name', ['name' => "$name%"])->fetchColumn();
-        $userName = ($userNum > 0) ? $name.' '.($userNum+1) : $name;
+        $userCount = 'SELECT COUNT(*) FROM `users` WHERE `name` LIKE :name';
+        $userNum = $this->db->query($userCount, ['name' => "$name%"])->fetchColumn();
+        $userName = ($userNum > 0) ? $name . ' ' . ($userNum + 1) : $name;
         $params['name'] = $userName;
         $this->db->query("INSERT INTO users SET name=:name, email=:email, password=:password", $params);
         $id = $this->db->lastInsertId();
         $this->load($id);
 
         // Add the new user to a group of their own.
-        $groupNum = $this->db->query('SELECT COUNT(*) FROM `groups` WHERE `name` LIKE :name', ['name' => "$name%"])->fetchColumn();
-        $groupName = ($groupNum > 0) ? $name.' '.($groupNum+1) : $name;
+        $groupCountSql = 'SELECT COUNT(*) FROM `groups` WHERE `name` LIKE :name';
+        $groupNum = $this->db->query($groupCountSql, ['name' => "$name%"])->fetchColumn();
+        $groupName = ($groupNum > 0) ? $name . ' ' . ($groupNum + 1) : $name;
         $this->db->query('INSERT INTO `groups` SET `name`=:name', ['name' => $groupName]);
         $gid = $this->db->lastInsertId();
-        $this->db->query('INSERT INTO `user_groups` SET `user`=:u, `group`=:g', ['u'=>$this->getId(), 'g'=>($gid)]);
+        $groupMemberSql = 'INSERT INTO `user_groups` SET `user`=:u, `group`=:g';
+        $this->db->query($groupMemberSql, ['u' => $this->getId(), 'g' => ($gid)]);
     }
 
-    public function getGroupNames() {
+    public function getGroupNames()
+    {
         if (!$this->getId()) {
-            $pub = $this->db->query("SELECT name FROM groups WHERE id = ".self::GROUP_PUBLIC)->fetchColumn();
+            $pub = $this->db->query("SELECT name FROM groups WHERE id = " . self::GROUP_PUBLIC)->fetchColumn();
             return [$pub];
         }
         $sql = "SELECT g.name FROM users u "
@@ -51,7 +61,8 @@ class User {
         return $this->db->query($sql, ['id' => $this->getId()])->fetchAll(\PDO::FETCH_COLUMN);
     }
 
-    public function getReminder() {
+    public function getReminder()
+    {
         if (!$this->getId()) {
             return false;
         }
@@ -65,11 +76,13 @@ class User {
         return $unhashedToken;
     }
 
-    public function checkReminderToken($token) {
+    public function checkReminderToken($token)
+    {
         return password_verify($token, $this->data->reminder_token);
     }
 
-    public function changePassword($password) {
+    public function changePassword($password)
+    {
         if (!$this->getId()) {
             return false;
         }
@@ -81,25 +94,30 @@ class User {
         $this->db->query($sql, $params);
     }
 
-    public function load($id) {
+    public function load($id)
+    {
         $sql = "SELECT * FROM users WHERE id = :id";
         $this->data = $this->db->query($sql, ['id' => $id])->fetch();
     }
 
-    public function loadByName($name) {
+    public function loadByName($name)
+    {
         $sql = "SELECT * FROM users WHERE name = :name";
         $this->data = $this->db->query($sql, ['name' => $name])->fetch();
     }
 
-    public function getId() {
+    public function getId()
+    {
         return (isset($this->data->id)) ? (int) $this->data->id : false;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return isset($this->data->name) ? $this->data->name : false;
     }
 
-    public function getEmail() {
+    public function getEmail()
+    {
         return isset($this->data->email) ? $this->data->email : false;
     }
 }
