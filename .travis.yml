@@ -6,10 +6,14 @@ php:
   - 7.0
 
 install:
-  - mysql -e 'create database swidau_test;'
+  - mysql -e 'CREATE DATABASE swidau_test;' -uroot
   - composer install
-  - echo -e "DB_USERNAME=root\nDB_PASSWORD=" > $TRAVIS_BUILD_DIR/.env
+  - cp config.example.php config.php
+  - sed -i "s/database_name_here/swidau_test/" config.php
+  - sed -i "s/database_user_here/root/" config.php
+  - sed -i "s/database_password_here//" config.php
+  - cat config.php
 
 script:
-  - phpunit
+  - $TRAVIS_BUILD_DIR/vendor/bin/phpunit
   - $TRAVIS_BUILD_DIR/vendor/bin/phpcs --standard=$TRAVIS_BUILD_DIR/phpcs.xml

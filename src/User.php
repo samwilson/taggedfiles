@@ -4,6 +4,9 @@ namespace App;
 
 class User {
 
+    /** @var integer The ID of the public group. */
+    const GROUP_PUBLIC = 1;
+
     /** @var \App\Db */
     protected $db;
 
@@ -38,7 +41,8 @@ class User {
 
     public function getGroupNames() {
         if (!$this->getId()) {
-            return [];
+            $pub = $this->db->query("SELECT name FROM groups WHERE id = ".self::GROUP_PUBLIC)->fetchColumn();
+            return [$pub];
         }
         $sql = "SELECT g.name FROM users u "
             . " JOIN user_groups ug ON ug.user = u.id "

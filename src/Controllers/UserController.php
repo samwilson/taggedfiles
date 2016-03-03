@@ -36,7 +36,7 @@ class UserController extends Base {
                 return new RedirectResponse($this->config->baseUrl());
             }
         }
-        $template->alert('warning', 'Acess denied', true);
+        $template->alert('warning', 'Acess denied.', true);
         return new RedirectResponse($this->config->baseUrl().'/login?name='.$name);
     }
 

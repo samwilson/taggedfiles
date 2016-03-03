@@ -95,6 +95,7 @@ class Db {
                 . " id INT(5) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
                 . " name VARCHAR(200) NOT NULL UNIQUE"
                 . ")");
+        $this->query("INSERT IGNORE INTO groups SET id=".User::GROUP_PUBLIC.", name='Commons'");
         $this->query("CREATE TABLE IF NOT EXISTS date_granularities ("
                 . " id INT(2) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
                 . " title VARCHAR(20) NOT NULL UNIQUE,"
@@ -113,7 +114,7 @@ class Db {
                 . " date_granularity INT(2) UNSIGNED NOT NULL DEFAULT 1,"
                 . "     FOREIGN KEY (date_granularity) REFERENCES date_granularities (id),"
                 . " description TEXT NULL DEFAULT NULL,"
-                . " read_group INT(5) UNSIGNED NOT NULL,"
+                . " read_group INT(5) UNSIGNED NULL DEFAULT NULL,"
                 . "     FOREIGN KEY (read_group) REFERENCES groups (id),"
                 . " edit_group INT(5) UNSIGNED NOT NULL,"
                 . "     FOREIGN KEY (edit_group) REFERENCES groups (id)"
@@ -144,6 +145,7 @@ class Db {
                 . "     FOREIGN KEY (`group`) REFERENCES `groups` (`id`),"
                 . " PRIMARY KEY (`user`, `group`)"
                 . ")");
+        $this->query("INSERT IGNORE INTO `user_groups` (`user`, `group`) SELECT id,".User::GROUP_PUBLIC." FROM users");
     }
 
 }

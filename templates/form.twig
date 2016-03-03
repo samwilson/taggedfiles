@@ -4,21 +4,21 @@
 
 <form action="{{baseurl}}/save" method="post" enctype="multipart/form-data" class="form">
     <p class="form-group">
-        <label for="title">Title:</label>
+        <label for="title" class="control-label">Title:</label>
         <input type="text" id="title" name="title" value="{{item.getTitle}}" class="form-control" />
     </p>
     <p>
-        <label for="tags">Tags:</label>
+        <label for="tags" class="control-label">Tags:</label>
         {{item.getTagsString}}
         <input type="text" id="tags" name="tags" value="{{item.getTagsString}}" class="form-control" />
     </p>
     <div class="row">
-        <div class="col-md-6">
-            <label>Date:</label>
+        <p class="col-md-6">
+            <label class="control-label">Date:</label>
             <input type="text" name="date" value="{{item.getDate}}" class="form-control datepicker" />
-        </div>
-        <div class="col-md-6">
-            <label>Granularity:</label>
+        </p>
+        <p class="col-md-6">
+            <label class="control-label">Granularity:</label>
             <select name="date_granularity" class="form-control">
             {%for g in dateGranularities %}
                 <option value="{{g.id}}" {% if g.id == item.getDateGranularity %}selected{% endif %}>
@@ -26,10 +26,10 @@
                 </option>
             {% endfor %}
             </select>
-        </div>
+        </p>
     </div>
     <p>
-        <label for="description">Description:</label>
+        <label for="description" class="control-label">Description:</label>
         <textarea id="description" name="description" class="form-control" rows="5">{{item.getDescription}}</textarea>
     </p>
     <div id="fileContents">
@@ -41,13 +41,27 @@
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="direct-entry">
+            <p role="tabpanel" class="tab-pane active" id="direct-entry">
                 <textarea name="file_contents" id="fileContents" class="form-control" rows="20">{% if item.isText() %}{{fileContents}}{% endif %}</textarea>
-            </div>
-            <div role="tabpanel" class="tab-pane" id="upload">
+            </p>
+            <p role="tabpanel" class="tab-pane" id="upload">
                 <input type="file" id="fileContents" name="file" class="form-control" />
-            </div>
+            </p>
         </div>
+    </div>
+    <div class="row">
+        <p class="col-md-6">
+            <label class="control-label" for="read_group">Read group:</label>
+            <select class="form-control" name="read_group">
+                
+            </select>
+        </p>
+        <p class="col-md-6">
+            <label class="control-label" for="edit_group">Edit group:</label>
+            <select class="form-control" name="edit_group">
+                
+            </select>
+        </p>
     </div>
     <p class="buttons">
         <input type="submit" value="Save" class="btn btn-primary" />

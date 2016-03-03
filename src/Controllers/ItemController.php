@@ -35,15 +35,16 @@ class ItemController extends Base {
     public function edit(Request $request, Response $response, array $args) {
         $template = new \App\Template('form.twig');
         $template->title = 'Create';
+        if (!$this->user) {
+            $template->alert('info', 'You have to <a href="'.$this->config->baseUrl().'/login" class="alert-link">log in</a> before you can add or edit items.');
+        }
         $item = new Item();
         if (isset($args['id'])) {
             $template->title = 'Editing #' . $args['id'];
-            //$params = ['id' => $args['id']];
-            //$item = $this->db->query('SELECT * FROM items WHERE id=:id', $params)->fetch();
             $item = new Item($args['id']);
         }
         $template->date_granularities = $this->db->query("SELECT id, title FROM date_granularities ORDER BY id ASC")->fetchAll();
-        $template->groups = $this->db->query("SELECT `id`, `title` FROM `groups` ORDER BY id ASC")->fetchAll();
+        $template->groups = $this->db->query("SELECT `id`, `name` FROM `groups` ORDER BY id ASC")->fetchAll();
 
         $template->item = $item;
         $template->fileContents = $item->getFileContents();
