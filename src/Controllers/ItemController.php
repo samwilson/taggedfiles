@@ -42,6 +42,9 @@ class ItemController extends Base {
             //$item = $this->db->query('SELECT * FROM items WHERE id=:id', $params)->fetch();
             $item = new Item($args['id']);
         }
+        $template->date_granularities = $this->db->query("SELECT id, title FROM date_granularities ORDER BY id ASC")->fetchAll();
+        $template->groups = $this->db->query("SELECT `id`, `title` FROM `groups` ORDER BY id ASC")->fetchAll();
+
         $template->item = $item;
         $template->fileContents = $item->getFileContents();
         $response->setContent($template->render());

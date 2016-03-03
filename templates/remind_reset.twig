@@ -1,0 +1,24 @@
+{%extends "base.twig"%}
+
+{% block content %}
+
+<div class="row">
+    <form action="{{baseurl}}/remind/{{userid}}/{{token}}" method="post" class="col-lg-4">
+        <p>
+            Please enter your new password twice.
+        </p>
+        <p>
+            <label class="control-label" for="password">Password:</label>
+            <input type="password" id="password" name="password" class="form-control focus-me" required />
+        </p>
+        <p>
+            <label class="control-label" for="password">Confirmation:</label>
+            <input type="password" id="password-confirmation" name="password-confirmation" class="form-control" required />
+        </p>
+        <p>
+            <input type="submit" value="Change password" name="reset" class="btn btn-success" />
+        </p>
+    </form>
+</div>
+
+{% endblock %}

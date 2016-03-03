@@ -55,11 +55,8 @@ class Item {
         if (empty($medatdata['date_granularity'])) {
             $medatdata['date_granularity'] = self::DATE_GRANULARITY_DEFAULT;
         }
-        if (empty($medatdata['auth_level'])) {
-            $medatdata['auth_level'] = 0;
-        }
         $setClause = 'SET title=:title, description=:description, date=:date, '
-            . ' date_granularity=:date_granularity, auth_level=:auth_level ';
+            . ' date_granularity=:date_granularity ';
 
         // Start a transaction. End after the key words and files have been written.
         $this->db->query('BEGIN');
@@ -241,10 +238,6 @@ class Item {
             throw new \Exception("Version must be an integer ('$version' was given)");
         }
         return $this->getHashedPath() . '/v' . $version;
-    }
-
-    public function getDateGranularities() {
-        return $this->db->query("SELECT id, title FROM date_granularities ORDER BY id ASC")->fetchAll();
     }
 
     public function getTags() {

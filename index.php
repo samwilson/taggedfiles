@@ -49,13 +49,17 @@ $router->addRoute('GET', '/login', 'App\Controllers\UserController::loginForm');
 $router->addRoute('POST', '/login', 'App\Controllers\UserController::login');
 $router->addRoute('GET', '/register', 'App\Controllers\UserController::registerForm');
 $router->addRoute('POST', '/register', 'App\Controllers\UserController::register');
+$router->addRoute('GET', '/remind/{userid}/{token}', 'App\Controllers\UserController::remindResetForm');
+$router->addRoute('POST', '/remind/{userid}/{token}', 'App\Controllers\UserController::remindReset');
 $router->addRoute('GET', '/remind', 'App\Controllers\UserController::remindForm');
 $router->addRoute('POST', '/remind', 'App\Controllers\UserController::remind');
 $router->addRoute('GET', '/u/{id:number}', 'App\Controllers\UserController::profile');
+$router->addRoute('GET', '/logout', 'App\Controllers\UserController::logout');
 
 /**
  * Dispatch.
  */
+session_start();
 $dispatcher = $router->getDispatcher();
 $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
 $response = $dispatcher->dispatch($request->getMethod(), $request->getPathInfo());

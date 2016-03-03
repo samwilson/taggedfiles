@@ -21,13 +21,17 @@ class Template {
         $this->data['app_version'] = App::version();
         $this->data['mode'] = $config->mode();
         $this->data['baseurl'] = $config->baseUrl();
+        $this->data['baseurl_full'] = $config->baseUrl(true);
         $this->data['site_title'] = $config->siteTitle();
 
-        if (!isset($_SESSION)) {
-            session_start();
-        }
         $this->data['alerts'] = (isset($_SESSION['alerts'])) ? $_SESSION['alerts'] : array();
         $_SESSION['alerts'] = array();
+
+        if (isset($_SESSION['userid'])) {
+            $user = new User();
+            $user->load($_SESSION['userid']);
+            $this->data['user'] = $user;
+        }
     }
 
     public function __set($name, $value) {
@@ -65,20 +69,20 @@ class Template {
 
     /**
      * Display a message to the user.
-     *
-     * @param string $type One of 'success', 'warning', 'info', or 'alert'.
+     * @link http://getbootstrap.com/components/#alerts
+     * @param string $type One of: 'success', 'info', 'warning', or 'danger'.
      * @param string $message The text of the message.
      * @param boolean $delayed Whether to delay the message until the next request.
      */
     public function alert($type, $message, $delayed = false) {
-        $msg = array(
+        $alert = array(
             'type' => $type,
             'message' => $message,
         );
         if ($delayed) {
-            $_SESSION['alerts'][] = $msg;
+            $_SESSION['alerts'][] = $alert;
         } else {
-            $this->data['alerts'][] = $msg;
+            $this->data['alerts'][] = $alert;
         }
     }
 }

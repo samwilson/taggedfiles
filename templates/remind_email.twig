@@ -1,0 +1,10 @@
+<p>Hi {{user.name}},</p>
+<p>To reset your password on <strong>{{site_title}}</strong>, please click the following link:</p>
+<p style="text-align:center; font-size:larger">
+    <a href="{{baseurl_full}}/remind/{{user.id}}/{{token}}">{{baseurl_full}}/remind/{{user.id}}/{{token}}</a>
+</p>
+<p>Thanks!</p>
+<p>
+    If you didn't request this reminder, please delete it;
+    no further action will be taken, and your account will not been modified.
+</p>

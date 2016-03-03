@@ -73,4 +73,8 @@ class App {
             @unlink($path) :
             array_map([__CLASS__, __FUNCTION__], glob($path.'/*')) == @rmdir($path);
     }
+
+    public function mail($message) {
+
+    }
 }

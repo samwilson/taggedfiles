@@ -37,11 +37,16 @@
                         </form>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                Users <span class="caret"></span>
+                                {% if user.name %}{{user.name}}{%else%}User{%endif%} <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
+                                {% if user.id %}
+                                <li><a href="{{baseurl}}/u/{{user.id}}">Profile</a></li>
+                                <li><a href="{{baseurl}}/logout">Log out</a></li>
+                                {% else %}
                                 <li><a href="{{baseurl}}/login">Log in</a></li>
                                 <li><a href="{{baseurl}}/register">Register</a></li>
+                                {% endif %}
                             </ul>
                         </li>
                     </ul>

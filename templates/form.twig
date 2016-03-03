@@ -20,7 +20,7 @@
         <div class="col-md-6">
             <label>Granularity:</label>
             <select name="date_granularity" class="form-control">
-            {%for g in item.getDateGranularities %}
+            {%for g in dateGranularities %}
                 <option value="{{g.id}}" {% if g.id == item.getDateGranularity %}selected{% endif %}>
                     {{g.title}}
                 </option>

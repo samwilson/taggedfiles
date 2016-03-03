@@ -132,7 +132,10 @@ class Db {
         $this->query("CREATE TABLE IF NOT EXISTS `users` ("
                 . " `id` INT(5) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
                 . " `name` VARCHAR(200) NOT NULL UNIQUE,"
-                . " `password` VARCHAR(255) NULL DEFAULT NULL"
+                . " `email` VARCHAR(200) NULL DEFAULT NULL,"
+                . " `password` VARCHAR(255) NULL DEFAULT NULL,"
+                . " `reminder_token` VARCHAR(255) NULL DEFAULT NULL,"
+                . " `reminder_time` DATETIME NULL DEFAULT NULL"
                 . ")");
         $this->query("CREATE TABLE IF NOT EXISTS `user_groups` ("
                 . " `user` INT(5) UNSIGNED NOT NULL,"

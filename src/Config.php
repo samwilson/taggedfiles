@@ -32,6 +32,11 @@ class Config {
         return $this->get('mode', 'production');
     }
 
+    public function mail()
+    {
+        return $this->get('mail', ['transport' => 'mail']);
+    }
+
     public function filesystems() {
         $default = [
             'cache' => [
@@ -50,14 +55,20 @@ class Config {
      * Get the Base URL of the application. Never has a trailing slash.
      * @return string
      */
-    public function baseUrl() {
+    public function baseUrl($absolute = false) {
         $calculatedBaseUrl = substr($_SERVER['SCRIPT_NAME'], 0, -(strlen('index.php')));
         $baseUrl = $this->get('base_url', $calculatedBaseUrl);
-        return rtrim($baseUrl, ' /');
+        $baseUrlTrimmed = rtrim($baseUrl, ' /');
+        $protocol = (!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://';
+        return $absolute ? $protocol.$_SERVER['HTTP_HOST'].$baseUrlTrimmed : $baseUrlTrimmed;
     }
 
     public function siteTitle() {
         return $this->get('site_title', 'A Swidau Site');
+    }
+
+    public function siteEmail() {
+        return $this->get('site_email', 'admin@example.org');
     }
 
     public function databaseHost() {
