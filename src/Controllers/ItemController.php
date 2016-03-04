@@ -53,7 +53,6 @@ class ItemController extends Base
         }
         $sql = "SELECT id, title FROM date_granularities ORDER BY id ASC";
         $template->date_granularities = $this->db->query($sql)->fetchAll();
-        $template->groups = $this->db->query("SELECT `id`, `name` FROM `groups` ORDER BY id ASC")->fetchAll();
 
         $template->item = $item;
         $template->fileContents = $item->getFileContents();
@@ -70,7 +69,8 @@ class ItemController extends Base
             'description' => filter_input(INPUT_POST, 'description'),
             'date' => filter_input(INPUT_POST, 'date'),
             'date_granularity' => filter_input(INPUT_POST, 'date_granularity', FILTER_SANITIZE_NUMBER_INT),
-            'auth_level' => filter_input(INPUT_POST, 'auth_level', FILTER_SANITIZE_NUMBER_INT),
+            'edit_group' => filter_input(INPUT_POST, 'edit_group', FILTER_SANITIZE_NUMBER_INT),
+            'read_group' => filter_input(INPUT_POST, 'read_group', FILTER_SANITIZE_NUMBER_INT),
         );
         $tags = filter_input(INPUT_POST, 'tags');
         $item = new \App\Item();

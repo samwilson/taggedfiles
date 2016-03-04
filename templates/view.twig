@@ -26,7 +26,11 @@
     {% endif %}
 
     {% if item.isImage() %}
-        <p><a href="{{baseurl}}/{{item.id}}_o.png"><img src="{{baseurl}}/{{item.id}}_t.png" /></a></p>
+    <p>
+        <a href="{{baseurl}}/{{item.id}}_o.png">
+            <img src="{{baseurl}}/{{item.id}}_t.png" height="200" width="200" />
+        </a>
+    </p>
     {% endif %}
 
 {% endblock %}

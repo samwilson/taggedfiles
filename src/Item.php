@@ -40,30 +40,30 @@ class Item
     /**
      * Save an item's data.
      *
-     * @param string[] $medatdata Array of metadata pairs.
+     * @param string[] $metadata Array of metadata pairs.
      * @param string $tagsString CSV string of tags.
      * @param string $filename The full filesystem path to a file to attach to this Item.
      * @param string $fileContents A string to treat as the contents of a file.
      */
-    public function save($medatdata, $tagsString = null, $filename = null, $fileContents = null)
+    public function save($metadata, $tagsString = null, $filename = null, $fileContents = null)
     {
-        if (empty($medatdata['title'])) {
-            $medatdata['title'] = 'Untitled';
+        if (empty($metadata['title'])) {
+            $metadata['title'] = 'Untitled';
         }
-        if (empty($medatdata['description'])) {
-            $medatdata['description'] = null;
+        if (empty($metadata['description'])) {
+            $metadata['description'] = null;
         }
-        if (empty($medatdata['date'])) {
-            $medatdata['date'] = null;
+        if (empty($metadata['date'])) {
+            $metadata['date'] = null;
         }
-        if (empty($medatdata['date_granularity'])) {
-            $medatdata['date_granularity'] = self::DATE_GRANULARITY_DEFAULT;
+        if (empty($metadata['date_granularity'])) {
+            $metadata['date_granularity'] = self::DATE_GRANULARITY_DEFAULT;
         }
-        if (empty($medatdata['edit_group'])) {
-            $medatdata['edit_group'] = User::GROUP_ADMIN;
+        if (empty($metadata['edit_group'])) {
+            $metadata['edit_group'] = User::GROUP_ADMIN;
         }
-        if (empty($medatdata['read_group'])) {
-            $medatdata['read_group'] = User::GROUP_PUBLIC;
+        if (empty($metadata['read_group'])) {
+            $metadata['read_group'] = User::GROUP_PUBLIC;
         }
         $setClause = 'SET title=:title, description=:description, date=:date, '
             . ' date_granularity=:date_granularity, edit_group=:edit_group, read_group=:read_group ';
@@ -71,16 +71,16 @@ class Item
         // Start a transaction. End after the key words and files have been written.
         $this->db->query('BEGIN');
 
-        if (isset($medatdata['id']) && is_numeric($medatdata['id'])) {
+        if (isset($metadata['id']) && is_numeric($metadata['id'])) {
             // Update?
             $sql = "UPDATE items $setClause WHERE id=:id";
-            $this->db->query($sql, $medatdata);
-            $id = $medatdata['id'];
+            $this->db->query($sql, $metadata);
+            $id = $metadata['id'];
         } else {
             // Or insert?
-            unset($medatdata['id']);
+            unset($metadata['id']);
             $sql = "INSERT INTO items $setClause";
-            $this->db->query($sql, $medatdata);
+            $this->db->query($sql, $metadata);
             $id = $this->db->lastInsertId();
         }
         $this->load($id);

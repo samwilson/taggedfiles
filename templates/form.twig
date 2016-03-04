@@ -53,13 +53,19 @@
         <p class="col-md-6">
             <label class="control-label" for="read_group">Read group:</label>
             <select class="form-control" name="read_group">
-                
+                <option></option>
+                {% for id,group in user.getGroups %}
+                <option value="{{baseurl}}/g/{{group.id}}">{{group.name}}</option>
+                {% endfor %}
             </select>
         </p>
         <p class="col-md-6">
             <label class="control-label" for="edit_group">Edit group:</label>
             <select class="form-control" name="edit_group">
-                
+                <option></option>
+                {% for group in user.getGroups %}
+                <option value="{{baseurl}}/g/{{group.id}}">{{group.name}}</option>
+                {% endfor %}
             </select>
         </p>
     </div>

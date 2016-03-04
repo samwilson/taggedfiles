@@ -55,6 +55,7 @@ $router->addRoute('GET', '/remind', 'App\Controllers\UserController::remindForm'
 $router->addRoute('POST', '/remind', 'App\Controllers\UserController::remind');
 $router->addRoute('GET', '/u/{id:number}', 'App\Controllers\UserController::profile');
 $router->addRoute('GET', '/logout', 'App\Controllers\UserController::logout');
+$router->addRoute('GET', '/g/{id:number}', 'App\Controllers\GroupController::view');
 
 /**
  * Dispatch.

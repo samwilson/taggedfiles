@@ -29,16 +29,21 @@ class Template
         $this->data['alerts'] = (isset($_SESSION['alerts'])) ? $_SESSION['alerts'] : array();
         $_SESSION['alerts'] = array();
 
+        $user = new User();
         if (isset($_SESSION['userid'])) {
-            $user = new User();
             $user->load($_SESSION['userid']);
-            $this->data['user'] = $user;
         }
+        $this->data['user'] = $user;
     }
 
     public function __set($name, $value)
     {
         $this->data[$name] = $value;
+    }
+
+    public function __get($name)
+    {
+        return (isset($this->data[$name])) ? $this->data[$name] : null;
     }
 
     public function render($echo = false)

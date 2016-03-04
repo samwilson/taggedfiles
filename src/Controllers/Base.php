@@ -35,8 +35,8 @@ abstract class Base
         $this->db = new \App\Db();
 
         // User.
+        $this->user = new User($this->db);
         if (isset($_SESSION['userid'])) {
-            $this->user = new User($this->db);
             $this->user->load($_SESSION['userid']);
         }
     }

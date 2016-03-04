@@ -48,17 +48,17 @@ class User
         $this->db->query($groupMemberSql, ['u' => $this->getId(), 'g' => ($gid)]);
     }
 
-    public function getGroupNames()
+    public function getGroups()
     {
         if (!$this->getId()) {
-            $pub = $this->db->query("SELECT name FROM groups WHERE id = " . self::GROUP_PUBLIC)->fetchColumn();
-            return [$pub];
+            $sql = "SELECT `id`, `name` FROM `groups` WHERE `id` = " . self::GROUP_PUBLIC;
+        } else {
+            $sql = "SELECT g.id, g.name FROM users u "
+                . " JOIN user_groups ug ON ug.user = u.id "
+                . " JOIN `groups` g ON ug.group = g.id"
+                . " WHERE u.id = :id";
         }
-        $sql = "SELECT g.name FROM users u "
-            . " JOIN user_groups ug ON ug.user = u.id "
-            . " JOIN `groups` g ON ug.group = g.id"
-            . " WHERE u.id = :id";
-        return $this->db->query($sql, ['id' => $this->getId()])->fetchAll(\PDO::FETCH_COLUMN);
+        return $this->db->query($sql, ['id' => $this->getId()])->fetchAll();
     }
 
     public function getReminder()

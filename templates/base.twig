@@ -31,8 +31,8 @@
                                 Groups <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                {% for g in user.getGroupNames %}
-                                    <li><a href="">{{g}}</a></li>
+                                {% for g in user.getGroups %}
+                                    <li><a href="{{baseurl}}/g/{{g.id}}">{{g.name}}</a></li>
                                 {% endfor %}
                             </ul>
                         </li>
