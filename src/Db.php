@@ -103,7 +103,7 @@ class Db
             . " name VARCHAR(200) NOT NULL UNIQUE"
             . ")");
         $this->query("INSERT IGNORE INTO groups (`id`, `name`) VALUES "
-            . "(" . User::GROUP_PUBLIC . ", 'Commons'), "
+            . "(" . User::GROUP_PUBLIC . ", 'Public'), "
             . "(" . User::GROUP_ADMIN . ", 'Administrators')");
         $this->query("CREATE TABLE IF NOT EXISTS date_granularities ("
             . " id INT(2) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
@@ -145,7 +145,9 @@ class Db
             . " `email` VARCHAR(200) NULL DEFAULT NULL,"
             . " `password` VARCHAR(255) NULL DEFAULT NULL,"
             . " `reminder_token` VARCHAR(255) NULL DEFAULT NULL,"
-            . " `reminder_time` DATETIME NULL DEFAULT NULL"
+            . " `reminder_time` DATETIME NULL DEFAULT NULL,"
+            . " `default_group` INT(5) UNSIGNED NOT NULL DEFAULT ".User::GROUP_PUBLIC.","
+            . "     FOREIGN KEY (`default_group`) REFERENCES `groups` (`id`)"
             . ")");
         $this->query("CREATE TABLE IF NOT EXISTS `user_groups` ("
             . " `user` INT(5) UNSIGNED NOT NULL,"

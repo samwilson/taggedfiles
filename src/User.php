@@ -35,17 +35,25 @@ class User
         $userName = ($userNum > 0) ? $name . ' ' . ($userNum + 1) : $name;
         $params['name'] = $userName;
         $this->db->query("INSERT INTO users SET name=:name, email=:email, password=:password", $params);
-        $id = $this->db->lastInsertId();
-        $this->load($id);
+        $userId = $this->db->lastInsertId();
 
         // Add the new user to a group of their own.
         $groupCountSql = 'SELECT COUNT(*) FROM `groups` WHERE `name` LIKE :name';
         $groupNum = $this->db->query($groupCountSql, ['name' => "$name%"])->fetchColumn();
         $groupName = ($groupNum > 0) ? $name . ' ' . ($groupNum + 1) : $name;
         $this->db->query('INSERT INTO `groups` SET `name`=:name', ['name' => $groupName]);
-        $gid = $this->db->lastInsertId();
+        $personalGroupId = $this->db->lastInsertId();
         $groupMemberSql = 'INSERT INTO `user_groups` SET `user`=:u, `group`=:g';
-        $this->db->query($groupMemberSql, ['u' => $this->getId(), 'g' => ($gid)]);
+        $this->db->query($groupMemberSql, ['u' => $userId, 'g' => $personalGroupId]);
+        // Make it their default group.
+        $this->db->query("UPDATE `users` SET `default_group` = :g WHERE `id`=:u", ['g'=>$personalGroupId,'u'=>$userId]);
+
+        // Also add them to the public group.
+        $groupMemberSql = 'INSERT INTO `user_groups` SET `user`=:u, `group`=:g';
+        $this->db->query($groupMemberSql, ['u' => $userId, 'g' => self::GROUP_PUBLIC]);
+
+        // Reload the user's data.
+        $this->load($userId);
     }
 
     public function getGroups()
@@ -119,5 +127,15 @@ class User
     public function getEmail()
     {
         return isset($this->data->email) ? $this->data->email : false;
+    }
+
+    public function getDefaultGroup()
+    {
+        if (isset($this->data->default_group)) {
+            $sql = "SELECT * FROM groups WHERE id = :id";
+            $group = $this->db->query($sql, ['id'=>$this->data->default_group])->fetch();
+            return $group;
+        }
+        return false;
     }
 }

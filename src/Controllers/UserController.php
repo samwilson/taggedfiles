@@ -110,6 +110,9 @@ class UserController extends Base
                 ->setTo(array($user->getEmail() => $user->getName()))
                 ->setBody($template->render(), 'text/html');
             $this->email($message);
+        } else {
+            // Pause for a moment, so it's not so obvious which users' names are resulting in mail being sent.
+            sleep(5);
         }
         $template->alert('success', 'Please check your email', true);
         return new RedirectResponse($this->config->baseUrl() . '/remind?name=' . $user->getName());

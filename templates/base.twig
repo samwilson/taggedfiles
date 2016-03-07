@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{{title}} :: {{site_title}}</title>
         <link rel="stylesheet" type="text/css" href="{{baseurl}}/assets/components/bootstrap/css/bootstrap.min.css?ver={{app_version}}" />
-        <link rel="stylesheet" type="text/css" href="{{baseurl}}/assets/components/bootstrap-datepicker/bootstrap-datepicker-built.min.css?ver={{app_version}}" />
+        <link rel="stylesheet" type="text/css" href="{{baseurl}}/assets/components/bootstrap-datepicker/bootstrap-datepicker-built.css?ver={{app_version}}" />
         <link rel="stylesheet" type="text/css" href="{{baseurl}}/all.css?ver={{app_version}}" />
     </head>
 
@@ -26,18 +26,8 @@
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        <li>
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                Groups <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                {% for g in user.getGroups %}
-                                    <li><a href="{{baseurl}}/g/{{g.id}}">{{g.name}}</a></li>
-                                {% endfor %}
-                            </ul>
-                        </li>
-                        <li><a href="{{baseurl}}/create">Create</a></li>
                         <li><a href="{{baseurl}}/tags">Tags</a></li>
+                        <li><a href="{{baseurl}}/create">Create</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <form class="navbar-form navbar-left" role="search" action="{{baseurl}}/search" method="get">
@@ -66,22 +56,15 @@
 
         <main class="container">
 
+            {% if alerts %}
+            <div class="alerts">
+                {% for alert in alerts %}
+                    <div class="alert alert-{{alert.type}}">{{alert.message|raw}}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
             <div id="content">
-                <h1>
-                    {{title|raw}}
-                    {% if subtitle %}
-                        <small class="subtitle">{{subtitle}}</small>
-                    {% endif %}
-                </h1>
-
-                {% if alerts %}
-                    <div class="alerts">
-                        {% for alert in alerts %}
-                            <div class="alert alert-{{alert.type}}">{{alert.message|raw}}</div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-
                 {% block content %}
                 {% endblock %}
             </div>

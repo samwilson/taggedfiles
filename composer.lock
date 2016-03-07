@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1bd8a5c9ad13d7aad73ce0be35e882b6",
-    "content-hash": "a0d7370dda78c1dc839a1830a1894f4c",
+    "hash": "562a1bed0911a4af3bf84b17742723d5",
+    "content-hash": "d9acb657ab3a13673a42b3fca82f4112",
     "packages": [
         {
             "name": "components/bootstrap",
@@ -116,6 +116,60 @@
             "description": "jQuery JavaScript Library",
             "homepage": "http://jquery.com",
             "time": "2016-02-24 08:16:25"
+        },
+        {
+            "name": "eloquent/asplode",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eloquent/asplode.git",
+                "reference": "f00c6cb1576bef84080cf4d2785e6e8dbf8d9e7d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eloquent/asplode/zipball/f00c6cb1576bef84080cf4d2785e6e8dbf8d9e7d",
+                "reference": "f00c6cb1576bef84080cf4d2785e6e8dbf8d9e7d",
+                "shasum": ""
+            },
+            "require": {
+                "icecave/isolator": "~2|~3",
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "eloquent/phony": "dev-develop",
+                "icecave/archer": "dev-develop",
+                "phpunit/phpunit": "^4",
+                "sami/sami": "^3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Eloquent\\Asplode\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Erin Millard",
+                    "email": "ezzatron@gmail.com",
+                    "homepage": "http://ezzatron.com/"
+                }
+            ],
+            "description": "Drop-in exception-based error handling for PHP.",
+            "homepage": "https://github.com/eloquent/asplode",
+            "keywords": [
+                "error",
+                "errorexception",
+                "exception",
+                "failure",
+                "fault",
+                "handler",
+                "handling"
+            ],
+            "time": "2015-12-11 00:24:24"
         },
         {
             "name": "erusev/parsedown",
@@ -268,6 +322,64 @@
                 "uri"
             ],
             "time": "2016-02-18 21:54:00"
+        },
+        {
+            "name": "icecave/isolator",
+            "version": "3.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/IcecaveStudios/isolator.git",
+                "reference": "8fad9e64c393238b01b359e01bd7f25dcdb818e4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/IcecaveStudios/isolator/zipball/8fad9e64c393238b01b359e01bd7f25dcdb818e4",
+                "reference": "8fad9e64c393238b01b359e01bd7f25dcdb818e4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "icecave/archer": "~1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "3.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Icecave\\Isolator\\": "src"
+                },
+                "files": [
+                    "src/register-autoloader.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "James Harris",
+                    "email": "james.harris@icecave.com.au",
+                    "homepage": "https://github.com/jmalloc"
+                }
+            ],
+            "description": "Dependency injection for global functions.",
+            "homepage": "https://github.com/IcecaveStudios/isolator",
+            "keywords": [
+                "Double",
+                "fake",
+                "mock",
+                "phpunit",
+                "stub",
+                "test",
+                "unit"
+            ],
+            "time": "2015-03-27 05:04:19"
         },
         {
             "name": "intervention/image",
@@ -648,6 +760,42 @@
                 "route"
             ],
             "time": "2015-09-11 07:40:31"
+        },
+        {
+            "name": "moxiecode/plupload",
+            "version": "v2.1.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/moxiecode/plupload.git",
+                "reference": "650763ac5b60d70191ca3bc10e08c20708b0cb29"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/moxiecode/plupload/zipball/650763ac5b60d70191ca3bc10e08c20708b0cb29",
+                "reference": "650763ac5b60d70191ca3bc10e08c20708b0cb29",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "(GPL-2.0 or OEM)"
+            ],
+            "authors": [
+                {
+                    "name": "Davit Barbakadze",
+                    "email": "david@moxiecode.com",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Plupload is a JavaScript API for dealing with file uploads it supports features like multiple file selection, file type filtering, request chunking, client side image scaling and it uses different runtimes to achieve this such as HTML 5, Silverlight and Flash.",
+            "homepage": "http://plupload.com",
+            "keywords": [
+                "file upload",
+                "legacy browser support",
+                "multi-runtime",
+                "plupload"
+            ],
+            "time": "2015-07-21 12:11:47"
         },
         {
             "name": "nikic/fast-route",

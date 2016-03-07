@@ -1,30 +1,9 @@
 <?php
 
 /**
- * Composer.
+ * Bootstrap. This file, the test suite, and the CLI tool all run the same bootstrap.
  */
-if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
-    echo "Please run <code>composer install</code>";
-    exit(1);
-}
-require __DIR__ . '/vendor/autoload.php';
-
-/**
- * Exception and error handling.
- */
-set_exception_handler(['App\App', 'exceptionHandler']);
-set_error_handler(function ($errno, $errstr, $errfile, $errline) {
-    throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
-});
-
-/**
- * Configuration file. When testing, the tests/config.php file is used.
- */
-define('CONFIG_FILE', __DIR__ . '/config.php');
-if (!file_exists(CONFIG_FILE)) {
-    echo "Please copy <code>config.example.php</code> to <code>config.php</code> and edit the values therein";
-    exit(1);
-}
+require_once 'bootstrap.php';
 
 /**
  * Routes.
@@ -32,8 +11,6 @@ if (!file_exists(CONFIG_FILE)) {
 $router = new League\Route\RouteCollection();
 // Assets, installation, and home.
 $router->addRoute('GET', '/{file:.*\.(?:css|js)}', 'App\Controllers\AssetsController::css');
-$router->addRoute('GET', '/install', 'App\Controllers\InstallController::install');
-$router->addRoute('POST', '/install', 'App\Controllers\InstallController::run');
 $router->addRoute('GET', '/', 'App\Controllers\TagController::index');
 // Items.
 $router->addRoute('GET', '/create', 'App\Controllers\ItemController::edit');

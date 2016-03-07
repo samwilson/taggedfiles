@@ -1,0 +1,24 @@
+#!/usr/bin/env php
+<?php
+
+// Make sure this isn't being executed from somewhere else.
+if (php_sapi_name() !== 'cli') {
+    echo "This script must be called from the command line" . PHP_EOL;
+    exit(1);
+}
+
+// Bootstrap.
+require_once 'bootstrap.php';
+
+// Determine the command classname, defaulting to 'help' if not found.
+$commandName = isset($argv[1]) ? $argv[1] : 'help';
+$commandClass = '\\App\\Commands\\' . ucfirst($commandName) . 'Command';
+if (!class_exists($commandClass)) {
+    echo "ERROR: Command '$commandName' not valid." . PHP_EOL;
+    $commandClass = '\\App\\Commands\\HelpCommand';
+}
+
+// Remove the command itself from the argument list, and call the command.
+array_shift($argv);
+$command = new $commandClass($argv);
+$command->run();

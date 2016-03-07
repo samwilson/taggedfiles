@@ -2,35 +2,40 @@
 
 {% block content %}
 
-    <div class="well">
-        <ul class="list-inline">
-            {% if item.getDate %}
-            <li>{{item.getDateFormatted}}</li>
-            {% endif %}
-            <li>{{item.getMimeType()}}</li>
-            <li><a href="{{baseurl}}/{{item.getId}}/edit">Edit</a></li>
-        </ul>
+<h1>{{title}}</h1>
 
-        {{item.getDescription}}
-
-        <ol id="tags" class="list-inline">
-            <li>Tags:</li>
-            {% for tag in tags %}
-                <li><a href="{{baseurl}}/+{{tag.id}}" class="label label-default">{{tag.title}}</a></li>
-            {% endfor %}
-        </ol>
-    </div>
-
-    {% if item.getMimeType == 'text/plain' %}
-    {{item.getFileContents|markdown|raw}}
+<ul class="list-inline">
+    {% if item.getDate %}
+    <li>{{item.getDateFormatted}}</li>
     {% endif %}
-
-    {% if item.isImage() %}
-    <p>
-        <a href="{{baseurl}}/{{item.id}}_o.png">
-            <img src="{{baseurl}}/{{item.id}}_t.png" height="200" width="200" />
-        </a>
-    </p>
+    {% if item.getMimeType() %}
+    <li>{{item.getMimeType()}}</li>
     {% endif %}
+    <li>{{dump(item.getReadGroup())}}</li>
+    {% if item.editable %}
+    <li><a href="{{baseurl}}/{{item.getId}}/edit">Edit</a></li>
+    {% endif %}
+</ul>
+
+{{item.getDescription}}
+
+<ol id="tags" class="list-inline">
+    <li>Tags:</li>
+    {% for tag in tags %}
+        <li><a href="{{baseurl}}/+{{tag.id}}" class="label label-default">{{tag.title}}</a></li>
+    {% endfor %}
+</ol>
+
+{% if item.getMimeType == 'text/plain' %}
+{#{{item.getFileContents|markdown|raw}}#}
+{% endif %}
+
+{% if item.isImage() %}
+<p>
+    <a href="{{baseurl}}/{{item.id}}_o.png">
+        <img src="{{baseurl}}/{{item.id}}_t.png" height="200" width="200" />
+    </a>
+</p>
+{% endif %}
 
 {% endblock %}

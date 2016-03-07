@@ -25,11 +25,30 @@ class UserTest extends Base
         $this->assertSame('3', $this->db->query("SELECT COUNT(*) FROM users")->fetchColumn());
     }
 
-    public function testGroups()
+    /**
+     * When a User registers, a new Group is created of which they are the only member.
+     * They are also a member of the Public group.
+     * @test
+     */
+    public function ownGroup()
     {
         $user1 = new User($this->db);
         $user1->register('Name');
         $this->assertSame('Name', $user1->getName());
-        $this->assertSame(['Name'], $user1->getGroupNames());
+        $groups = $user1->getGroups();
+        $this->assertCount(2, $groups);
+    }
+
+    /**
+     * A user has a 'default group', which initially is the same as the group that is created for them when
+     * they register.
+     * @test
+     */
+    public function testGroupMembership()
+    {
+        $user1 = new User($this->db);
+        $user1->register('Name');
+        $defaultGroup = $user1->getDefaultGroup();
+        $this->assertSame('Name', $defaultGroup->name);
     }
 }

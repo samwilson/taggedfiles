@@ -2,6 +2,11 @@
 
 {% block content %}
 
+<h1>
+    {{title}}
+    <small><a href="{{baseurl}}/{{item.getid}}" class="btn btn-default">Cancel</a></small>
+</h1>
+
 <form action="{{baseurl}}/save" method="post" enctype="multipart/form-data" class="form">
     <p class="form-group">
         <label for="title" class="control-label">Title:</label>
@@ -19,13 +24,7 @@
         </p>
         <p class="col-md-6">
             <label class="control-label">Granularity:</label>
-            <select name="date_granularity" class="form-control">
-            {%for g in dateGranularities %}
-                <option value="{{g.id}}" {% if g.id == item.getDateGranularity %}selected{% endif %}>
-                    {{g.title}}
-                </option>
-            {% endfor %}
-            </select>
+            {% include "html_select.twig" with {id:date_granularity, name:date_granularity, options:dateGranularities, blank:false} %}
         </p>
     </div>
     <p>
@@ -45,26 +44,30 @@
                 <textarea name="file_contents" id="fileContents" class="form-control" rows="20">{% if item.isText() %}{{fileContents}}{% endif %}</textarea>
             </p>
             <p role="tabpanel" class="tab-pane" id="upload">
-                <input type="file" id="fileContents" name="file" class="form-control" />
+                <input type="file" id="fileContents" name="file" />
             </p>
         </div>
     </div>
     <div class="row">
         <p class="col-md-6">
             <label class="control-label" for="read_group">Read group:</label>
-            <select class="form-control" name="read_group">
+            <select class="form-control" name="read_group" required>
                 <option></option>
-                {% for id,group in user.getGroups %}
-                <option value="{{baseurl}}/g/{{group.id}}">{{group.name}}</option>
+                {% for group in user.getGroups %}
+                <option value="{{baseurl}}/g/{{group.id}}" {% if group.id == item.getReadGroup %}selected{% endif %}>
+                    {{group.name}}
+                </option>
                 {% endfor %}
             </select>
         </p>
         <p class="col-md-6">
             <label class="control-label" for="edit_group">Edit group:</label>
-            <select class="form-control" name="edit_group">
+            <select class="form-control" name="edit_group" required>
                 <option></option>
                 {% for group in user.getGroups %}
-                <option value="{{baseurl}}/g/{{group.id}}">{{group.name}}</option>
+                    <option value="{{baseurl}}/g/{{group.id}}" {% if group.id == item.getEditGroup %}selected{% endif %}>
+                        {{group.name}}
+                    </option>
                 {% endfor %}
             </select>
         </p>

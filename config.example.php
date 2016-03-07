@@ -21,4 +21,5 @@ return [
     'mail' => [
         'transport' => 'mail',
     ],
+    'mode' => 'production',
 ];

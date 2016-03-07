@@ -40,7 +40,7 @@ class ItemController extends Base
     {
         $template = new \App\Template('form.twig');
         $template->title = 'Create';
-        if (!$this->user) {
+        if (!$this->user->getId()) {
             $msg = 'You have to '
                 . ' <a href="' . $this->config->baseUrl() . '/login" class="alert-link">log in</a> '
                 . ' before you can add or edit items.';
@@ -73,7 +73,7 @@ class ItemController extends Base
             'read_group' => filter_input(INPUT_POST, 'read_group', FILTER_SANITIZE_NUMBER_INT),
         );
         $tags = filter_input(INPUT_POST, 'tags');
-        $item = new \App\Item();
+        $item = new Item(null, $this->user);
         $item->save($metadata, $tags, $_FILES['file']['tmp_name'], filter_input(INPUT_POST, 'file_contents'));
 
         $config = new Config();

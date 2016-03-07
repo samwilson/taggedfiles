@@ -18,6 +18,6 @@
 
     <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
         <exclude-pattern>./index.php</exclude-pattern>
-        <exclude-pattern>./tests/bootstrap.php</exclude-pattern>
+        <exclude-pattern>./bootstrap.php</exclude-pattern>
     </rule>
 </ruleset>

@@ -16,12 +16,16 @@ class Item
     /** @var \StdClass */
     private $data;
 
-    public function __construct($id = null)
+    /** @var User */
+    protected $user;
+
+    public function __construct($id = null, User $user = null)
     {
         $this->db = new Db();
         if ($id !== null) {
             $this->load($id);
         }
+        $this->user = $user;
     }
 
     public function load($id)
@@ -30,11 +34,33 @@ class Item
             throw new \Exception("Not an Item ID: " . print_r($id, true));
         }
         $sql = 'SELECT items.id, items.title, items.description, items.date, '
-            . '    items.date_granularity, dg.php_format AS date_granularity_format '
+            . '    items.date_granularity, dg.php_format AS date_granularity_format, '
+            . '    items.read_group, items.edit_group '
             . ' FROM items JOIN date_granularities dg ON dg.id=items.date_granularity '
             . ' WHERE items.id=:id ';
         $params = ['id' => $id];
         $this->data = $this->db->query($sql, $params)->fetch();
+    }
+
+    /**
+     * Is this item editable by any of the current user's groups?
+     *
+     * @return bool
+     */
+    public function editable()
+    {
+        if (!$this->user || !$this->user->getId()) {
+            return false;
+        }
+        if (!$this->getId()) {
+            return true;
+        }
+        foreach ($this->user->getGroups() as $group) {
+            if ($this->getEditGroup() === $group->id) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -44,9 +70,13 @@ class Item
      * @param string $tagsString CSV string of tags.
      * @param string $filename The full filesystem path to a file to attach to this Item.
      * @param string $fileContents A string to treat as the contents of a file.
+     * @return false
      */
     public function save($metadata, $tagsString = null, $filename = null, $fileContents = null)
     {
+        if (!$this->editable()) {
+            return false;
+        }
         if (empty($metadata['title'])) {
             $metadata['title'] = 'Untitled';
         }
@@ -132,7 +162,10 @@ class Item
         }
         $filesystem = App::getFilesystem();
         $path = "storage://" . $this->getFilePath($version);
-        return $filesystem->getMimetype($path);
+        if ($filesystem->has($path)) {
+            return $filesystem->getMimetype($path);
+        }
+        return false;
     }
 
     /**
@@ -158,7 +191,7 @@ class Item
     public function getFileContents($version = null)
     {
         if (!$this->getId()) {
-            return;
+            return false;
         }
         if (is_null($version)) {
             $version = $this->getVersionCount();
@@ -168,6 +201,7 @@ class Item
         if ($filesystem->has($path)) {
             return $filesystem->read($path);
         }
+        return false;
     }
 
     /**
@@ -292,6 +326,17 @@ class Item
     public function getDate()
     {
         return isset($this->data->date) ? $this->data->date : false;
+    }
+
+    public function getEditGroup()
+    {
+        $group = ($this->user instanceof User) ? $this->user->getDefaultGroup() : User::GROUP_ADMIN;
+        return isset($this->data->edit_group) ? $this->data->edit_group : $group;
+    }
+
+    public function getReadGroup()
+    {
+        return isset($this->data->read_group) ? $this->data->read_group : User::GROUP_PUBLIC;
     }
 
     public function getDateFormatted()
