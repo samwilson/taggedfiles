@@ -17,11 +17,7 @@ Swidau
 1. Clone from Github to a web-accessible directory: `git clone https://github.com/samwilson/swidau.git /var/www/swidau`
 2. Change to that directory: `cd /var/www/swidau`
 3. Install dependencies: `composer install`
-4. Run the application installer: `swidau upgrade`
-
-## Troubleshooting
-
-1. If you get this error: ``/usr/bin/env: php: No such file or directory` then you may need to install 
+4. Run the application installer: `./swidau upgrade`
 
 ## Licence (GPL-3.0+)
 
