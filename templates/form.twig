@@ -23,8 +23,12 @@
             <input type="text" name="date" value="{{item.getDate}}" class="form-control datepicker" />
         </p>
         <p class="col-md-6">
-            <label class="control-label">Granularity:</label>
-            {% include "html_select.twig" with {id:date_granularity, name:date_granularity, options:dateGranularities, blank:false} %}
+            <label class="control-label" for="date_granularity">Granularity:</label>
+            <select name="date_granularity" id="date_granularity" class="form-control">
+                {% for dg in item.getDateGranularities %}
+                <option value="{{dg.id}}">{{dg.name}}</option>
+                {% endfor %}
+            </select>
         </p>
     </div>
     <p>

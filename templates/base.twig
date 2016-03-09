@@ -84,7 +84,7 @@
 
         {% if mode == 'development' %}
             <div id="queries">
-            {% for query in queries %}
+            {% for query in db_queries %}
                 <pre>{{query}}</pre>
             {% endfor %}
             </div>

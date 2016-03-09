@@ -74,6 +74,9 @@ class Item
      */
     public function save($metadata, $tagsString = null, $filename = null, $fileContents = null)
     {
+        if (isset($metadata['id'])) {
+            $this->load($metadata['id']);
+        }
         if (!$this->editable()) {
             return false;
         }
@@ -330,13 +333,15 @@ class Item
 
     public function getEditGroup()
     {
-        $group = ($this->user instanceof User) ? $this->user->getDefaultGroup() : User::GROUP_ADMIN;
-        return isset($this->data->edit_group) ? $this->data->edit_group : $group;
+        $defaultGroup = ($this->user instanceof User) ? $this->user->getDefaultGroup() : User::GROUP_ADMIN;
+        $groupId = isset($this->data->edit_group) ? $this->data->edit_group : $defaultGroup;
+        return $this->db->query("SELECT * FROM groups WHERE id=:id", ['id'=>$groupId])->fetch();
     }
 
     public function getReadGroup()
     {
-        return isset($this->data->read_group) ? $this->data->read_group : User::GROUP_PUBLIC;
+        $groupId = isset($this->data->read_group) ? $this->data->read_group : User::GROUP_PUBLIC;
+        return $this->db->query("SELECT * FROM groups WHERE id=:id", ['id'=>$groupId])->fetch();
     }
 
     public function getDateFormatted()

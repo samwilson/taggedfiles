@@ -48,8 +48,6 @@ class Template
 
     public function render($echo = false)
     {
-        $this->queries = Db::getQueries();
-
         // Load template directories.
         $loader = new \Twig_Loader_Filesystem();
         $loader->addPath('templates');
@@ -65,6 +63,11 @@ class Template
         $twig->addFilter(new \Twig_SimpleFilter('markdown', function ($text) {
             $parsedown = new \Parsedown();
             return $parsedown->text($text);
+        }));
+
+        // DB queries.
+        $twig->addFunction(new \Twig_SimpleFunction('db_queries', function () {
+            return Db::getQueries();
         }));
 
         // Render.

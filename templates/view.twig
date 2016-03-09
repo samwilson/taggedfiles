@@ -9,9 +9,13 @@
     <li>{{item.getDateFormatted}}</li>
     {% endif %}
     {% if item.getMimeType() %}
-    <li>{{item.getMimeType()}}</li>
+    <li>Mime type: {{item.getMimeType()}}</li>
     {% endif %}
-    <li>{{dump(item.getReadGroup())}}</li>
+    <li>
+        Access control:
+        Read: <a href="{{baseurl}}/g/{{item.getReadGroup().id}}">{{item.getReadGroup().name}}</a>
+        Edit: <a href="{{baseurl}}/g/{{item.getEditGroup().id}}">{{item.getEditGroup().name}}</a>
+    </li>
     {% if item.editable %}
     <li><a href="{{baseurl}}/{{item.getId}}/edit">Edit</a></li>
     {% endif %}
@@ -19,12 +23,14 @@
 
 {{item.getDescription}}
 
+{% if tags %}
 <ol id="tags" class="list-inline">
     <li>Tags:</li>
     {% for tag in tags %}
         <li><a href="{{baseurl}}/+{{tag.id}}" class="label label-default">{{tag.title}}</a></li>
     {% endfor %}
 </ol>
+{% endif %}
 
 {% if item.getMimeType == 'text/plain' %}
 {#{{item.getFileContents|markdown|raw}}#}
