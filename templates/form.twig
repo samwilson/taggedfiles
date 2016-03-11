@@ -77,7 +77,7 @@
         </p>
     </div>
     <p class="buttons">
-        <input type="submit" value="Save" class="btn btn-primary" />
+        <input type="submit" value="Save" class="btn btn-primary" {% if not item.editable(user) %}disabled{% endif %} />
         {% if item %}
             <input type="hidden" name="id" value="{{item.getId}}" />
             <a href="{{baseurl}}/{{item.id}}" class="btn btn-default">Cancel</a>

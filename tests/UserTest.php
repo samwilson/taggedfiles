@@ -7,7 +7,11 @@ use App\User;
 class UserTest extends Base
 {
 
-    public function testRegister()
+    /**
+     * A new User can be registered. If they supply a name that already exists, a number will be appended.
+     * @test
+     */
+    public function register()
     {
         // First.
         $user1 = new User($this->db);
@@ -23,6 +27,19 @@ class UserTest extends Base
         $this->assertSame('Name 3', $user3->getName());
         // Make sure there were three users created.
         $this->assertSame('3', $this->db->query("SELECT COUNT(*) FROM users")->fetchColumn());
+    }
+
+    /**
+     * The default non-registered, non-authenticated User has no ID and is a member of the public group (which is also their default group).
+     * @test
+     */
+    public function publicGroup()
+    {
+        $user = new User($this->db);
+        $groups = $user->getGroups();
+        $this->assertCount(1, $groups);
+        $group = $groups[0];
+        $this->assertSame(User::GROUP_PUBLIC, $group['id']);
     }
 
     /**

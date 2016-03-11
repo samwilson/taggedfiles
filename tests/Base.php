@@ -22,10 +22,18 @@ abstract class Base extends \PHPUnit_Framework_TestCase
         $this->db->query("DROP TABLE IF EXISTS `user_groups`");
         $this->db->query("SET FOREIGN_KEY_CHECKS=1");
         $this->db->install();
+        if (!is_dir($this->dataDir())) {
+            mkdir($this->dataDir());
+        }
     }
 
     public function tearDown()
     {
-        App::deleteDir(__DIR__ . '/data');
+        App::deleteDir($this->dataDir());
+    }
+
+    protected function dataDir()
+    {
+        return __DIR__.'/data';
     }
 }

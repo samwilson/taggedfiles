@@ -56,6 +56,10 @@ class User
         $this->load($userId);
     }
 
+    /**
+     * Get a list of all groups that this user belongs to.
+     * @return string[] Each with 'id' and 'name' properties.
+     */
     public function getGroups()
     {
         if (!$this->getId()) {
@@ -66,7 +70,12 @@ class User
                 . " JOIN `groups` g ON ug.group = g.id"
                 . " WHERE u.id = :id";
         }
-        return $this->db->query($sql, ['id' => $this->getId()])->fetchAll();
+        $groups = [];
+        $results = $this->db->query($sql, ['id' => $this->getId()])->fetchAll();
+        foreach ($results as $res) {
+            $groups[] = ['id' => (int)$res->id, 'name' => $res->name];
+        }
+        return $groups;
     }
 
     public function getReminder()
