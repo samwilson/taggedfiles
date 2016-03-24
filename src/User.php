@@ -145,6 +145,6 @@ class User
             $group = $this->db->query($sql, ['id'=>$this->data->default_group])->fetch();
             return $group;
         }
-        return false;
+        return self::GROUP_PUBLIC;
     }
 }

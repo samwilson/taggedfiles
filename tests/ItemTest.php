@@ -8,13 +8,23 @@ use App\Config;
 class ItemTest extends Base
 {
 
+    /** @var \App\User */
+    protected $testUser;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->testUser = new \App\User($this->db);
+        $this->testUser->register('Test User');
+    }
+
     /**
      * @testdox An Item has an ID and title.
      * @test
      */
     public function basics()
     {
-        $item = new Item();
+        $item = new Item(null, $this->testUser);
         $item->save(['title' => 'Test']);
         $this->assertEquals(1, $item->getId());
         $this->assertEquals('Test', $item->getTitle());
@@ -26,7 +36,7 @@ class ItemTest extends Base
      */
     public function modification()
     {
-        $item = new Item();
+        $item = new Item(null, $this->testUser);
         $item->save(['title' => 'Test']);
         $this->assertEquals(1, $item->getId());
         $this->assertEquals('Test', $item->getTitle());
@@ -43,7 +53,7 @@ class ItemTest extends Base
      */
     public function keywords()
     {
-        $item = new Item();
+        $item = new Item(null, $this->testUser);
         $item->save([], 'one,two');
         $this->assertCount(2, $item->getTags());
     }
@@ -54,7 +64,7 @@ class ItemTest extends Base
      */
     public function files()
     {
-        $item = new Item();
+        $item = new Item(null, $this->testUser);
         // First version.
         $item->save([], null, null, 'Test file contents.');
         $this->assertSame(1, $item->getId());
@@ -72,7 +82,7 @@ class ItemTest extends Base
         $this->assertSame('New file contents.', $item->getFileContents());
         $this->assertSame('Test file contents.', $item->getFileContents(1));
         // Upload a different file.
-        $item2 = new Item();
+        $item2 = new Item(null, $this->testUser);
         $item2->save(['title' => 'Second test'], null, null, 'Second test.');
         $this->assertSame(2, $item2->getId());
         $this->assertSame('c8/1e/2/v1', $item2->getFilePath());
@@ -83,7 +93,7 @@ class ItemTest extends Base
     {
         $config = new Config();
         $this->assertArrayHasKey('cache', $config->filesystems());
-        $item = new Item();
+        $item = new Item(null, $this->testUser);
         $item->save([], null, null, 'Test file contents.');
         $this->assertSame(__DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR
             . 'cache' . DIRECTORY_SEPARATOR . '1_v1_o', $item->getCachePath());

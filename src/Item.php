@@ -28,6 +28,11 @@ class Item
         $this->user = $user;
     }
 
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
+
     public function load($id)
     {
         if (!empty($id) && !is_numeric($id)) {
@@ -55,8 +60,9 @@ class Item
         if (!$this->getId()) {
             return true;
         }
+        $editGroupId = $this->getEditGroup()->id;
         foreach ($this->user->getGroups() as $group) {
-            if ($this->getEditGroup() === $group->id) {
+            if ($editGroupId == $group['id']) {
                 return true;
             }
         }
@@ -78,7 +84,7 @@ class Item
             $this->load($metadata['id']);
         }
         if (!$this->editable()) {
-            return false;
+            throw new \Exception("You are not allowed to edit this item.");
         }
         if (empty($metadata['title'])) {
             $metadata['title'] = 'Untitled';
@@ -93,10 +99,10 @@ class Item
             $metadata['date_granularity'] = self::DATE_GRANULARITY_DEFAULT;
         }
         if (empty($metadata['edit_group'])) {
-            $metadata['edit_group'] = User::GROUP_ADMIN;
+            $metadata['edit_group'] = $this->getEditGroup()->id;
         }
         if (empty($metadata['read_group'])) {
-            $metadata['read_group'] = User::GROUP_PUBLIC;
+            $metadata['read_group'] = $this->getReadGroup()->id;
         }
         $setClause = 'SET title=:title, description=:description, date=:date, '
             . ' date_granularity=:date_granularity, edit_group=:edit_group, read_group=:read_group ';
@@ -333,7 +339,7 @@ class Item
 
     public function getEditGroup()
     {
-        $defaultGroup = ($this->user instanceof User) ? $this->user->getDefaultGroup() : User::GROUP_ADMIN;
+        $defaultGroup = ($this->user instanceof User) ? $this->user->getDefaultGroup()->id : User::GROUP_ADMIN;
         $groupId = isset($this->data->edit_group) ? $this->data->edit_group : $defaultGroup;
         return $this->db->query("SELECT * FROM groups WHERE id=:id", ['id'=>$groupId])->fetch();
     }
@@ -341,7 +347,9 @@ class Item
     public function getReadGroup()
     {
         $groupId = isset($this->data->read_group) ? $this->data->read_group : User::GROUP_PUBLIC;
-        return $this->db->query("SELECT * FROM groups WHERE id=:id", ['id'=>$groupId])->fetch();
+        $readGroup = $this->db->query("SELECT * FROM groups WHERE id=:id", ['id'=>$groupId])->fetch();
+        //dump($readGroup);exit();
+        return $readGroup;
     }
 
     public function getDateFormatted()

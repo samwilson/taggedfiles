@@ -57,8 +57,8 @@
             <label class="control-label" for="read_group">Read group:</label>
             <select class="form-control" name="read_group" required>
                 <option></option>
-                {% for group in user.getGroups %}
-                <option value="{{baseurl}}/g/{{group.id}}" {% if group.id == item.getReadGroup %}selected{% endif %}>
+                {% for group in groups %}
+                <option value="{{baseurl}}/g/{{group.id}}" {% if group.id == item.getReadGroup.id %}selected{% endif %}>
                     {{group.name}}
                 </option>
                 {% endfor %}
@@ -68,8 +68,8 @@
             <label class="control-label" for="edit_group">Edit group:</label>
             <select class="form-control" name="edit_group" required>
                 <option></option>
-                {% for group in user.getGroups %}
-                    <option value="{{baseurl}}/g/{{group.id}}" {% if group.id == item.getEditGroup %}selected{% endif %}>
+                {% for group in groups %}
+                    <option value="{{baseurl}}/g/{{group.id}}" {% if group.id == item.getEditGroup().id %}selected{% endif %}>
                         {{group.name}}
                     </option>
                 {% endfor %}

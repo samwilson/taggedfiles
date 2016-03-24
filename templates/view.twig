@@ -4,6 +4,7 @@
 
 <h1>{{title}}</h1>
 
+<div class="well">
 <ul class="list-inline">
     {% if item.getDate %}
     <li>{{item.getDateFormatted}}</li>
@@ -21,7 +22,7 @@
     {% endif %}
 </ul>
 
-{{item.getDescription}}
+{{item.getDescription|markdown|raw}}
 
 {% if tags %}
 <ol id="tags" class="list-inline">
@@ -31,9 +32,10 @@
     {% endfor %}
 </ol>
 {% endif %}
+</div>
 
 {% if item.getMimeType == 'text/plain' %}
-{#{{item.getFileContents|markdown|raw}}#}
+{{item.getFileContents|markdown|raw}}
 {% endif %}
 
 {% if item.isImage() %}

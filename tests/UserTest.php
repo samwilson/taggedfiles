@@ -36,11 +36,11 @@ class UserTest extends Base
     public function publicGroup()
     {
         $user = new User($this->db);
-        $this->assertSame(User::GROUP_PUBLIC, $user->getDefaultGroup());
+        $this->assertEquals(User::GROUP_PUBLIC, $user->getDefaultGroup());
         $groups = $user->getGroups();
         $this->assertCount(1, $groups);
         $group = $groups[0];
-        $this->assertSame(User::GROUP_PUBLIC, $group['id']);
+        $this->assertEquals(User::GROUP_PUBLIC, $group['id']);
     }
 
     /**

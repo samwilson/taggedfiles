@@ -25,7 +25,7 @@ class ItemController extends Base
 
     public function view(Request $request, Response $response, array $args)
     {
-        $item = new Item($args['id']);
+        $item = new Item($args['id'], $this->user);
         $template = new \App\Template('view.twig');
         $template->item = $item;
         $template->title = $item->getTitle();
@@ -51,10 +51,11 @@ class ItemController extends Base
             $template->title = 'Editing #' . $args['id'];
             $item = new Item($args['id']);
         }
+        $item->setUser($this->user);
         $sql = "SELECT id, title FROM date_granularities ORDER BY id ASC";
         $template->date_granularities = $this->db->query($sql)->fetchAll();
-
         $template->item = $item;
+        $template->groups = $this->user->getGroups();
         $template->fileContents = $item->getFileContents();
         $response->setContent($template->render());
         return $response;
