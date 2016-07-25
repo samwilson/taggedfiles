@@ -110,7 +110,7 @@ class Item
         // Start a transaction. End after the key words and files have been written.
         $this->db->query('BEGIN');
 
-        if ($this->getId()) {
+        if ($this->isLoaded()) {
             // Update?
             $metadata['id'] = $this->getId();
             $sql = "UPDATE items $setClause WHERE id=:id";
@@ -164,7 +164,7 @@ class Item
      */
     public function getMimeType($version = null)
     {
-        if (!$this->getId()) {
+        if (!$this->isLoaded()) {
             return false;
         }
         if (is_null($version)) {
@@ -200,7 +200,7 @@ class Item
      */
     public function getFileContents($version = null)
     {
-        if (!$this->getId()) {
+        if (!$this->isLoaded()) {
             return false;
         }
         if (is_null($version)) {
@@ -316,6 +316,16 @@ class Item
             $out[] = $tag->title;
         }
         return join(', ', $out);
+    }
+
+    /**
+     * Find out whether an Item is loaded.
+     * @uses \App\Item::getId() If an Item has an ID, it's considered loaded.
+     * @return boolean
+     */
+    public function isLoaded()
+    {
+        return ($this->getId() !== false);
     }
 
     public function getId()

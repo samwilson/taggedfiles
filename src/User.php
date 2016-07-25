@@ -139,6 +139,11 @@ class User
         return isset($this->data->email) ? $this->data->email : false;
     }
 
+    /**
+     * Get this user's default group.
+     *
+     * @return StdClass with attributes: 'id', 'name'.
+     */
     public function getDefaultGroup()
     {
         $defaultGroupId = isset($this->data->default_group) ? $this->data->default_group : self::GROUP_PUBLIC;
