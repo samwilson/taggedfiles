@@ -8,7 +8,8 @@
         <div class="col-lg-2">
             <a href="{{baseurl}}/{{item.id}}" class="thumbnail text-center">
                 <p>{{item.title}}</p>
-                {% if item.isImage %}
+{{dump(item.isImage())}}
+                {% if item.isImage() %}
                 <p><img src="{{baseurl}}/{{item.id}}_t.png" class="img-responsive" /></p>
                 {% endif %}
                 {{item.description|markdown|raw}}

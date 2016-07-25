@@ -74,8 +74,8 @@ class Item
      *
      * @param string[] $metadata Array of metadata pairs.
      * @param string $tagsString CSV string of tags.
-     * @param string $filename The full filesystem path to a file to attach to this Item.
-     * @param string $fileContents A string to treat as the contents of a file.
+     * @param string $filename The full filesystem path to a file to attach to this Item. Don't use with $fileContents.
+     * @param string $fileContents A string to treat as the contents of a file. Don't use with $filename.
      * @return false
      */
     public function save($metadata, $tagsString = null, $filename = null, $fileContents = null)
@@ -110,8 +110,9 @@ class Item
         // Start a transaction. End after the key words and files have been written.
         $this->db->query('BEGIN');
 
-        if (isset($metadata['id']) && is_numeric($metadata['id'])) {
+        if ($this->getId()) {
             // Update?
+            $metadata['id'] = $this->getId();
             $sql = "UPDATE items $setClause WHERE id=:id";
             $this->db->query($sql, $metadata);
             $id = $metadata['id'];
@@ -341,7 +342,8 @@ class Item
     {
         $defaultGroup = ($this->user instanceof User) ? $this->user->getDefaultGroup()->id : User::GROUP_ADMIN;
         $groupId = isset($this->data->edit_group) ? $this->data->edit_group : $defaultGroup;
-        return $this->db->query("SELECT * FROM groups WHERE id=:id", ['id'=>$groupId])->fetch();
+        $editGroup = $this->db->query("SELECT * FROM groups WHERE id=:id", ['id'=>$groupId])->fetch();
+        return $editGroup;
     }
 
     public function getReadGroup()

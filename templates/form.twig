@@ -4,7 +4,7 @@
 
 <h1>
     {{title}}
-    <small><a href="{{baseurl}}/{{item.getid}}" class="btn btn-default">Cancel</a></small>
+    <small><a href="{{baseurl}}/{{item.getId}}" class="btn btn-default">Cancel</a></small>
 </h1>
 
 <form action="{{baseurl}}/save" method="post" enctype="multipart/form-data" class="form">
@@ -14,8 +14,8 @@
     </p>
     <p>
         <label for="tags" class="control-label">Tags:</label>
-        {{item.getTagsString}}
-        <input type="text" id="tags" name="tags" value="{{item.getTagsString}}" class="form-control" />
+        {{itemTags}}
+        <input type="text" id="tags" name="tags" value="{{itemTags}}" class="form-control" />
     </p>
     <div class="row">
         <p class="col-md-6">
@@ -45,10 +45,11 @@
         <!-- Tab panes -->
         <div class="tab-content">
             <p role="tabpanel" class="tab-pane active" id="direct-entry">
-                <textarea name="file_contents" id="fileContents" class="form-control" rows="20">{% if item.isText() %}{{fileContents}}{% endif %}</textarea>
+                <textarea name="file_contents" id="fileContents" class="form-control" rows="20"
+                >{% if item.isText() %}{{fileContents}}{% endif %}</textarea>
             </p>
             <p role="tabpanel" class="tab-pane" id="upload">
-                <input type="file" id="fileContents" name="file" />
+                <input type="file" id="fileContents" name="file" class="form-control" />
             </p>
         </div>
     </div>
@@ -58,7 +59,7 @@
             <select class="form-control" name="read_group" required>
                 <option></option>
                 {% for group in groups %}
-                <option value="{{baseurl}}/g/{{group.id}}" {% if group.id == item.getReadGroup.id %}selected{% endif %}>
+                <option value="{{baseurl}}/g/{{group.id}}" {% if group.id == itemReadGroupId %}selected{% endif %}>
                     {{group.name}}
                 </option>
                 {% endfor %}
@@ -68,10 +69,10 @@
             <label class="control-label" for="edit_group">Edit group:</label>
             <select class="form-control" name="edit_group" required>
                 <option></option>
-                {% for group in groups %}
-                    <option value="{{baseurl}}/g/{{group.id}}" {% if group.id == item.getEditGroup().id %}selected{% endif %}>
-                        {{group.name}}
-                    </option>
+               {% for group in groups %}
+                <option value="{{baseurl}}/g/{{group.id}}" {% if group.id == itemEditGroupId %}selected{% endif %}>
+                    {{group.name}}
+                </option>
                 {% endfor %}
             </select>
         </p>

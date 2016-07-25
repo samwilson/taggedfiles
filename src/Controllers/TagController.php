@@ -18,7 +18,8 @@ class TagController extends Base
             . " JOIN groups ON groups.id = items.read_group "
             //. " WHERE groups.id = "
             . " ORDER BY RAND() LIMIT 20";
-        $items = $this->db->query($sql);
+        $params = [];
+        $items = $this->db->query($sql, $params, '\\App\\Item');
         $template = new \App\Template('home.twig');
         $template->items = $items;
         $template->title = 'Home';

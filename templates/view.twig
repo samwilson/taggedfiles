@@ -5,22 +5,27 @@
 <h1>{{title}}</h1>
 
 <div class="well">
-<ul class="list-inline">
+<dl class="dl-horizontal">
     {% if item.getDate %}
-    <li>{{item.getDateFormatted}}</li>
+    <dt>Date:</dt>
+    <dd>{{item.getDateFormatted}}</dd>
     {% endif %}
     {% if item.getMimeType() %}
-    <li>Mime type: {{item.getMimeType()}}</li>
+    <dt>Mime type:</dt>
+    <dd>{{item.getMimeType()}}</dd>
     {% endif %}
-    <li>
-        Access control:
-        Read: <a href="{{baseurl}}/g/{{item.getReadGroup().id}}">{{item.getReadGroup().name}}</a>
-        Edit: <a href="{{baseurl}}/g/{{item.getEditGroup().id}}">{{item.getEditGroup().name}}</a>
-    </li>
+    <dt>Access control:</dt>
+    <dd>
+        <ul class="list-inline">
+            <li>Read: <a href="{{baseurl}}/g/{{itemReadGroup.id}}">{{itemReadGroup.name}}</a></li>
+            <li>Edit: <a href="{{baseurl}}/g/{{itemEditGroup.id}}">{{itemEditGroup.name}}</a></li>
+        </ul>
+    </dd>
     {% if item.editable %}
-    <li><a href="{{baseurl}}/{{item.getId}}/edit">Edit</a></li>
+    <dt>Actions:</dt>
+    <dd><a href="{{baseurl}}/{{item.getId}}/edit">Edit</a></dd>
     {% endif %}
-</ul>
+</dl>
 
 {{item.getDescription|markdown|raw}}
 

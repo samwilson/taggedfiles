@@ -4,6 +4,7 @@ namespace App\Tests;
 
 use App\Item;
 use App\Config;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class ItemTest extends Base
 {
@@ -51,7 +52,7 @@ class ItemTest extends Base
      * @testdox
      * @test
      */
-    public function keywords()
+    public function tags()
     {
         $item = new Item(null, $this->testUser);
         $item->save([], 'one,two');
@@ -98,5 +99,49 @@ class ItemTest extends Base
         $this->assertSame(__DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR
             . 'cache' . DIRECTORY_SEPARATOR . '1_v1_o', $item->getCachePath());
         $this->assertFileExists(__DIR__ . '/data/cache/1_v1_o');
+    }
+
+    /**
+     * @testdox A text file can be updated to be a text file.
+     * @test
+     */
+    public function fileModifyTextToText()
+    {
+        // Create an item, and save it twice with different text content.
+        $item = new Item(null, $this->testUser);
+        $item->save([], null, null, 'First contents');
+        $this->assertEquals('First contents', $item->getFileContents());
+        $item->save(null, null, null, 'Second contents');
+        $this->assertEquals('Second contents', $item->getFileContents());
+
+        // Check that the version numbers and mime types are what we'd expect.
+        $this->assertEquals('First contents', $item->getFileContents(1));
+        $this->assertEquals('text/plain', $item->getMimeType(1));
+        $this->assertEquals('Second contents', $item->getFileContents(2));
+        $this->assertEquals('text/plain', $item->getMimeType(2));
+    }
+
+    /**
+     * @testdox A text file can be updated to be an image file.
+     * @test
+     */
+    public function fileModifyTextToImage()
+    {
+        $img = Image::canvas(200, 100, '#ccc');
+        $tmpFilename = $this->dataDir() . '/test-image.jpg';
+        $img->save($tmpFilename);
+
+        // Create an item, and save it twice with different text content.
+        $item = new Item(null, $this->testUser);
+        $item->save([], null, null, 'First contents');
+        $this->assertEquals('First contents', $item->getFileContents());
+        $item->save(null, null, $tmpFilename);
+        $this->assertFileEquals($tmpFilename, $item->getCachePath());
+
+        // Check that the version numbers and mime types are what we'd expect.
+        $this->assertEquals('First contents', $item->getFileContents(1));
+        $this->assertEquals('text/plain', $item->getMimeType(1));
+        $this->assertFileEquals($tmpFilename, $item->getCachePath('o', 2));
+        $this->assertEquals('image/jpeg', $item->getMimeType(2));
     }
 }

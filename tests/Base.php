@@ -32,6 +32,12 @@ abstract class Base extends \PHPUnit_Framework_TestCase
         App::deleteDir($this->dataDir());
     }
 
+    /**
+     * Get the full local filesystem path to the test-data directory.
+     * This directory is created at set-up and deleted at tear-down.
+     *
+     * @return string
+     */
     protected function dataDir()
     {
         return __DIR__.'/data';

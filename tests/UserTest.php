@@ -30,7 +30,8 @@ class UserTest extends Base
     }
 
     /**
-     * The default non-registered, non-authenticated User has no ID and is a member of the public group (which is also their default group).
+     * The default non-registered, non-authenticated User has no ID and is a member of the public group (which is also
+     * their default group).
      * @test
      */
     public function publicGroup()

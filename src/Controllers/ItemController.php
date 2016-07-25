@@ -12,17 +12,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class ItemController extends Base
 {
 
-    public function index(Request $request, Response $response, array $args)
-    {
-        $sql = "SELECT id, title, description FROM items WHERE auth_level = 0 ORDER BY RAND() LIMIT 10";
-        $items = $this->db->query($sql);
-        $template = new \App\Template('home.twig');
-        $template->items = $items;
-        $template->title = 'Home';
-        $response->setContent($template->render());
-        return $response;
-    }
-
     public function view(Request $request, Response $response, array $args)
     {
         $item = new Item($args['id'], $this->user);
@@ -31,6 +20,8 @@ class ItemController extends Base
         $template->title = $item->getTitle();
         $template->tags = $item->getTags();
         $template->mime_type = $item->getMimeType();
+        $template->itemReadGroup = $item->getReadGroup();
+        $template->itemEditGroup = $item->getEditGroup();
         // Return the template.
         $response->setContent($template->render());
         return $response;
@@ -45,6 +36,8 @@ class ItemController extends Base
                 . ' <a href="' . $this->config->baseUrl() . '/login" class="alert-link">log in</a> '
                 . ' before you can add or edit items.';
             $template->alert('info', $msg);
+            $response->setContent($template->render());
+            return $response;
         }
         $item = new Item();
         if (isset($args['id'])) {
@@ -57,6 +50,9 @@ class ItemController extends Base
         $template->item = $item;
         $template->groups = $this->user->getGroups();
         $template->fileContents = $item->getFileContents();
+        $template->itemTags = $item->getTagsString();
+        $template->itemReadGroupId = $item->getReadGroup()->id;
+        $template->itemEditGroupId = $item->getEditGroup()->id;
         $response->setContent($template->render());
         return $response;
     }

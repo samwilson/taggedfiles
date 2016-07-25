@@ -115,7 +115,7 @@ class UserController extends Base
             sleep(5);
         }
         $template->alert('success', 'Please check your email', true);
-        return new RedirectResponse($this->config->baseUrl() . '/remind?name=' . $user->getName());
+        return new RedirectResponse($this->config->baseUrl() . '/remind?name=' . $name);
     }
 
     public function remindResetForm(Request $request, Response $response, array $args)
@@ -151,5 +151,13 @@ class UserController extends Base
         $user->changePassword($password);
         $template->alert('success', 'Your password has been changed. Please log in.', true);
         return new RedirectResponse($this->config->baseUrl() . "/login?name=" . $user->getName());
+    }
+
+    public function profile(Request $request, Response $response, array $args)
+    {
+        $template = new \App\Template('profile.twig');
+        $template->title = 'Profile';
+        $response->setContent($template->render());
+        return $response;
     }
 }

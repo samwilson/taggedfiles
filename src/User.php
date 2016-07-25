@@ -46,7 +46,8 @@ class User
         $groupMemberSql = 'INSERT INTO `user_groups` SET `user`=:u, `group`=:g';
         $this->db->query($groupMemberSql, ['u' => $userId, 'g' => $personalGroupId]);
         // Make it their default group.
-        $this->db->query("UPDATE `users` SET `default_group` = :g WHERE `id`=:u", ['g'=>$personalGroupId,'u'=>$userId]);
+        $defaultGroupSql = "UPDATE `users` SET `default_group` = :g WHERE `id`=:u";
+        $this->db->query($defaultGroupSql, ['g' => $personalGroupId, 'u' => $userId]);
 
         // Also add them to the public group.
         $groupMemberSql = 'INSERT INTO `user_groups` SET `user`=:u, `group`=:g';
@@ -73,7 +74,7 @@ class User
         $groups = [];
         $results = $this->db->query($sql, ['id' => $this->getId()])->fetchAll();
         foreach ($results as $res) {
-            $groups[] = ['id' => (int)$res->id, 'name' => $res->name];
+            $groups[] = ['id' => (int) $res->id, 'name' => $res->name];
         }
         return $groups;
     }
@@ -140,11 +141,9 @@ class User
 
     public function getDefaultGroup()
     {
-        if (isset($this->data->default_group)) {
-            $sql = "SELECT * FROM groups WHERE id = :id";
-            $group = $this->db->query($sql, ['id'=>$this->data->default_group])->fetch();
-            return $group;
-        }
-        return self::GROUP_PUBLIC;
+        $defaultGroupId = isset($this->data->default_group) ? $this->data->default_group : self::GROUP_PUBLIC;
+        $sql = "SELECT * FROM groups WHERE id = :id";
+        $group = $this->db->query($sql, ['id' => $defaultGroupId])->fetch();
+        return $group;
     }
 }
