@@ -1,7 +1,9 @@
 <?php
 
 return [
+    'mode' => 'production',
     'site_title' => 'Your Site Name Here',
+    'site_email' => 'admin@example.net',
     'database' => [
         'host' => 'localhost',
         'user' => 'database_user_here',
@@ -21,5 +23,4 @@ return [
     'mail' => [
         'transport' => 'mail',
     ],
-    'mode' => 'production',
 ];
