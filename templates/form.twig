@@ -20,13 +20,13 @@
     <div class="row">
         <p class="col-md-6">
             <label class="control-label">Date:</label>
-            <input type="text" name="date" value="{{item.getDate}}" class="form-control datepicker" />
+            <input type="text" name="date" value="{{item.getDate}}" class="form-control" />
         </p>
         <p class="col-md-6">
             <label class="control-label" for="date_granularity">Granularity:</label>
             <select name="date_granularity" id="date_granularity" class="form-control">
-                {% for dg in item.getDateGranularities %}
-                <option value="{{dg.id}}">{{dg.name}}</option>
+                {% for dg in date_granularities %}
+                <option value="{{dg.id}}">{{dg.title}}</option>
                 {% endfor %}
             </select>
         </p>

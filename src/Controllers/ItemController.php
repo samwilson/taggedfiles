@@ -31,6 +31,21 @@ class ItemController extends Base
     {
         $template = new \App\Template('form.twig');
         $template->title = 'Create';
+
+        // Date granularities.
+        $sql = "SELECT id, title FROM date_granularities ORDER BY id ASC";
+        $template->date_granularities = $this->db->query($sql)->fetchAll();
+
+        // Item.
+        $item = new Item();
+        if (isset($args['id'])) {
+            $template->title = 'Editing #' . $args['id'];
+            $item = new Item($args['id']);
+        }
+        $template->item = $item;
+
+        // User.
+        $item->setUser($this->user);
         if (!$this->user->getId()) {
             $msg = 'You have to '
                 . ' <a href="' . $this->config->baseUrl() . '/login" class="alert-link">log in</a> '
@@ -39,16 +54,9 @@ class ItemController extends Base
             $response->setContent($template->render());
             return $response;
         }
-        $item = new Item();
-        if (isset($args['id'])) {
-            $template->title = 'Editing #' . $args['id'];
-            $item = new Item($args['id']);
-        }
-        $item->setUser($this->user);
-        $sql = "SELECT id, title FROM date_granularities ORDER BY id ASC";
-        $template->date_granularities = $this->db->query($sql)->fetchAll();
-        $template->item = $item;
         $template->groups = $this->user->getGroups();
+
+        // Other template data.
         $template->fileContents = $item->getFileContents();
         $template->itemTags = $item->getTagsString();
         $template->itemReadGroupId = $item->getReadGroup()->id;
