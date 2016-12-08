@@ -3,16 +3,30 @@
 {% block content %}
     <h1>{{title}}</h1>
 
+    {% if tags %}
+        <ol class="tag-list list-inline">
+            {% for tag in tags %}
+                <li data-item-count="{{tag.item_count}}">
+                    {{tag.title}} ({{tag.item_count}})
+                    <a href="{{baseurl}}/t/{{tag.id}}" class="label label-default">+</a>
+                    <a href="" class="label">-</a>
+                </li>
+            {% endfor %}
+        </ol>
+    {% endif %}
+
     <div class=" row">
         {% for item in items %}
         <div class="col-lg-2">
             <a href="{{baseurl}}/{{item.id}}" class="thumbnail text-center">
-                <p>{{item.title}}</p>
-{{dump(item.isImage())}}
+                <h3>{{item.title}}</h3>
                 {% if item.isImage() %}
                 <p><img src="{{baseurl}}/{{item.id}}_t.png" class="img-responsive" /></p>
                 {% endif %}
                 {{item.description|markdown|raw}}
+                {% for tag in item.tags %}
+                    <span class="tag">{{tag.title}}</span>
+                {% endfor %}
             </a>
         </div>
         {% endfor %}

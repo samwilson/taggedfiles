@@ -17,6 +17,9 @@ $router->addRoute('GET', '/create', 'App\Controllers\ItemController::edit');
 $router->addRoute('POST', '/save', 'App\Controllers\ItemController::save');
 $router->addRoute('GET', '/{id:number}', 'App\Controllers\ItemController::view');
 $router->addRoute('GET', '/{id:number}/edit', 'App\Controllers\ItemController::edit');
+//Tags
+$router->addRoute('GET', '/t/{id:number}', 'App\Controllers\TagController::index');
+$router->addRoute('GET', '/t/{id:number}/edit', 'App\Controllers\TagController::edit');
 // Files
 $router->addRoute('GET', '/{id:number}.png', 'App\Controllers\FileController::render');
 $router->addRoute('GET', '/{id:number}_{size}.png', 'App\Controllers\FileController::render');

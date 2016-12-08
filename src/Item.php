@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Exception;
+use Intervention\Image\Constraint;
 use Intervention\Image\ImageManager;
 
 class Item
@@ -28,7 +30,25 @@ class Item
         $this->user = $user;
     }
 
-    public function setUser($user)
+    /**
+     * When Items are loaded as results of a PDO::query(), the values are set as public class
+     * attributes. We want to do more than just set the value, though, so we don't set any column
+     * names as attributes of this class, and instead handle them here.
+     * @param string $varName The name of the class attribute.
+     * @param mixed $value The value to set the class attribute to.
+     */
+    public function __set($varName, $value)
+    {
+        if ($varName === 'id') {
+            $this->load($value);
+        }
+    }
+
+    /**
+     * Set the current user.
+     * @param User $user
+     */
+    public function setUser(User $user)
     {
         $this->user = $user;
     }
@@ -215,16 +235,19 @@ class Item
     }
 
     /**
-     * Get a local filesystem path to the requested file.
-     *
-     * @param string $format
-     * @param null $version
+     * Get a local filesystem path to the requested file, creating it if required.
+     * @param string $format The file format, one of 'o', 'd', or 't'.
+     * @param int $version The version of the file to fetch.
+     * @return string The fully-qualified path to the file.
      * @throws \Exception
      */
     public function getCachePath($format = 'o', $version = null)
     {
         if (is_null($version)) {
             $version = $this->getVersionCount();
+        }
+        if ($version > $this->getVersionCount()) {
+            throw new Exception("Version $version does not exist for Item ".$this->getId());
         }
         $filesystem = App::getFilesystem();
         $path = $this->getFilePath($version);
@@ -249,7 +272,20 @@ class Item
         $pathnameDisplay = $root . DIRECTORY_SEPARATOR . $filenameDisplay;
         $manager = new ImageManager();
         $image = $manager->make($pathnameOrig);
-        $image->fit(200);
+        if ($format === 'd') {
+            // 'Display' size.
+            $width = $image->getWidth();
+            $height = $image->getHeight();
+            $newWidth = ($width > $height) ? 700 : null;
+            $newHeight = ($width > $height) ? null : 700;
+            $image->resize($newWidth, $newHeight, function (Constraint $constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+        } else {
+            // Thumbnail.
+            $image->fit(200);
+        }
         $image->save($pathnameDisplay);
 
         clearstatcache(false, $pathnameDisplay);

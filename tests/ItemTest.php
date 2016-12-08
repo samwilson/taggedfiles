@@ -144,4 +144,30 @@ class ItemTest extends Base
         $this->assertFileEquals($tmpFilename, $item->getCachePath('o', 2));
         $this->assertEquals('image/jpeg', $item->getMimeType(2));
     }
+
+    /**
+     * @testdox Image thumbnails are correctly resized.
+     * @test
+     */
+    public function correctSizedThumbnails()
+    {
+        // Create a large image.
+        $img = Image::canvas(1000, 400, '#ccc');
+        $tmpFilename = $this->dataDir() . '/test-image.jpg';
+        $img->save($tmpFilename);
+        // Add it to an Item.
+        $item = new Item(null, $this->testUser);
+        $item->save(null, null, $tmpFilename);
+        // Check that the various sizes returned are correct.
+        $this->assertEquals('image/jpeg', $item->getMimeType());
+        $this->assertFileEquals($tmpFilename, $item->getCachePath('o'));
+        // Load the 'display' size.
+        $display = Image::make($item->getCachePath('d'));
+        $this->assertEquals(700, $display->getWidth());
+        $this->assertEquals(280, $display->getHeight());
+        // The thumbnail is always 200 x 200.
+        $thumb = Image::make($item->getCachePath('t'));
+        $this->assertEquals(200, $thumb->getWidth());
+        $this->assertEquals(200, $thumb->getHeight());
+    }
 }

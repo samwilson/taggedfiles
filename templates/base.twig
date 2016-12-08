@@ -26,7 +26,6 @@
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        <li><a href="{{baseurl}}/tags">Tags</a></li>
                         <li><a href="{{baseurl}}/create">Create</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
@@ -81,7 +80,7 @@
                 </ul>
             </div>
         </footer>
-
+{{dump(db_queries)}}
         {% if mode == 'development' %}
             <div id="queries">
             {% for query in db_queries %}

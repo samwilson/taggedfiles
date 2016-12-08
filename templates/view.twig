@@ -5,38 +5,38 @@
 <h1>{{title}}</h1>
 
 <div class="well">
-<dl class="dl-horizontal">
-    {% if item.getDate %}
-    <dt>Date:</dt>
-    <dd>{{item.getDateFormatted}}</dd>
-    {% endif %}
-    {% if item.getMimeType() %}
-    <dt>Mime type:</dt>
-    <dd>{{item.getMimeType()}}</dd>
-    {% endif %}
-    <dt>Access control:</dt>
-    <dd>
-        <ul class="list-inline">
-            <li>Read: <a href="{{baseurl}}/g/{{itemReadGroup.id}}">{{itemReadGroup.name}}</a></li>
-            <li>Edit: <a href="{{baseurl}}/g/{{itemEditGroup.id}}">{{itemEditGroup.name}}</a></li>
-        </ul>
-    </dd>
-    {% if item.editable %}
-    <dt>Actions:</dt>
-    <dd><a href="{{baseurl}}/{{item.getId}}/edit">Edit</a></dd>
-    {% endif %}
-</dl>
+    <dl class="dl-horizontal">
+        {% if item.getDate %}
+        <dt>Date:</dt>
+        <dd>{{item.getDateFormatted}}</dd>
+        {% endif %}
+        {% if item.getMimeType() %}
+        <dt>Mime type:</dt>
+        <dd>{{item.getMimeType()}}</dd>
+        {% endif %}
+        <dt>Access control:</dt>
+        <dd>
+            <ul class="list-inline">
+                <li>Read: <a href="{{baseurl}}/g/{{itemReadGroup.id}}">{{itemReadGroup.name}}</a></li>
+                <li>Edit: <a href="{{baseurl}}/g/{{itemEditGroup.id}}">{{itemEditGroup.name}}</a></li>
+            </ul>
+        </dd>
+        {% if item.editable %}
+        <dt>Actions:</dt>
+        <dd><a href="{{baseurl}}/{{item.getId}}/edit">Edit</a></dd>
+        {% endif %}
+    </dl>
 
-{{item.getDescription|markdown|raw}}
+    {{item.getDescription|markdown|raw}}
 
-{% if tags %}
-<ol id="tags" class="list-inline">
-    <li>Tags:</li>
-    {% for tag in tags %}
-        <li><a href="{{baseurl}}/+{{tag.id}}" class="label label-default">{{tag.title}}</a></li>
-    {% endfor %}
-</ol>
-{% endif %}
+    {% if tags %}
+    <ol id="tags" class="list-inline">
+        <li>Tags:</li>
+        {% for tag in tags %}
+            <li><a href="{{baseurl}}/+{{tag.id}}" class="label label-default">{{tag.title}}</a></li>
+        {% endfor %}
+    </ol>
+    {% endif %}
 </div>
 
 {% if item.getMimeType == 'text/plain' %}
@@ -44,9 +44,9 @@
 {% endif %}
 
 {% if item.isImage() %}
-<p>
+<p class="image text-center">
     <a href="{{baseurl}}/{{item.id}}_o.png">
-        <img src="{{baseurl}}/{{item.id}}_t.png" height="200" width="200" />
+        <img src="{{baseurl}}/{{item.id}}_d.png" />
     </a>
 </p>
 {% endif %}
