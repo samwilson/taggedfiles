@@ -66,9 +66,7 @@ class Template
         }));
 
         // DB queries.
-        $twig->addFunction(new \Twig_SimpleFunction('db_queries', function () {
-            return Db::getQueries();
-        }));
+        $this->db_queries = Db::getQueries();
 
         // Render.
         $string = $twig->render($this->template, $this->data);

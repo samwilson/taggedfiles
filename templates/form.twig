@@ -26,7 +26,9 @@
             <label class="control-label" for="date_granularity">Granularity:</label>
             <select name="date_granularity" id="date_granularity" class="form-control">
                 {% for dg in date_granularities %}
-                <option value="{{dg.id}}">{{dg.title}}</option>
+                <option value="{{dg.id}}" {% if dg.id == item.dateGranularity %}selected{% endif %}>
+                    {{dg.title}}
+                </option>
                 {% endfor %}
             </select>
         </p>

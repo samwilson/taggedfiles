@@ -110,16 +110,23 @@ class Db
             . " title VARCHAR(20) NOT NULL UNIQUE,"
             . " php_format VARCHAR(50) NOT NULL UNIQUE"
             . ")");
-        $this->query("INSERT IGNORE INTO date_granularities (id,title,php_format) VALUES"
-            . " (1, 'Exact', 'Y-m-d H:i:s'),"
-            . " (2, 'Day', 'j F Y'),"
-            . " (3, 'Month', 'F Y'),"
-            . " (4, 'Year', 'Y'),"
-            . " (5, 'Circa', '\\c. Y')");
+        $granularities = [
+             [1, 'Exact', 'Y-m-d H:i:s'],
+             [2, 'Day', 'j F Y'],
+             [3, 'Month', 'F Y'],
+             [4, 'Year', 'Y'],
+             [5, 'Circa', '\\c. Y'],
+        ];
+        foreach ($granularities as $gran) {
+            $this->query(
+                "INSERT IGNORE INTO date_granularities SET id=:id, title=:t, php_format=:f",
+                ['id' => $gran[0], 't' => $gran[1], 'f' => $gran[2]]
+            );
+        }
         $this->query("CREATE TABLE IF NOT EXISTS items ("
             . " id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,"
             . " title VARCHAR(100) NOT NULL UNIQUE,"
-            . " date DATE NULL DEFAULT NULL,"
+            . " date DATETIME NULL DEFAULT NULL,"
             . " date_granularity INT(2) UNSIGNED NOT NULL DEFAULT 1,"
             . "     FOREIGN KEY (date_granularity) REFERENCES date_granularities (id),"
             . " description TEXT NULL DEFAULT NULL,"

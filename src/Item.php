@@ -56,7 +56,7 @@ class Item
     public function load($id)
     {
         if (!empty($id) && !is_numeric($id)) {
-            throw new \Exception("Not an Item ID: " . print_r($id, true));
+            throw new Exception("Not an Item ID: " . print_r($id, true));
         }
         $sql = 'SELECT items.id, items.title, items.description, items.date, '
             . '    items.date_granularity, dg.php_format AS date_granularity_format, '
@@ -97,6 +97,7 @@ class Item
      * @param string $filename The full filesystem path to a file to attach to this Item. Don't use with $fileContents.
      * @param string $fileContents A string to treat as the contents of a file. Don't use with $filename.
      * @return false
+     * @throws Exception If the item is not editable by the current user.
      */
     public function save($metadata, $tagsString = null, $filename = null, $fileContents = null)
     {
@@ -104,7 +105,7 @@ class Item
             $this->load($metadata['id']);
         }
         if (!$this->editable()) {
-            throw new \Exception("You are not allowed to edit this item.");
+            throw new Exception("You are not allowed to edit this item.");
         }
         if (empty($metadata['title'])) {
             $metadata['title'] = 'Untitled';
@@ -379,11 +380,6 @@ class Item
         return isset($this->data->description) ? $this->data->description : false;
     }
 
-    public function getDate()
-    {
-        return isset($this->data->date) ? $this->data->date : false;
-    }
-
     public function getEditGroup()
     {
         $defaultGroup = ($this->user instanceof User) ? $this->user->getDefaultGroup()->id : User::GROUP_ADMIN;
@@ -400,6 +396,24 @@ class Item
         return $readGroup;
     }
 
+    /**
+     * Get the raw unformatted date string, including the time component. This may have lots of
+     * trailing zeros, depending on the granularity of this item.
+     * @return string|boolean The date, or false if there isn't one.
+     */
+    public function getDate()
+    {
+        // For new items, default to the current time.
+        if (!$this->isLoaded()) {
+            return date('Y-m-d H:i:s');
+        }
+        // Otherwise, use what's in the database or false when there's no date.
+        return isset($this->data->date) ? $this->data->date : false;
+    }
+
+    /**
+     * @return string
+     */
     public function getDateFormatted()
     {
         if (empty($this->data->date)) {

@@ -32,6 +32,22 @@ class ItemTest extends Base
         $this->assertEquals(1, $this->db->query("SELECT COUNT(*) FROM `items`")->fetchColumn());
     }
 
+    public function testDates()
+    {
+        $item = new Item(null, $this->testUser);
+        $item->save(['title' => 'Test', 'date' => '2013-01-12 13:45']);
+        $this->assertEquals('2013-01-12 13:45:00', $item->getDate());
+        $this->assertEquals(Item::DATE_GRANULARITY_DEFAULT, $item->getDateGranularity());
+
+        $item->save(['title' => 'Test', 'date' => '2013-01-12 13:45', 'date_granularity' => 3]);
+        $this->assertEquals('2013-01-12 13:45:00', $item->getDate());
+        $this->assertEquals(3, $item->getDateGranularity());
+        $this->assertEquals('January 2013', $item->getDateFormatted());
+
+        $item->save(['title' => 'Test', 'date' => '2013-01-12 13:45', 'date_granularity' => 5]);
+        $this->assertEquals('c. 2013', $item->getDateFormatted());
+    }
+
     /**
      * @testdox An item can be created and modified.
      */

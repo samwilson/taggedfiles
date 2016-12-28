@@ -1,0 +1,37 @@
+{% extends "base.twig" %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                Dates go here.
+            </div>
+
+            <div class="col-md-9">
+                {% for item in items %}
+                    <h2>
+                        <a href="{{baseurl}}/{{item.id}}">{{item.title}}</a>
+                        <small>{{item.dateFormatted}}</small>
+                    </h2>
+                    <p class="tags">
+                    {% for tag in item.tags %}
+                        <span class="tag label label-default">{{tag.title}}</span>
+                    {% endfor %}
+                    </p>
+                    {% if item.isImage() %}
+                    <p><img src="{{baseurl}}/{{item.id}}_d.png" class="img-responsive" /></p>
+                    {% endif %}
+                    {% if item.description %}
+                    <blockquote>{{item.description|markdown|raw}}</blockquote>
+                    {% endif %}
+                    {% if item.getMimeType == 'text/plain' %}
+                        {{item.getFileContents|markdown|raw}}
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

@@ -11,7 +11,7 @@ require_once 'bootstrap.php';
 $router = new League\Route\RouteCollection();
 // Assets, installation, and home.
 $router->addRoute('GET', '/{file:.*\.(?:css|js)}', 'App\Controllers\AssetsController::css');
-$router->addRoute('GET', '/', 'App\Controllers\TagController::index');
+$router->addRoute('GET', '/', 'App\Controllers\DateController::index');
 // Items.
 $router->addRoute('GET', '/create', 'App\Controllers\ItemController::edit');
 $router->addRoute('POST', '/save', 'App\Controllers\ItemController::save');
