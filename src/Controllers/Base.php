@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Config;
 use App\User;
+use Swift_Mailer;
+use Swift_Message;
 
 abstract class Base
 {
@@ -29,6 +31,10 @@ abstract class Base
      */
     protected $user;
 
+    /**
+     * Every controller gets the configuration, database, and a user. If the user has a session
+     * in progress, the user is loaded from that.
+     */
     public function __construct()
     {
         $this->config = new Config();
@@ -44,14 +50,14 @@ abstract class Base
     /**
      * Send an email message.
      *
-     * @param \Swift_Message $message
+     * @param Swift_Message $message
      */
-    public function email(\Swift_Message $message)
+    public function email(Swift_Message $message)
     {
         $config = $this->config->mail();
         $transport_classname = '\\Swift_' . ucfirst($config['transport']) . 'Transport';
         $transport = $transport_classname::newInstance();
-        $mailer = \Swift_Mailer::newInstance($transport);
+        $mailer = Swift_Mailer::newInstance($transport);
         $mailer->send($message);
     }
 }

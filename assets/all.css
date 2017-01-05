@@ -1,3 +1,10 @@
 * { border-radius:0!important }
 footer { margin-top:3em }
 p.buttons {margin:1em 0}
+
+.dates ol li { display:block }
+.dates ol li.current { background-color:lightblue }
+
+
+li .addremove { visibility:hidden }
+li:hover .addremove { visibility: visible }

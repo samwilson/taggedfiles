@@ -15,6 +15,7 @@ class ItemTest extends Base
     public function setUp()
     {
         parent::setUp();
+        $this->setUpDb();
         $this->testUser = new \App\User($this->db);
         $this->testUser->register('Test User');
     }

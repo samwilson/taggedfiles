@@ -33,7 +33,7 @@
     <ol id="tags" class="list-inline">
         <li>Tags:</li>
         {% for tag in tags %}
-            <li><a href="{{baseurl}}/+{{tag.id}}" class="label label-default">{{tag.title}}</a></li>
+            <li><a href="{{baseurl}}/t/{{tag.id}}" class="label label-default">{{tag.title}}</a></li>
         {% endfor %}
     </ol>
     {% endif %}

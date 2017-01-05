@@ -4,8 +4,19 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-3">
-                Dates go here.
+            <div class="col-md-3 dates">
+                <ol class="list-unstyled">
+                {% for y in years %}
+                    <li class="{% if y == year %}current{% endif %}">
+                        <a href="{{baseurl}}/d/{{y}}">{{y}}</a>
+                        {% if y == year %}
+                        <ol>
+
+                        </ol>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+                </ol>
             </div>
 
             <div class="col-md-9">
@@ -14,16 +25,22 @@
                         <a href="{{baseurl}}/{{item.id}}">{{item.title}}</a>
                         <small>{{item.dateFormatted}}</small>
                     </h2>
-                    <p class="tags">
-                    {% for tag in item.tags %}
-                        <span class="tag label label-default">{{tag.title}}</span>
-                    {% endfor %}
+                    <p>
+                        Read group: <a href="{{baseurl}}/g/{{item.readGroup.id}}">{{item.readGroup.name}}</a>;
+                        edit group: <a href="{{baseurl}}/g/{{item.editGroup.id}}">{{item.editGroup.name}}</a>.
                     </p>
+                    {% if item.tags %}
+                        <p class="tags">Tags:
+                        {% for tag in item.tags %}
+                            <a href="{{baseurl}}/t/{{tag.id}}">{{tag.title}}</a>
+                        {% endfor %}
+                        </p>
+                    {% endif %}
                     {% if item.isImage() %}
-                    <p><img src="{{baseurl}}/{{item.id}}_d.png" class="img-responsive" /></p>
+                        <p><img src="{{baseurl}}/{{item.id}}_d.png" class="img-responsive" /></p>
                     {% endif %}
                     {% if item.description %}
-                    <blockquote>{{item.description|markdown|raw}}</blockquote>
+                        {{item.description|markdown|raw}}
                     {% endif %}
                     {% if item.getMimeType == 'text/plain' %}
                         {{item.getFileContents|markdown|raw}}

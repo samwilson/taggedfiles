@@ -59,7 +59,7 @@ class User
 
     /**
      * Get a list of all groups that this user belongs to.
-     * @return string[] Each with 'id' and 'name' properties.
+     * @return string[] Each array item is an array with 'id' and 'name' properties.
      */
     public function getGroups()
     {
@@ -77,6 +77,19 @@ class User
             $groups[] = ['id' => (int) $res->id, 'name' => $res->name];
         }
         return $groups;
+    }
+
+    /**
+     * Get an array of the IDs of all the groups that this user belongs to.
+     * @return integer[] The group IDs.
+     */
+    public function getGroupIds()
+    {
+        $ids = [];
+        foreach ($this->getGroups() as $group) {
+            $ids[] = $group['id'];
+        }
+        return $ids;
     }
 
     public function getReminder()
@@ -122,6 +135,15 @@ class User
     {
         $sql = "SELECT * FROM users WHERE name = :name";
         $this->data = $this->db->query($sql, ['name' => $name])->fetch();
+    }
+
+    /**
+     * Whether this user is loaded or not (i.e. has a database ID).
+     * @return boolean
+     */
+    public function loaded()
+    {
+        return $this->getId() !== false;
     }
 
     public function getId()

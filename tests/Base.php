@@ -11,7 +11,11 @@ abstract class Base extends \PHPUnit_Framework_TestCase
     /** @var \App\Db */
     protected $db;
 
-    public function setUp()
+    /**
+     * Set up the database by dropping all of the tables (if any exist) and then installing the
+     * application. The test-data directory will be created too, and then removed in tearDown().
+     */
+    public function setUpDb()
     {
         $this->db = new Db();
         $this->db->query("SET FOREIGN_KEY_CHECKS=0");

@@ -7,6 +7,12 @@ use App\User;
 class UserTest extends Base
 {
 
+    public function setUp()
+    {
+        parent::setUp();
+        $this->setUpDb();
+    }
+
     /**
      * A new User can be registered. If they supply a name that already exists, a number will be appended.
      * @test

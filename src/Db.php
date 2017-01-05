@@ -2,10 +2,15 @@
 
 namespace App;
 
+use Exception;
+use PDO;
+use PDOException;
+use PDOStatement;
+
 class Db
 {
 
-    /** @var \PDO */
+    /** @var PDO */
     static protected $pdo;
 
     /** @var string[] */
@@ -20,10 +25,10 @@ class Db
         $dbConfig = $config['database'];
         $host = isset($dbConfig['host']) ? $dbConfig['host'] : 'localhost';
         $dsn = "mysql:host=$host;dbname=" . $dbConfig['database'];
-        $attr = array(\PDO::ATTR_TIMEOUT => 10);
-        self::$pdo = new \PDO($dsn, $dbConfig['user'], $dbConfig['password'], $attr);
-        self::$pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $this->setFetchMode(\PDO::FETCH_OBJ);
+        $attr = array(PDO::ATTR_TIMEOUT => 10);
+        self::$pdo = new PDO($dsn, $dbConfig['user'], $dbConfig['password'], $attr);
+        self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->setFetchMode(PDO::FETCH_OBJ);
     }
 
     public static function getQueries()
@@ -42,7 +47,7 @@ class Db
 
     public function setFetchMode($fetchMode)
     {
-        return self::$pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, $fetchMode);
+        return self::$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, $fetchMode);
     }
 
     /**
@@ -50,45 +55,48 @@ class Db
      *
      * @param string $sql The SQL statement to execute.
      * @param array $params Array of param => value pairs.
-     * @return \PDOStatement Resulting PDOStatement.
+     * @param string $class The PHP class of each item of the result set.
+     * @param mixed $classArgs The arguments to pass to the constructor of the class.
+     * @return PDOStatement Resulting PDOStatement.
+     * @throws Exception If the requested result class does not exist.
      */
     public function query($sql, $params = null, $class = null, $classArgs = null)
     {
         if (!empty($class) && !class_exists($class)) {
-            throw new \Exception("Class not found: $class");
+            throw new Exception("Class not found: $class");
         }
         if (is_array($params) && count($params) > 0) {
             $stmt = self::$pdo->prepare($sql);
             foreach ($params as $placeholder => $value) {
                 if (is_bool($value)) {
-                    $type = \PDO::PARAM_BOOL;
+                    $type = PDO::PARAM_BOOL;
                 } elseif (is_null($value)) {
-                    $type = \PDO::PARAM_NULL;
+                    $type = PDO::PARAM_NULL;
                 } elseif (is_int($value)) {
-                    $type = \PDO::PARAM_INT;
+                    $type = PDO::PARAM_INT;
                 } else {
-                    $type = \PDO::PARAM_STR;
+                    $type = PDO::PARAM_STR;
                 }
                 $stmt->bindValue($placeholder, $value, $type);
             }
             if ($class) {
-                $stmt->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $class, $classArgs);
+                $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $class, $classArgs);
             } else {
-                $stmt->setFetchMode(\PDO::FETCH_OBJ);
+                $stmt->setFetchMode(PDO::FETCH_OBJ);
             }
             $result = $stmt->execute();
             if (!$result) {
-                throw new \PDOException('Unable to execute parameterised SQL: <code>' . $sql . '</code>');
+                throw new PDOException('Unable to execute parameterised SQL: <code>' . $sql . '</code>');
             }
         } else {
             try {
                 if ($class) {
-                    $stmt = self::$pdo->query($sql, \PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $class, $classArgs);
+                    $stmt = self::$pdo->query($sql, PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $class, $classArgs);
                 } else {
                     $stmt = self::$pdo->query($sql);
                 }
-            } catch (\PDOException $e) {
-                throw new \Exception($e->getMessage() . ' -- Unable to execute SQL: <code>' . $sql . '</code>');
+            } catch (PDOException $e) {
+                throw new PDOException($e->getMessage() . ' -- Unable to execute SQL: <code>' . $sql . '</code>');
             }
         }
 

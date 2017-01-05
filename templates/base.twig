@@ -5,7 +5,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{{title}} :: {{site_title}}</title>
+        <title>{% if title %}{{title}} :: {% endif %}{{site_title}}</title>
         <link rel="stylesheet" type="text/css" href="{{baseurl}}/assets/components/bootstrap/css/bootstrap.min.css?ver={{app_version}}" />
         <link rel="stylesheet" type="text/css" href="{{baseurl}}/assets/components/bootstrap-datepicker/bootstrap-datepicker-built.css?ver={{app_version}}" />
         <link rel="stylesheet" type="text/css" href="{{baseurl}}/all.css?ver={{app_version}}" />
@@ -26,6 +26,8 @@
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
+                        <li><a href="{{baseurl}}/">Dates</a></li>
+                        <li><a href="{{baseurl}}/tags">Tags</a></li>
                         <li><a href="{{baseurl}}/create">Create</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">

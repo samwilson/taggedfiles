@@ -3,13 +3,24 @@
 {% block content %}
     <h1>{{title}}</h1>
 
-    {% if tags %}
+   {% if tags %}
         <ol class="tag-list list-inline">
             {% for tag in tags %}
                 <li data-item-count="{{tag.item_count}}">
-                    {{tag.title}} ({{tag.item_count}})
-                    <a href="{{baseurl}}/t/{{tag.id}}" class="btn btn-default">+</a>
-                    <a href="" class="label">-</a>
+                {% if tagsIdent.contains(tag.id) %}
+                    <strong class="btn btn-default">
+                        {{tag.title}}
+                        <a href="{{baseurl}}/t/{{tagsIdent.toString(null, tag.id)}}" title="Remove from selection" class="addremove">[-]</a>
+                    </strong>
+                {% else %}
+                    <a href="{{baseurl}}/t/{{tag.id}}" title="Show all items tagged '{{tag.title}}'">
+                        {{tag.title}}
+                    </a>
+                    <span title="{{tag.item_count}} items have this tag">({{tag.item_count}})</span>
+                    <a href="{{baseurl}}/t/{{tagsIdent.toString(tag.id)}}" title="Show only these {{tag.item_count}} items" class="addremove">
+                        [+]
+                    </a>
+                {% endif %}
                 </li>
             {% endfor %}
         </ol>
@@ -24,9 +35,11 @@
                 <p><img src="{{baseurl}}/{{item.id}}_t.png" class="img-responsive" /></p>
                 {% endif %}
                 {{item.description|markdown|raw}}
+                <p class="tags">
                 {% for tag in item.tags %}
-                    <span class="tag label label-default">{{tag.title}}</span>
+                    <span class="tag">{{tag.title}}</span>
                 {% endfor %}
+                </p>
             </a>
         </div>
         {% endfor %}
