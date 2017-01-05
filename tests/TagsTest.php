@@ -2,7 +2,6 @@
 
 namespace App\Tests;
 
-
 use App\TagsIdentifier;
 
 class TagsTest extends Base

@@ -6,7 +6,8 @@ namespace App;
  * A wrapper around comma-delimited strings of tag IDs. This class is used to make sure the IDs
  * are always used in the same order, and to make it easier to add and remove tags.
  */
-class TagsIdentifier {
+class TagsIdentifier
+{
 
     /** @var integer[] Tag IDs. */
     protected $tags;
