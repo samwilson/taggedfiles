@@ -179,27 +179,6 @@ class Item
     }
 
     /**
-     * Get the file's mime type, or false if there's no file.
-     * @param integer $version
-     * @return integer|false
-     */
-    public function getMimeType($version = null)
-    {
-        if (!$this->isLoaded()) {
-            return false;
-        }
-        if (is_null($version)) {
-            $version = $this->getVersionCount();
-        }
-        $filesystem = App::getFilesystem();
-        $path = "storage://" . $this->getFilePath($version);
-        if ($filesystem->has($path)) {
-            return $filesystem->getMimetype($path);
-        }
-        return false;
-    }
-
-    /**
      * Whether this file is a text file.
      */
     public function isText($version = null)
@@ -213,6 +192,16 @@ class Item
     }
 
     /**
+     * Get the file's mime type, or false if there's no file.
+     * @param integer $version
+     * @return integer|false
+     */
+    public function getMimeType($version = null)
+    {
+        return $this->performFileSystemOperation('getMimetype', $version);
+    }
+
+    /**
      * Get the contents of the file.
      *
      * @param integer $version Which file version to get.
@@ -220,6 +209,18 @@ class Item
      * @throws \Exception
      */
     public function getFileContents($version = null)
+    {
+        return $this->performFileSystemOperation('read', $version);
+    }
+
+    /**
+     * Perform an operation on the filesystem file.
+     * @param integer|null $version
+     * @param string $method The method name, from the MountManager class.
+     * @return bool|false|string
+     * @throws Exception If the method can't be executed.
+     */
+    protected function performFileSystemOperation($method, $version)
     {
         if (!$this->isLoaded()) {
             return false;
@@ -230,7 +231,10 @@ class Item
         $filesystem = App::getFilesystem();
         $path = "storage://" . $this->getFilePath($version);
         if ($filesystem->has($path)) {
-            return $filesystem->read($path);
+            if (!is_callable([$filesystem, $method])) {
+                throw new Exception("Unable to execute $method on the filesystem");
+            }
+            return $filesystem->$method($path);
         }
         return false;
     }
