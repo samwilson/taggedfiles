@@ -1,9 +1,9 @@
-Swidau
-======
+Tagged Files
+============
 
-[![Build Status](https://travis-ci.org/samwilson/swidau.svg?branch=master)](https://travis-ci.org/samwilson/swidau)
+[![Build Status](https://travis-ci.org/samwilson/taggedfiles.svg?branch=master)](https://travis-ci.org/samwilson/taggedfiles)
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/samwilson/swidau/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/samwilson/swidau/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/samwilson/taggedfiles/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/samwilson/taggedfiles/?branch=master)
 
 ## Prerequisites
 
@@ -14,10 +14,10 @@ Swidau
 
 ## Install
 
-1. Clone from Github to a web-accessible directory: `git clone https://github.com/samwilson/swidau.git /var/www/swidau`
-2. Change to that directory: `cd /var/www/swidau`
+1. Clone from Github to a web-accessible directory: `git clone https://github.com/samwilson/taggedfiles.git /var/www/taggedfiles`
+2. Change to that directory: `cd /var/www/taggedfiles`
 3. Install dependencies: `composer install`
-4. Run the application installer: `./swidau upgrade`
+4. Run the application installer: `./cli upgrade`
 
 ## Licence (GPL-3.0+)
 

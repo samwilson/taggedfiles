@@ -21,7 +21,7 @@ abstract class CommandBase
      */
     protected function write($message, $newline = true)
     {
-        if (basename($_SERVER['SCRIPT_NAME']) !== 'swidau') {
+        if (basename($_SERVER['SCRIPT_NAME']) !== 'cli') {
             // Only produce output when running the CLI tool.
             return;
         }

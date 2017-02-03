@@ -56,7 +56,7 @@ class TagsTest extends Base
         $item3 = new Item(null, $testUser);
         $item3->save(['title' => 'Test 3'], 'three,four');
         $tags = new TagsIdentifier();
-        $tags->add('1');
+        $tags->add('2');
         $this->assertCount(2, $tags->getItems($this->db));
     }
 }

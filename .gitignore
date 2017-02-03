@@ -1,23 +1,11 @@
 /.env
 /vendor
-/nbproject/private
+/nbproject
+/.idea
 /data
 /assets/components/
 /.htaccess
 /config.php
 /tests/data
 /tests/config.php
-
-
-# Created by https://www.gitignore.io/api/phpstorm
-### PhpStorm ###
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/dataSources/
-.idea/dataSources.ids
-.idea/dataSources.xml
-.idea/dataSources.local.xml
-.idea/sqlDataSources.xml
-.idea/dynamic.xml
-.idea/uiDesigner.xml
 

@@ -1,7 +1,7 @@
-Contributing to Swidau
-======================
+Contributing to Tagged Files
+============================
 
-This document contains information for people wanting to modify or extend Swidau.
+This document contains information for people wanting to modify or extend Tagged Files.
 
 ## Versioning and releasing
 

@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Template;
 use League\Flysystem\Filesystem;
 use League\Flysystem\MountManager;
 
@@ -11,7 +10,7 @@ class App
 
     public static function name()
     {
-        return 'Swidau';
+        return 'Tagged Files';
     }
 
     /**

@@ -8,13 +8,14 @@ php:
   - 7.0
 
 install:
-  - mysql -e 'CREATE DATABASE swidau_test;' -uroot
+  - mysql -e 'CREATE DATABASE travis_test;' -uroot
   - composer install
   - cp config.example.php tests/config.php
-  - sed -i "s/database_name_here/swidau_test/" tests/config.php
+  - sed -i "s/database_name_here/travis_test/" tests/config.php
   - sed -i "s/database_user_here/root/" tests/config.php
   - sed -i "s/database_password_here//" tests/config.php
 
 script:
+  - composer validate
   - $TRAVIS_BUILD_DIR/vendor/bin/phpunit
   - $TRAVIS_BUILD_DIR/vendor/bin/phpcs --standard=$TRAVIS_BUILD_DIR/phpcs.xml

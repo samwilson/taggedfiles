@@ -70,7 +70,7 @@ class Config
 
     public function siteTitle()
     {
-        return $this->get('site_title', 'A Swidau Site');
+        return $this->get('site_title', 'A ' . App::name() . ' website');
     }
 
     public function siteEmail()
@@ -85,12 +85,12 @@ class Config
 
     public function databaseName()
     {
-        return self::get('databaseName', 'tabulate');
+        return self::get('databaseName', 'taggedfiles');
     }
 
     public function databaseUser()
     {
-        return self::get('databaseUser', 'tabulate');
+        return self::get('databaseUser', 'root');
     }
 
     public function databasePassword()
