@@ -63,7 +63,7 @@ class User
      */
     public function getGroups()
     {
-        if (!$this->getId()) {
+        if ($this->getId() === false) {
             $sql = "SELECT `id`, `name` FROM `groups` WHERE `id` = " . self::GROUP_PUBLIC;
         } else {
             $sql = "SELECT g.id, g.name FROM users u "
@@ -94,7 +94,7 @@ class User
 
     public function getReminder()
     {
-        if (!$this->getId()) {
+        if ($this->getId() === false) {
             return false;
         }
         $sql = "UPDATE users SET reminder_token=:t, reminder_time=NOW() WHERE id=:id";
@@ -114,7 +114,7 @@ class User
 
     public function changePassword($password)
     {
-        if (!$this->getId()) {
+        if ($this->getId() === false) {
             return false;
         }
         $sql = "UPDATE users SET password=:pwd, reminder_token=NULL, reminder_time=NULL WHERE id=:id";

@@ -79,7 +79,7 @@ class Db
                 }
                 $stmt->bindValue($placeholder, $value, $type);
             }
-            if ($class) {
+            if ($class !== null) {
                 $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $class, $classArgs);
             } else {
                 $stmt->setFetchMode(PDO::FETCH_OBJ);
@@ -90,7 +90,7 @@ class Db
             }
         } else {
             try {
-                if ($class) {
+                if ($class !== null) {
                     $stmt = self::$pdo->query($sql, PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $class, $classArgs);
                 } else {
                     $stmt = self::$pdo->query($sql);

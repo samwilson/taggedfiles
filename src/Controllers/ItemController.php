@@ -46,7 +46,7 @@ class ItemController extends Base
 
         // User.
         $item->setUser($this->user);
-        if (!$this->user->getId()) {
+        if ($this->user->getId() === false) {
             $msg = 'You have to '
                 . ' <a href="' . $this->config->baseUrl() . '/login" class="alert-link">log in</a> '
                 . ' before you can add or edit items.';
