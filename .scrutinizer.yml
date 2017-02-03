@@ -25,6 +25,6 @@ build:
       - ./vendor/bin/phpcs
       -
         command: 'phpunit --coverage-clover=clover-coverage'
-          coverage:
-            file: 'clover-coverage'
-            format: 'clover'
+        coverage:
+          file: 'clover-coverage'
+          format: 'clover'
