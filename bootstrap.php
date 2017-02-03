@@ -12,6 +12,9 @@ require __DIR__ . '/vendor/autoload.php';
 /**
  * Exception handling.
  */
+set_error_handler(function ($code, $message, $file, $line, $context) {
+    throw new ErrorException($code, $message, $file, $line, $context);
+});
 set_exception_handler([ \App\App::class, 'exceptionHandler' ]);
 
 /**
