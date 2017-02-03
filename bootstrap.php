@@ -10,6 +10,11 @@ if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
 require __DIR__ . '/vendor/autoload.php';
 
 /**
+ * Exception handling.
+ */
+set_exception_handler( [ \App\App::class, 'exceptionHandler' ] );
+
+/**
  * Configuration file. When testing, the tests/config.php file is used.
  */
 if (substr(basename($_SERVER['PHP_SELF']), 0, 7)==='phpunit') {

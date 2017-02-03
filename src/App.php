@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Exception;
 use League\Flysystem\Filesystem;
 use League\Flysystem\MountManager;
 
@@ -40,7 +41,7 @@ class App
      * Get the filesystem manager.
      *
      * @return MountManager
-     * @throws \Exception
+     * @throws Exception
      */
     public static function getFilesystem()
     {
@@ -55,12 +56,11 @@ class App
         return $manager;
     }
 
-    public static function exceptionHandler(\Exception $exception)
+    public static function exceptionHandler( Exception $exception)
     {
         $template = new Template('error.twig');
         $template->title = 'Error';
-        $template->alert('danger', $exception->getMessage());
-        $template->e = $exception;
+        $template->exception = $exception;
         $template->render(true);
     }
 

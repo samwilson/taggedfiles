@@ -2,12 +2,12 @@
 {% block content %}
     <h1>{{title}}</h1>
 
-    <p>Do you need to run the <a href="{{baseurl}}/install">installer</a>?</p>
-
+    <p class="alert alert-danger">{{ exception.message }}</p>
+    
     {% if mode=='development' %}
     <h2>Trace</h2>
     <table class="full-width table">
-        {% for line in e.getTrace() %}
+        {% for line in exception.trace %}
         <tr>
             <td>{{line.file}}</td>
             <td>{{line.line}}</td>

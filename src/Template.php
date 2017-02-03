@@ -2,6 +2,11 @@
 
 namespace App;
 
+/**
+ * A Twig template.
+ * @property string $title Page title.
+ * @property \Exception $exception Any Exception.
+ */
 class Template
 {
 
