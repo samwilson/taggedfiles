@@ -12,7 +12,7 @@ require __DIR__ . '/vendor/autoload.php';
 /**
  * Exception handling.
  */
-set_exception_handler( [ \App\App::class, 'exceptionHandler' ] );
+set_exception_handler([ \App\App::class, 'exceptionHandler' ]);
 
 /**
  * Configuration file. When testing, the tests/config.php file is used.

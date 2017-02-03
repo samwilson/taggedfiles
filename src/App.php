@@ -56,7 +56,7 @@ class App
         return $manager;
     }
 
-    public static function exceptionHandler( Exception $exception)
+    public static function exceptionHandler(Exception $exception)
     {
         $template = new Template('error.twig');
         $template->title = 'Error';
