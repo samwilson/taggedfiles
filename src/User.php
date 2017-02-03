@@ -146,6 +146,10 @@ class User
         return $this->getId() !== false;
     }
 
+    /**
+     * Get the user's ID, or false if the user isn't loaded yet.
+     * @return bool|integer
+     */
     public function getId()
     {
         return (isset($this->data->id)) ? (int) $this->data->id : false;

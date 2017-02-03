@@ -74,10 +74,10 @@ class Item
      */
     public function editable()
     {
-        if (!$this->user || !$this->user->getId()) {
+        if (!$this->user || $this->user->getId() === false) {
             return false;
         }
-        if (!$this->getId()) {
+        if ($this->getId() === false) {
             return true;
         }
         $editGroupId = $this->getEditGroup()->id;
