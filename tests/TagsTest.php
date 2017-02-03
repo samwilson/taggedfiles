@@ -2,7 +2,9 @@
 
 namespace App\Tests;
 
+use App\Item;
 use App\TagsIdentifier;
+use App\User;
 
 class TagsTest extends Base
 {
@@ -39,5 +41,22 @@ class TagsTest extends Base
         $tags->add('test');
         $this->assertEquals('', $tags->toString());
         $this->assertTrue($tags->isEmpty());
+    }
+
+    public function testGetTaggedItems()
+    {
+        $this->setUpDb();
+        $testUser = new User($this->db);
+        $testUser->register('Test User');
+
+        $item1 = new Item(null, $testUser);
+        $item1->save(['title' => 'Test 1'], 'one,two');
+        $item2 = new Item(null, $testUser);
+        $item2->save(['title' => 'Test 2'], 'two,three');
+        $item3 = new Item(null, $testUser);
+        $item3->save(['title' => 'Test 3'], 'three,four');
+        $tags = new TagsIdentifier();
+        $tags->add('1');
+        $this->assertCount(2, $tags->getItems($this->db));
     }
 }

@@ -26,15 +26,17 @@
         </ol>
     {% endif %}
 
-    <div class=" row">
+    <div class="items row">
         {% for item in items %}
-        <div class="col-lg-2">
+        <div class="col-lg-2 item">
             <a href="{{baseurl}}/{{item.id}}" class="thumbnail text-center">
                 <h3>{{item.title}}</h3>
                 {% if item.isImage() %}
                 <p><img src="{{baseurl}}/{{item.id}}_t.png" class="img-responsive" /></p>
                 {% endif %}
-                {{item.description|markdown|raw}}
+                {% if item.description %}
+                <div class="description">{{item.description|markdown|raw}}</div>
+                {% endif %}
                 <p class="tags">
                 {% for tag in item.tags %}
                     <span class="tag">{{tag.title}}</span>

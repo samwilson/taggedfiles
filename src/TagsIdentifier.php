@@ -21,7 +21,8 @@ class TagsIdentifier
     }
 
     /**
-     * @param string $id A numeric string.
+     * Add a single tag ID.
+     * @param string|integer $id An integer or numeric string.
      * @return $this
      */
     public function add($id)
@@ -36,7 +37,8 @@ class TagsIdentifier
     }
 
     /**
-     * @param $str
+     * Add a bunch of tag IDs from a comma-separated string.
+     * @param $str string
      * @return $this
      */
     public function addFromString($str)
@@ -105,5 +107,23 @@ class TagsIdentifier
     public function toArray()
     {
         return $this->tags;
+    }
+
+    /**
+     * Get all Items with all of the currently listed tags.
+     * @param Db $db The database to query.
+     * @return Item[]
+     */
+    public function getItems(Db $db)
+    {
+        if ($this->isEmpty()) {
+            $sql = "SELECT id FROM items ORDER BY title ASC";
+        } else {
+            $sql = "SELECT items.id FROM items JOIN item_tags ON item_tags.item = items.id "
+                . " WHERE item_tags.tag IN (" . $this->toString() . ") GROUP BY items.id LIMIT 20";
+        }
+        $params = [];
+        $items = $db->query($sql, $params, '\\App\\Item')->fetchAll();
+        return $items;
     }
 }

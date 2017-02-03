@@ -5,6 +5,11 @@ p.buttons {margin:1em 0}
 .dates ol li { display:block }
 .dates ol li.current { background-color:lightblue }
 
+.items .item a:hover { text-decoration:none }
+.items .item h3 { margin:0 }
+.items .item .description { color:black }
+.items .item .tags .tag { display:inline-block; margin-right:1em;
+    background-color:#efefef; padding:0.2em }
 
 li .addremove { visibility:hidden }
 li:hover .addremove { visibility: visible }
