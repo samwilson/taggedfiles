@@ -22,7 +22,7 @@ build:
       - composer validate
       - ./vendor/bin/phpcs
       -
-        command: './vendor/bin/phpunit --coverage-clover clover-coverage.txt'
+        command: './vendor/bin/phpunit --coverage-clover=clover-coverage.xml'
         coverage:
-          file: 'clover-coverage.txt'
+          file: 'clover-coverage.xml'
           format: 'clover'
