@@ -20,10 +20,9 @@ build:
   tests:
     override:
       - composer validate
-      - ./vendor/bin/phpunit
       - ./vendor/bin/phpcs
       -
-        command: './vendor/bin/phpunit --coverage-clover=clover-coverage'
+        command: './vendor/bin/phpunit --coverage-clover clover-coverage.txt'
         coverage:
-          file: 'clover-coverage'
+          file: 'clover-coverage.txt'
           format: 'clover'
