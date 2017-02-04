@@ -56,7 +56,11 @@ class App
         return $manager;
     }
 
-    public static function exceptionHandler(Exception $exception)
+    /**
+     * Show an exception/error with the error template.
+     * @param Exception|\Error $exception
+     */
+    public static function exceptionHandler($exception)
     {
         $template = new Template('error.twig');
         $template->title = 'Error';
