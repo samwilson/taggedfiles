@@ -23,7 +23,7 @@ build:
       - ./vendor/bin/phpunit
       - ./vendor/bin/phpcs
       -
-        command: 'phpunit --coverage-clover=clover-coverage'
+        command: './vendor/bin/phpunit --coverage-clover=clover-coverage'
         coverage:
           file: 'clover-coverage'
           format: 'clover'

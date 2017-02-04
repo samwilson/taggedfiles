@@ -65,7 +65,8 @@ class Config
         $baseUrl = $this->get('base_url', $calculatedBaseUrl);
         $baseUrlTrimmed = rtrim($baseUrl, ' /');
         $protocol = (!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://';
-        return $absolute ? $protocol . $_SERVER['HTTP_HOST'] . $baseUrlTrimmed : $baseUrlTrimmed;
+        $host = (isset($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : 'localhost';
+        return $absolute ? $protocol . $host . $baseUrlTrimmed : $baseUrlTrimmed;
     }
 
     public function siteTitle()

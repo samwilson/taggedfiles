@@ -23,7 +23,7 @@
         "moxiecode/plupload": "^2.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.0",
+        "phpunit/phpunit": "^5.7",
         "symfony/var-dumper": "^3.0",
         "squizlabs/php_codesniffer": "^2.0"
     },
