@@ -4,7 +4,9 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
-    <whitelist>
-        <directory>src</directory>
-    </whitelist>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">src</directory>
+        </whitelist>
+    </filter>
 </phpunit>
