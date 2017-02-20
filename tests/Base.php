@@ -4,8 +4,9 @@ namespace App\Tests;
 
 use App\App;
 use App\Db;
+use PHPUnit\Framework\TestCase;
 
-abstract class Base extends \PHPUnit_Framework_TestCase
+abstract class Base extends TestCase
 {
 
     /** @var \App\Db */
