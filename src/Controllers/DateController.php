@@ -4,18 +4,13 @@ namespace App\Controllers;
 
 use App\Template;
 use App\User;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class DateController extends Base
 {
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     * @return Response
-     */
-    public function index(Request $request, Response $response, array $args)
+
+    public function index(ServerRequestInterface $request, ResponseInterface $response)
     {
         $template = new Template('dates_index.twig');
         $template->year = (!empty($args['year'])) ? $args['year'] : null;
@@ -66,7 +61,7 @@ class DateController extends Base
         $template->items = $items;
         $template->title = 'Dates';
 
-        $response->setContent($template->render());
+        $response->getBody()->write($template->render());
         return $response;
     }
 }

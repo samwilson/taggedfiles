@@ -5,17 +5,18 @@ namespace App\Controllers;
 use App\App;
 use App\Config;
 use App\Item;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use App\Template;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Zend\Diactoros\Response\RedirectResponse;
 
 class ItemController extends Base
 {
 
-    public function view(Request $request, Response $response, array $args)
+    public function view(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $item = new Item($args['id'], $this->user);
-        $template = new \App\Template('view.twig');
+        $template = new Template('view.twig');
         $template->item = $item;
         $template->title = $item->getTitle();
         $template->tags = $item->getTags();
@@ -23,13 +24,13 @@ class ItemController extends Base
         $template->itemReadGroup = $item->getReadGroup();
         $template->itemEditGroup = $item->getEditGroup();
         // Return the template.
-        $response->setContent($template->render());
+        $response->getBody()->write($template->render());
         return $response;
     }
 
-    public function edit(Request $request, Response $response, array $args)
+    public function edit(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $template = new \App\Template('form.twig');
+        $template = new Template('form.twig');
         $template->title = 'Create';
 
         // Date granularities.
@@ -51,7 +52,7 @@ class ItemController extends Base
                 . ' <a href="' . $this->config->baseUrl() . '/login" class="alert-link">log in</a> '
                 . ' before you can add or edit items.';
             $template->alert('info', $msg);
-            $response->setContent($template->render());
+            $response->getBody()->write($template->render());
             return $response;
         }
         $template->groups = $this->user->getGroups();
@@ -61,11 +62,11 @@ class ItemController extends Base
         $template->itemTags = $item->getTagsString();
         $template->itemReadGroupId = $item->getReadGroup()->id;
         $template->itemEditGroupId = $item->getEditGroup()->id;
-        $response->setContent($template->render());
+        $response->getBody()->write($template->render());
         return $response;
     }
 
-    public function save(Request $request, Response $response, array $args)
+    public function save(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $_POST = array_filter($_POST, 'trim');
         $metadata = array(

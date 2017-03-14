@@ -5,35 +5,37 @@ namespace App\Controllers;
 use App\Config;
 use App\User;
 use App\Template;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Swift_Message;
+use Zend\Diactoros\Response\RedirectResponse;
 
 class UserController extends Base
 {
 
-    public function loginForm(Request $request, Response $response, array $args)
+    public function loginForm(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $template = new \App\Template('login.twig');
+        $template = new Template('login.twig');
         $template->title = 'Log in';
-        $template->name = $request->get('name');
-        $response->setContent($template->render());
+        $template->name = $this->getQueryParam($request, 'name');
+        $response->getBody()->write($template->render());
         return $response;
     }
 
-    public function login(Request $request, Response $response, array $args)
+    public function login(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $name = $request->get('name');
-        if ($request->get('register')) {
-            return new RedirectResponse($this->config->baseUrl() . '/register?name=' . $name);
+        $name = $this->getBodyParam($request, 'name');
+        $nameQueryString = $name ? "?nam=$name" : '';
+        if ($this->getBodyParam($request, 'register')) {
+            return new RedirectResponse($this->config->baseUrl() . '/register' . $nameQueryString);
         }
-        if ($request->get('remind')) {
-            return new RedirectResponse($this->config->baseUrl() . '/remind?name=' . $name);
+        if ($this->getBodyParam($request, 'remind')) {
+            return new RedirectResponse($this->config->baseUrl() . '/remind' . $nameQueryString);
         }
-        $template = new \App\Template('login.twig');
+        $template = new Template('login.twig');
         $user = $this->db->query('SELECT id, password FROM users WHERE name=:n', ['n' => $name])->fetch();
         if (isset($user->password)) {
-            if (password_verify($request->get('password'), $user->password)) {
+            if (password_verify($this->getBodyParam($request, 'password'), $user->password)) {
                 session_regenerate_id(true);
                 $_SESSION['userid'] = $user->id;
                 return new RedirectResponse($this->config->baseUrl());
@@ -43,7 +45,7 @@ class UserController extends Base
         return new RedirectResponse($this->config->baseUrl() . '/login?name=' . $name);
     }
 
-    public function logout(Request $request, Response $response, array $args)
+    public function logout(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         session_unset();
         session_destroy();
@@ -53,26 +55,26 @@ class UserController extends Base
         return new RedirectResponse($this->config->baseUrl() . '/login');
     }
 
-    public function registerForm(Request $request, Response $response, array $args)
+    public function registerForm(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $template = new \App\Template('register.twig');
+        $template = new Template('register.twig');
         $template->title = 'Register';
-        $template->name = $request->get('name');
-        $template->email = $request->get('email');
-        $response->setContent($template->render());
+        $template->name = $this->getBodyParam($request, 'name');
+        $template->email = $this->getBodyParam($request, 'email');
+        $response->getBody()->write($template->render());
         return $response;
     }
 
-    public function register(Request $request, Response $response, array $args)
+    public function register(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $name = $request->get('name');
-        $email = $request->get('email');
-        $template = new \App\Template('register.twig');
-        if ($request->get('login')) {
+        $name = $this->getBodyParam($request, 'name');
+        $email = $this->getBodyParam($request, 'email');
+        $template = new Template('register.twig');
+        if ($this->getBodyParam($request, 'login')) {
             return new RedirectResponse($this->config->baseUrl() . '/login?name=' . $name);
         }
-        $password = $request->get('password');
-        if ($password !== $request->get('password-confirmation')) {
+        $password = $this->getBodyParam($request, 'password');
+        if ($password !== $this->getBodyParam($request, 'password-confirmation')) {
             $template->alert('warning', 'Your passwords did not match.', true);
             return new RedirectResponse($this->config->baseUrl() . "/register?name=$name&email=$email");
         }
@@ -82,19 +84,19 @@ class UserController extends Base
         return new RedirectResponse($this->config->baseUrl() . '/login?name=' . $user->getName());
     }
 
-    public function remindForm(Request $request, Response $response, array $args)
+    public function remindForm(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $template = new \App\Template('remind.twig');
+        $template = new Template('remind.twig');
         $template->title = 'Remind';
-        $template->name = $request->get('name');
-        $response->setContent($template->render());
+        $template->name = $this->getBodyParam($request, 'name');
+        $response->getBody()->write($template->render());
         return $response;
     }
 
-    public function remind(Request $request, Response $response, array $args)
+    public function remind(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $name = $request->get('name');
-        if ($request->get('login')) {
+        $name = $this->getBodyParam($request, 'name');
+        if ($this->getBodyParam($request, 'login')) {
             return new RedirectResponse($this->config->baseUrl() . '/login?name=' . $name);
         }
         $config = new Config();
@@ -104,7 +106,7 @@ class UserController extends Base
         if (!empty($user->getEmail())) {
             $template->user = $user;
             $template->token = $user->getReminder();
-            $message = \Swift_Message::newInstance()
+            $message = Swift_Message::newInstance()
                 ->setSubject('Password reminder')
                 ->setFrom(array($config->siteEmail() => $config->siteTitle()))
                 ->setTo(array($user->getEmail() => $user->getName()))
@@ -118,25 +120,25 @@ class UserController extends Base
         return new RedirectResponse($this->config->baseUrl() . '/remind?name=' . $name);
     }
 
-    public function remindResetForm(Request $request, Response $response, array $args)
+    public function remindResetForm(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         if (!isset($args['token'])) {
             return new RedirectResponse($this->config->baseUrl() . '/remind');
         }
-        $template = new \App\Template('remind_reset.twig');
+        $template = new Template('remind_reset.twig');
         $template->title = 'Password Reset';
         $template->userid = $args['userid'];
         $template->token = $args['token'];
-        $response->setContent($template->render());
+        $response->getBody()->write($template->render());
         return $response;
     }
 
-    public function remindReset(Request $request, Response $response, array $args)
+    public function remindReset(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $template = new \App\Template('remind_reset.twig');
+        $template = new Template('remind_reset.twig');
         // First check that the passwords match.
-        $password = $request->get('password');
-        if ($password !== $request->get('password-confirmation')) {
+        $password = $request->getAttribute('password');
+        if ($password !== $request->getAttribute('password-confirmation')) {
             $template->alert('warning', 'Your passwords did not match.', true);
             return new RedirectResponse($this->config->baseUrl() . "/remind/" . $args['userid'] . "/" . $args['token']);
         }
@@ -153,11 +155,11 @@ class UserController extends Base
         return new RedirectResponse($this->config->baseUrl() . "/login?name=" . $user->getName());
     }
 
-    public function profile(Request $request, Response $response, array $args)
+    public function profile(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $template = new \App\Template('profile.twig');
+        $template = new Template('profile.twig');
         $template->title = 'Profile';
-        $response->setContent($template->render());
+        $response->getBody()->write($template->render());
         return $response;
     }
 }

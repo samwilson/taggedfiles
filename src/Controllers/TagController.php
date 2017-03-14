@@ -4,20 +4,20 @@ namespace App\Controllers;
 
 use App\TagsIdentifier;
 use App\Template;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Zend\Diactoros\Response\RedirectResponse;
 
 class TagController extends Base
 {
 
     /**
-     * @param Request $request
-     * @param Response $response
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
      * @param array $args
-     * @return Response
+     * @return RedirectResponse|ResponseInterface
      */
-    public function index(Request $request, Response $response, array $args)
+    public function index(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $template = new Template('tags_index.twig');
         $template->title = 'Tags';
@@ -54,7 +54,7 @@ class TagController extends Base
         }
 
         // Return.
-        $response->setContent($template->render());
+        $response->getBody()->write($template->render());
         return $response;
     }
 }

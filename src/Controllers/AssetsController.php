@@ -2,17 +2,17 @@
 
 namespace App\Controllers;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
-class AssetsController extends \App\Controllers\Base
+class AssetsController extends Base
 {
 
-    public function css(Request $request, Response $response, array $args)
+    public function css(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $filename = 'assets/' . $args['file'];
-        $response->setContent(file_get_contents($filename));
-        $response->headers->set('Content-Type', 'text/css');
+        $response->getBody()->write(file_get_contents($filename));
+        $response->withHeader('Content-Type', 'text/css');
         return $response;
     }
 }

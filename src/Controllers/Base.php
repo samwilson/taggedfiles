@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Config;
 use App\User;
+use Psr\Http\Message\ServerRequestInterface;
 use Swift_Mailer;
 use Swift_Message;
 
@@ -45,6 +46,32 @@ abstract class Base
         if (isset($_SESSION['userid'])) {
             $this->user->load($_SESSION['userid']);
         }
+    }
+
+    /**
+     * Get a parameter value out of a request's body.
+     * @param ServerRequestInterface $request
+     * @param string $param The name of the parameter to get.
+     * @param mixed $default
+     * @return mixed
+     */
+    protected function getBodyParam(ServerRequestInterface $request, $param, $default = null)
+    {
+        $params = $request->getParsedBody();
+        return (isset($params[$param])) ? $params[$param] : $default;
+    }
+
+    /**
+     * Get a parameter from the query string of this request.
+     * @param ServerRequestInterface $request
+     * @param string $param The name of the parameter to get.
+     * @param mixed $default
+     * @return mixed
+     */
+    protected function getQueryParam(ServerRequestInterface $request, $param, $default = null)
+    {
+        $params = $request->getQueryParams();
+        return (isset($params[$param])) ? $params[$param] : $default;
     }
 
     /**
