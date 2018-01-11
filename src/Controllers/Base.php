@@ -75,6 +75,22 @@ abstract class Base
     }
 
     /**
+     * Get either a body or a query parameter.
+     * @param ServerRequestInterface $request
+     * @param string $param The name of the parameter to get.
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getAnyParam(ServerRequestInterface $request, $param, $default = null)
+    {
+        $bodyParam = $this->getBodyParam($request, $param, $default);
+        if ($bodyParam !== null) {
+            return $bodyParam;
+        }
+        return $this->getQueryParam($request, $param, $default);
+    }
+
+    /**
      * Send an email message.
      *
      * @param Swift_Message $message

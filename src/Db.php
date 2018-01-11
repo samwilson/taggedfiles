@@ -173,5 +173,22 @@ class Db
             . ")");
         $this->query("INSERT IGNORE INTO `user_groups` (`user`, `group`) "
             . " SELECT id," . User::GROUP_PUBLIC . " FROM users");
+        $this->query("CREATE TABLE IF NOT EXISTS `changesets` ("
+            . " `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,"
+            . " `datetime` DATETIME NOT NULL,"
+            . " `user` INT(5) UNSIGNED NOT NULL,"
+            . "     FOREIGN KEY (`user`) REFERENCES `users` (`id`),"
+            . " `comment` TEXT NULL DEFAULT NULL"
+            . " );");
+        $this->query("CREATE TABLE IF NOT EXISTS `changes` ("
+            . " `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,"
+            . " `changeset` INT(10) UNSIGNED NOT NULL,"
+            . "     FOREIGN KEY (`changeset`) REFERENCES `changesets` (`id`),"
+            . " `item` INT(10) UNSIGNED NOT NULL,"
+            . "     FOREIGN KEY (`item`) REFERENCES `items` (`id`),"
+            . " `field_name` TEXT(65) NOT NULL,"
+            . " `old_value` LONGTEXT NULL DEFAULT NULL,"
+            . " `new_value` LONGTEXT NULL DEFAULT NULL"
+            . ");");
     }
 }

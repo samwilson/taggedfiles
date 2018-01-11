@@ -4,33 +4,37 @@ namespace App\Tests;
 
 use App\Item;
 use App\Config;
+use App\User;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class ItemTest extends Base
 {
 
-    /** @var \App\User */
+    /** @var User */
     protected $testUser;
 
     public function setUp()
     {
         parent::setUp();
         $this->setUpDb();
-        $this->testUser = new \App\User($this->db);
+        $this->testUser = new User($this->db);
         $this->testUser->register('Test User');
     }
 
     /**
-     * @testdox An Item has an ID and title.
+     * @testdox An Item has an ID and title and has by default plain text contents.
      * @test
      */
-    public function basics()
+    public function itemBasics()
     {
         $item = new Item(null, $this->testUser);
         $item->save(['title' => 'Test']);
         $this->assertEquals(1, $item->getId());
         $this->assertEquals('Test', $item->getTitle());
         $this->assertEquals(1, $this->db->query("SELECT COUNT(*) FROM `items`")->fetchColumn());
+        $this->assertTrue($item->isLoaded());
+        $this->assertEquals('c4/ca/1/v1', $item->getFilePath());
+        $this->assertEquals('text/plain', $item->getMimeType());
     }
 
     public function testDates()

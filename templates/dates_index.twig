@@ -5,13 +5,16 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-3 dates">
+                <h3>Dates</h3>
                 <ol class="list-unstyled">
                 {% for y in years %}
                     <li class="{% if y == year %}current{% endif %}">
                         <a href="{{baseurl}}/d/{{y}}">{{y}}</a>
                         {% if y == year %}
                         <ol>
-
+                            {% for m in months %}
+                            <li><a href="{{baseurl}}/d/{{y}}/{{m}}">{{m}}</a></li>
+                            {% endfor %}
                         </ol>
                         {% endif %}
                     </li>

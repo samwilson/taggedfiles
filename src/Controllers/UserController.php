@@ -25,7 +25,7 @@ class UserController extends Base
     public function login(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $name = $this->getBodyParam($request, 'name');
-        $nameQueryString = $name ? "?nam=$name" : '';
+        $nameQueryString = $name ? "?name=$name" : '';
         if ($this->getBodyParam($request, 'register')) {
             return new RedirectResponse($this->config->baseUrl() . '/register' . $nameQueryString);
         }
@@ -59,7 +59,7 @@ class UserController extends Base
     {
         $template = new Template('register.twig');
         $template->title = 'Register';
-        $template->name = $this->getBodyParam($request, 'name');
+        $template->name = $this->getAnyParam($request, 'name');
         $template->email = $this->getBodyParam($request, 'email');
         $response->getBody()->write($template->render());
         return $response;

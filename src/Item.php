@@ -53,6 +53,10 @@ class Item
         $this->user = $user;
     }
 
+    /**
+     * @param $id
+     * @throws Exception
+     */
     public function load($id)
     {
         if (!empty($id) && !is_numeric($id)) {
@@ -96,7 +100,6 @@ class Item
      * @param string $tagsString CSV string of tags.
      * @param string $filename The full filesystem path to a file to attach to this Item. Don't use with $fileContents.
      * @param string $fileContents A string to treat as the contents of a file. Don't use with $filename.
-     * @return false
      * @throws Exception If the item is not editable by the current user.
      */
     public function save($metadata, $tagsString = null, $filename = null, $fileContents = null)
@@ -160,8 +163,8 @@ class Item
         }
 
         $newVer = $this->getVersionCount() + 1;
-        // Save file contents.
-        if (!empty($fileContents)) {
+        // Save file contents. If no file contents OR filename are provided, save an empty file.
+        if (!empty($fileContents) || (empty($fileContents) && empty($filename))) {
             $filesystem = App::getFilesystem();
             $filesystem->put("storage://" . $this->getFilePath($newVer), $fileContents);
         }
@@ -195,6 +198,7 @@ class Item
      * Get the file's mime type, or false if there's no file.
      * @param integer $version
      * @return integer|false
+     * @throws Exception
      */
     public function getMimeType($version = null)
     {
@@ -206,7 +210,7 @@ class Item
      *
      * @param integer $version Which file version to get.
      * @return false|string
-     * @throws \Exception
+     * @throws Exception
      */
     public function getFileContents($version = null)
     {
@@ -216,8 +220,8 @@ class Item
     /**
      * Perform an operation on the filesystem file.
      * @param integer|null $version
-     * @param string $method The method name, from the MountManager class.
-     * @return bool|false|string
+     * @param string $method The method name, from the MountManager class (one of: 'read' or 'getMimetype').
+     * @return bool|string
      * @throws Exception If the method can't be executed.
      */
     protected function performFileSystemOperation($method, $version)
@@ -244,7 +248,7 @@ class Item
      * @param string $format The file format, one of 'o', 'd', or 't'.
      * @param int $version The version of the file to fetch.
      * @return string The fully-qualified path to the file.
-     * @throws \Exception
+     * @throws Exception
      */
     public function getCachePath($format = 'o', $version = null)
     {
@@ -326,8 +330,9 @@ class Item
     /**
      * Get the path to a version of the attached file.
      * Never has a leading slash, and the last component is the filename.
-     * @return string
-     * @throws \Exception
+     * The returned filepath may not actually exist.
+     * @return string The file path, e.g. 'c4/ca/1/v1'.
+     * @throws Exception
      */
     public function getFilePath($version = null)
     {
@@ -335,7 +340,7 @@ class Item
             $version = $this->getVersionCount();
         }
         if (!is_int($version)) {
-            throw new \Exception("Version must be an integer ('$version' was given)");
+            throw new Exception("Version must be an integer ('$version' was given)");
         }
         return $this->getHashedPath() . '/v' . $version;
     }
@@ -431,5 +436,15 @@ class Item
     public function getDateGranularity()
     {
         return isset($this->data->date_granularity) ? $this->data->date_granularity : self::DATE_GRANULARITY_DEFAULT;
+    }
+
+    public function getChangeSets()
+    {
+        $sql = 'SELECT * FROM changes c'
+            .' JOIN changesets cs ON c.changeset = cs.id'
+            .' JOIN users u ON u.id = cs.user'
+            .' WHERE item = :id'
+            .' ORDER BY datetime DESC, cs.id DESC';
+        return $this->db->query($sql, ['id'=>$this->getId()])->fetchAll();
     }
 }
